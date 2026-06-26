@@ -70,7 +70,7 @@ export default function AdminUsersPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-md border-b border-white/20 dark:border-white/10 pb-4">
         <div>
           <h1 className="font-headline-lg text-headline-lg font-bold text-primary dark:text-inverse-primary tracking-tight">User Directory</h1>
-          <p className="text-on-surface-variant dark:text-on-surface-variant/80 text-sm">Manage platform user credentials, access controls, and security profiles.</p>
+          <p className="text-on-surface-variant dark:text-slate-400 text-sm">Manage platform user credentials, access controls, and security profiles.</p>
         </div>
         <button 
           onClick={() => setShowAddModal(true)}
@@ -93,11 +93,11 @@ export default function AdminUsersPage() {
         
         <div className="flex items-center gap-2 w-full md:w-auto">
           <div className="relative flex-1 md:flex-initial">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 text-sm">search</span>
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 dark:text-slate-500 text-sm">search</span>
             <input 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 pr-4 py-1.5 bg-white/50 dark:bg-slate-950/50 border border-outline-variant/20 rounded-full text-xs focus:ring-2 focus:ring-primary/20 w-full md:w-48 outline-none text-on-surface placeholder:text-on-surface-variant/50" 
+              className="pl-9 pr-4 py-1.5 bg-white/50 dark:bg-slate-900 text-xs focus:ring-2 focus:ring-primary/20 w-full md:w-48 outline-none text-on-surface dark:text-slate-100 placeholder:text-on-surface-variant/50 dark:placeholder:text-slate-500 border border-outline-variant/20 dark:border-white/10 rounded-full" 
               placeholder="Search users..." 
               type="text"
             />
@@ -105,12 +105,12 @@ export default function AdminUsersPage() {
           <select 
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="bg-white/50 dark:bg-slate-950/50 text-on-surface-variant dark:text-on-primary-container px-3 py-1.5 rounded-full text-xs font-semibold border border-outline-variant/20 focus:ring-2 focus:ring-primary/20 outline-none cursor-pointer"
+            className="bg-white/50 dark:bg-slate-900 text-on-surface-variant dark:text-slate-200 px-3 py-1.5 rounded-full text-xs font-semibold border border-outline-variant/20 dark:border-white/10 focus:ring-2 focus:ring-primary/20 outline-none cursor-pointer"
           >
-            <option value="All">All Statuses</option>
-            <option value="Verified">Verified</option>
-            <option value="Pending">Pending</option>
-            <option value="Rejected">Rejected</option>
+            <option value="All" className="dark:bg-slate-900 dark:text-slate-200">All Statuses</option>
+            <option value="Verified" className="dark:bg-slate-900 dark:text-slate-200">Verified</option>
+            <option value="Pending" className="dark:bg-slate-900 dark:text-slate-200">Pending</option>
+            <option value="Rejected" className="dark:bg-slate-900 dark:text-slate-200">Rejected</option>
           </select>
         </div>
       </div>
@@ -120,7 +120,7 @@ export default function AdminUsersPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[700px]">
             <thead>
-              <tr className="bg-surface-container-low/80 dark:bg-slate-900/60 text-on-surface-variant/80 border-b border-outline-variant/10">
+              <tr className="bg-surface-container-low/80 dark:bg-slate-900/60 text-on-surface-variant/80 dark:text-slate-300 border-b border-outline-variant/10">
                 <th className="px-6 py-4 font-bold text-xs uppercase tracking-wider">User Name</th>
                 <th className="px-6 py-4 font-bold text-xs uppercase tracking-wider">Email</th>
                 <th className="px-6 py-4 font-bold text-xs uppercase tracking-wider">Status</th>
@@ -144,7 +144,7 @@ export default function AdminUsersPage() {
                         <span className="font-semibold text-sm text-on-surface dark:text-white">{user.name}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-on-surface-variant text-sm">{user.email}</td>
+                    <td className="px-6 py-4 text-on-surface-variant dark:text-slate-300 text-sm">{user.email}</td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border ${
                         user.status === 'Verified' 
@@ -159,7 +159,7 @@ export default function AdminUsersPage() {
                         {user.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-on-surface-variant text-sm">{user.dateJoined}</td>
+                    <td className="px-6 py-4 text-on-surface-variant dark:text-slate-300 text-sm">{user.dateJoined}</td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-1 md:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         {user.status !== 'Verified' && (
@@ -193,7 +193,7 @@ export default function AdminUsersPage() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="text-center py-8 text-on-surface-variant/60 font-semibold text-sm">
+                  <td colSpan={5} className="text-center py-8 text-on-surface-variant/60 dark:text-slate-400 font-semibold text-sm">
                     No users found matching filters.
                   </td>
                 </tr>
@@ -204,11 +204,11 @@ export default function AdminUsersPage() {
         
         {/* Pagination Details */}
         <div className="bg-surface-container-low/60 dark:bg-slate-900/60 px-6 py-4 flex items-center justify-between border-t border-outline-variant/10 text-xs">
-          <span className="text-on-surface-variant/80">Showing 1-{filteredUsers.length} of {filteredUsers.length} entries</span>
+          <span className="text-on-surface-variant/80 dark:text-slate-400">Showing 1-{filteredUsers.length} of {filteredUsers.length} entries</span>
           <div className="flex gap-1">
-            <button className="px-2.5 py-1 rounded border border-outline-variant/20 hover:bg-white/30 dark:hover:bg-slate-800 transition-colors cursor-pointer">Prev</button>
+            <button className="px-2.5 py-1 rounded border border-outline-variant/20 dark:border-white/10 hover:bg-white/30 dark:hover:bg-slate-800 transition-colors cursor-pointer text-on-surface dark:text-slate-200">Prev</button>
             <button className="px-2.5 py-1 rounded bg-primary text-on-primary font-bold">1</button>
-            <button className="px-2.5 py-1 rounded border border-outline-variant/20 hover:bg-white/30 dark:hover:bg-slate-800 transition-colors cursor-pointer">Next</button>
+            <button className="px-2.5 py-1 rounded border border-outline-variant/20 dark:border-white/10 hover:bg-white/30 dark:hover:bg-slate-800 transition-colors cursor-pointer text-on-surface dark:text-slate-200">Next</button>
           </div>
         </div>
       </div>
@@ -220,46 +220,46 @@ export default function AdminUsersPage() {
           <div className="relative bg-surface-container-lowest dark:bg-slate-900 border border-white/20 dark:border-white/10 w-full max-w-md rounded-3xl p-6 shadow-2xl animate-scale-up">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-bold text-lg text-primary dark:text-inverse-primary">Add New User</h3>
-              <button onClick={() => setShowAddModal(false)} className="text-on-surface-variant hover:text-primary">
+              <button onClick={() => setShowAddModal(false)} className="text-on-surface-variant hover:text-primary dark:text-slate-400 dark:hover:text-white">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
             
             <form onSubmit={handleAddUser} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-on-surface-variant/80 mb-1">Full Name</label>
+                <label className="block text-xs font-bold text-on-surface-variant/80 dark:text-slate-300 mb-1">Full Name</label>
                 <input 
                   required
                   type="text" 
                   value={newUser.name}
                   onChange={(e) => setNewUser({...newUser, name: e.target.value})}
-                  className="w-full px-4 py-2.5 bg-surface-container-low dark:bg-slate-950 border border-outline-variant/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm text-on-surface"
+                  className="w-full px-4 py-2.5 bg-surface-container-low dark:bg-slate-950 border border-outline-variant/20 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm text-on-surface dark:text-slate-100"
                   placeholder="Elena Wright"
                 />
               </div>
               
               <div>
-                <label className="block text-xs font-bold text-on-surface-variant/80 mb-1">Email Address</label>
+                <label className="block text-xs font-bold text-on-surface-variant/80 dark:text-slate-300 mb-1">Email Address</label>
                 <input 
                   required
                   type="email" 
                   value={newUser.email}
                   onChange={(e) => setNewUser({...newUser, email: e.target.value})}
-                  className="w-full px-4 py-2.5 bg-surface-container-low dark:bg-slate-950 border border-outline-variant/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm text-on-surface"
+                  className="w-full px-4 py-2.5 bg-surface-container-low dark:bg-slate-950 border border-outline-variant/20 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm text-on-surface dark:text-slate-100"
                   placeholder="name@company.com"
                 />
               </div>
               
               <div>
-                <label className="block text-xs font-bold text-on-surface-variant/80 mb-1">Status</label>
+                <label className="block text-xs font-bold text-on-surface-variant/80 dark:text-slate-300 mb-1">Status</label>
                 <select 
                   value={newUser.status}
                   onChange={(e) => setNewUser({...newUser, status: e.target.value as any})}
-                  className="w-full px-4 py-2.5 bg-surface-container-low dark:bg-slate-950 border border-outline-variant/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm cursor-pointer text-on-surface dark:text-white"
+                  className="w-full px-4 py-2.5 bg-surface-container-low dark:bg-slate-950 border border-outline-variant/20 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm cursor-pointer text-on-surface dark:text-slate-100"
                 >
-                  <option value="Pending" className="text-on-surface dark:text-white">Pending</option>
-                  <option value="Verified" className="text-on-surface dark:text-white">Verified</option>
-                  <option value="Rejected" className="text-on-surface dark:text-white">Rejected</option>
+                  <option value="Pending" className="text-on-surface dark:bg-slate-900 dark:text-slate-100">Pending</option>
+                  <option value="Verified" className="text-on-surface dark:bg-slate-900 dark:text-slate-100">Verified</option>
+                  <option value="Rejected" className="text-on-surface dark:bg-slate-900 dark:text-slate-100">Rejected</option>
                 </select>
               </div>
 
@@ -267,7 +267,7 @@ export default function AdminUsersPage() {
                 <button 
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2 bg-surface-container-low dark:bg-slate-800 text-on-surface-variant rounded-xl text-xs font-bold hover:bg-surface-container-high transition-colors"
+                  className="px-4 py-2 bg-surface-container-low dark:bg-slate-800 text-on-surface-variant dark:text-slate-300 rounded-xl text-xs font-bold hover:bg-surface-container-high transition-colors"
                 >
                   Cancel
                 </button>
