@@ -28,7 +28,7 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         />
       </head>
-      <body className="bg-background text-on-surface font-body-md transition-colors duration-300 min-h-screen flex flex-col justify-between">
+      <body className="bg-background text-on-surface dark:bg-[#0b1120] dark:text-slate-100 font-body-md transition-colors duration-300 min-h-screen flex flex-col justify-between">
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
