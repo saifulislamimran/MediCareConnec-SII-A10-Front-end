@@ -58,13 +58,13 @@ export default function DoctorPrescriptionsPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/20 dark:border-white/10 pb-4">
         <div>
           <h1 className="font-headline-lg text-headline-lg font-bold text-primary dark:text-inverse-primary tracking-tight">Prescription Manager</h1>
-          <p className="text-on-surface-variant dark:text-on-surface-variant/80 text-sm">Review, authorize, and issue digital prescriptions securely.</p>
+          <p className="text-on-surface-variant dark:text-slate-400 text-sm">Review, authorize, and issue digital prescriptions securely.</p>
         </div>
         <div className="flex gap-2">
           <button 
             type="button" 
             onClick={() => alert("Simulating prescription history retrieval...")}
-            className="flex items-center gap-1.5 px-4 py-2 bg-surface-container-low/60 dark:bg-slate-900 border border-outline-variant/20 hover:bg-white/40 text-on-surface text-xs font-bold rounded-xl transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-4 py-2 bg-surface-container-low/60 dark:bg-slate-900 border border-outline-variant/20 dark:border-white/10 hover:bg-white/40 dark:hover:bg-slate-800 text-on-surface dark:text-slate-200 text-xs font-bold rounded-xl transition-all cursor-pointer"
           >
             <span className="material-symbols-outlined text-[16px]">history</span> History
           </button>
@@ -82,36 +82,36 @@ export default function DoctorPrescriptionsPage() {
           {/* Patient Search and Issue Date */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
             <div className="flex flex-col gap-1">
-              <label className="text-xs font-bold text-on-surface-variant/70">Search Patient</label>
+              <label className="text-xs font-bold text-on-surface-variant/70 dark:text-slate-300">Search Patient</label>
               <input 
                 required
                 type="text" 
                 value={patientName}
                 onChange={(e) => setPatientName(e.target.value)}
-                className="bg-transparent border-0 border-b border-outline-variant/30 py-2 focus:ring-0 focus:border-primary transition-all text-sm text-on-surface dark:text-white outline-none"
+                className="bg-transparent border-0 border-b border-outline-variant/30 dark:border-white/20 py-2 focus:ring-0 focus:border-primary transition-all text-sm text-on-surface dark:text-white outline-none"
                 placeholder="Enter patient name..."
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs font-bold text-on-surface-variant/70">Date of Issue</label>
+              <label className="text-xs font-bold text-on-surface-variant/70 dark:text-slate-300">Date of Issue</label>
               <input 
                 required
                 type="date" 
                 value={dateOfIssue}
                 onChange={(e) => setDateOfIssue(e.target.value)}
-                className="bg-transparent border-0 border-b border-outline-variant/30 py-2 focus:ring-0 focus:border-primary transition-all text-sm text-on-surface dark:text-white outline-none cursor-pointer"
+                className="bg-transparent border-0 border-b border-outline-variant/30 dark:border-white/20 py-2 focus:ring-0 focus:border-primary transition-all text-sm text-on-surface dark:text-white outline-none cursor-pointer"
               />
             </div>
           </div>
 
           {/* Diagnosis */}
           <div className="flex flex-col gap-1">
-            <label className="text-xs font-bold text-on-surface-variant/70">Clinical Diagnosis</label>
+            <label className="text-xs font-bold text-on-surface-variant/70 dark:text-slate-300">Clinical Diagnosis</label>
             <textarea 
               value={diagnosis}
               onChange={(e) => setDiagnosis(e.target.value)}
               rows={2}
-              className="bg-transparent border-0 border-b border-outline-variant/30 py-2 focus:ring-0 focus:border-primary transition-all text-sm text-on-surface dark:text-white outline-none resize-none"
+              className="bg-transparent border-0 border-b border-outline-variant/30 dark:border-white/20 py-2 focus:ring-0 focus:border-primary transition-all text-sm text-on-surface dark:text-white outline-none resize-none"
               placeholder="Enter diagnosis findings..."
             />
           </div>
@@ -119,7 +119,7 @@ export default function DoctorPrescriptionsPage() {
           {/* Medications list */}
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <label className="text-xs font-bold text-on-surface-variant/70">Medications List</label>
+              <label className="text-xs font-bold text-on-surface-variant/70 dark:text-slate-300">Medications List</label>
               <button 
                 type="button"
                 onClick={handleAddMedication}
@@ -133,38 +133,38 @@ export default function DoctorPrescriptionsPage() {
               {medications.map((med, index) => (
                 <div key={med.id} className="flex flex-col md:flex-row items-stretch md:items-end gap-3 p-4 bg-surface-container-low/40 dark:bg-slate-900/40 rounded-2xl border border-white/20 dark:border-white/10">
                   <div className="flex-1 flex flex-col gap-1">
-                    <span className="text-[10px] font-bold text-on-surface-variant/50 uppercase">Drug Name & Strength</span>
+                    <span className="text-[10px] font-bold text-on-surface-variant/50 dark:text-slate-400 uppercase">Drug Name & Strength</span>
                     <input 
                       required
                       type="text" 
                       value={med.name}
                       onChange={(e) => handleMedicationChange(med.id, 'name', e.target.value)}
-                      className="bg-transparent border-0 border-b border-outline-variant/30 py-1 text-sm text-on-surface dark:text-white focus:ring-0 focus:border-primary outline-none"
+                      className="bg-transparent border-0 border-b border-outline-variant/30 dark:border-white/20 py-1 text-sm text-on-surface dark:text-white focus:ring-0 focus:border-primary outline-none"
                       placeholder="e.g. Lisinopril 10mg"
                     />
                   </div>
                   <div className="w-full md:w-32 flex flex-col gap-1">
-                    <span className="text-[10px] font-bold text-on-surface-variant/50 uppercase">Dosage</span>
+                    <span className="text-[10px] font-bold text-on-surface-variant/50 dark:text-slate-400 uppercase">Dosage</span>
                     <input 
                       required
                       type="text" 
                       value={med.dosage}
                       onChange={(e) => handleMedicationChange(med.id, 'dosage', e.target.value)}
-                      className="bg-transparent border-0 border-b border-outline-variant/30 py-1 text-sm text-on-surface dark:text-white focus:ring-0 focus:border-primary outline-none text-center"
+                      className="bg-transparent border-0 border-b border-outline-variant/30 dark:border-white/20 py-1 text-sm text-on-surface dark:text-white focus:ring-0 focus:border-primary outline-none text-center"
                       placeholder="e.g. 1 Tablet"
                     />
                   </div>
                   <div className="flex-1 flex flex-col gap-1">
-                    <span className="text-[10px] font-bold text-on-surface-variant/50 uppercase">Frequency</span>
+                    <span className="text-[10px] font-bold text-on-surface-variant/50 dark:text-slate-400 uppercase">Frequency</span>
                     <select 
                       value={med.frequency}
                       onChange={(e) => handleMedicationChange(med.id, 'frequency', e.target.value)}
-                      className="bg-transparent border-0 border-b border-outline-variant/30 py-1 text-sm text-on-surface dark:text-white focus:ring-0 focus:border-primary outline-none cursor-pointer"
+                      className="bg-transparent border-0 border-b border-outline-variant/30 dark:border-white/20 py-1 text-sm text-on-surface dark:text-white focus:ring-0 focus:border-primary outline-none cursor-pointer"
                     >
-                      <option value="Once Daily" className="text-on-surface">Once Daily</option>
-                      <option value="Twice Daily" className="text-on-surface">Twice Daily</option>
-                      <option value="Bedtime" className="text-on-surface">Bedtime</option>
-                      <option value="As Needed (PRN)" className="text-on-surface">As Needed (PRN)</option>
+                      <option value="Once Daily" className="text-on-surface dark:bg-slate-900 dark:text-slate-200">Once Daily</option>
+                      <option value="Twice Daily" className="text-on-surface dark:bg-slate-900 dark:text-slate-200">Twice Daily</option>
+                      <option value="Bedtime" className="text-on-surface dark:bg-slate-900 dark:text-slate-200">Bedtime</option>
+                      <option value="As Needed (PRN)" className="text-on-surface dark:bg-slate-900 dark:text-slate-200">As Needed (PRN)</option>
                     </select>
                   </div>
                   {medications.length > 1 && (
@@ -183,12 +183,12 @@ export default function DoctorPrescriptionsPage() {
 
           {/* Clinical Instructions */}
           <div className="flex flex-col gap-1">
-            <label className="text-xs font-bold text-on-surface-variant/70">Clinical Instructions & Notes</label>
+            <label className="text-xs font-bold text-on-surface-variant/70 dark:text-slate-300">Clinical Instructions & Notes</label>
             <textarea 
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
-              className="bg-transparent border-0 border-b border-outline-variant/30 py-2 focus:ring-0 focus:border-primary transition-all text-sm text-on-surface dark:text-white outline-none resize-none"
+              className="bg-transparent border-0 border-b border-outline-variant/30 dark:border-white/20 py-2 focus:ring-0 focus:border-primary transition-all text-sm text-on-surface dark:text-white outline-none resize-none"
               placeholder="Instructions for patient and pharmacist..."
             />
           </div>
@@ -196,7 +196,7 @@ export default function DoctorPrescriptionsPage() {
           {/* Controls */}
           <div className="pt-4 flex flex-col sm:flex-row justify-between items-center gap-4 border-t border-outline-variant/10">
             <div className="flex items-center gap-4 w-full sm:w-auto">
-              <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-on-surface-variant/80">
+              <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-on-surface-variant/80 dark:text-slate-300">
                 <input 
                   type="checkbox" 
                   checked={urgent} 
@@ -205,7 +205,7 @@ export default function DoctorPrescriptionsPage() {
                 />
                 Urgent Processing
               </label>
-              <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-on-surface-variant/80">
+              <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-on-surface-variant/80 dark:text-slate-300">
                 <input 
                   type="checkbox" 
                   checked={refill} 
@@ -220,7 +220,7 @@ export default function DoctorPrescriptionsPage() {
               <button 
                 type="button"
                 onClick={() => alert("Prescription saved to drafts.")}
-                className="px-4 py-2 bg-surface-container-low dark:bg-slate-800 text-on-surface-variant rounded-xl text-xs font-bold hover:bg-surface-container-high transition-colors cursor-pointer"
+                className="px-4 py-2 bg-surface-container-low dark:bg-slate-800 text-on-surface-variant dark:text-slate-300 rounded-xl text-xs font-bold hover:bg-surface-container-high transition-colors cursor-pointer"
               >
                 Save Draft
               </button>
@@ -246,13 +246,13 @@ export default function DoctorPrescriptionsPage() {
                 </div>
                 <div>
                   <h4 className="font-bold text-sm text-on-surface dark:text-white">{patientName}</h4>
-                  <p className="text-[10px] text-on-surface-variant font-bold">PID: 8849-W2</p>
+                  <p className="text-[10px] text-on-surface-variant dark:text-slate-400 font-bold">PID: 8849-W2</p>
                 </div>
               </div>
               <button 
                 type="button" 
                 onClick={() => alert("Opening profile menu...")}
-                className="p-1 rounded-lg hover:bg-white/40 text-on-surface-variant transition-colors cursor-pointer"
+                className="p-1 rounded-lg hover:bg-white/40 text-on-surface-variant dark:text-slate-400 dark:hover:bg-slate-800 transition-colors cursor-pointer"
               >
                 <span className="material-symbols-outlined text-[18px]">more_vert</span>
               </button>
@@ -260,36 +260,36 @@ export default function DoctorPrescriptionsPage() {
 
             <div className="grid grid-cols-2 gap-2 mb-4">
               <div className="p-3 bg-white/20 dark:bg-slate-900/30 rounded-xl border border-white/10">
-                <p className="text-[9px] font-bold text-on-surface-variant/60 uppercase">Age / Sex</p>
+                <p className="text-[9px] font-bold text-on-surface-variant/60 dark:text-slate-400 uppercase">Age / Sex</p>
                 <p className="text-xs font-semibold text-on-surface dark:text-white">68 / Male</p>
               </div>
               <div className="p-3 bg-white/20 dark:bg-slate-900/30 rounded-xl border border-white/10">
-                <p className="text-[9px] font-bold text-on-surface-variant/60 uppercase">Blood Type</p>
+                <p className="text-[9px] font-bold text-on-surface-variant/60 dark:text-slate-400 uppercase">Blood Type</p>
                 <p className="text-xs font-semibold text-on-surface dark:text-white">A+ Positive</p>
               </div>
             </div>
 
             <div className="space-y-2">
-              <p className="text-[10px] font-bold text-on-surface-variant/60 uppercase">Known Allergies</p>
+              <p className="text-[10px] font-bold text-on-surface-variant/60 dark:text-slate-400 uppercase">Known Allergies</p>
               <div className="flex flex-wrap gap-1">
                 <span className="px-2.5 py-0.5 bg-error-container text-on-error-container text-[10px] font-bold rounded-full">Penicillin</span>
                 <span className="px-2.5 py-0.5 bg-error-container text-on-error-container text-[10px] font-bold rounded-full">Latex</span>
-                <span className="px-2.5 py-0.5 bg-surface-container-highest text-on-surface-variant text-[10px] font-bold rounded-full">+2 others</span>
+                <span className="px-2.5 py-0.5 bg-surface-container-highest dark:bg-slate-800 text-on-surface-variant dark:text-slate-300 text-[10px] font-bold rounded-full">+2 others</span>
               </div>
             </div>
           </div>
 
           {/* Current Vitals */}
           <div className="glass-card p-6 rounded-3xl border-white/20 dark:border-white/10 shadow-lg space-y-4">
-            <h5 className="text-[10px] font-bold text-on-surface uppercase tracking-wider">Current Vitals</h5>
+            <h5 className="text-[10px] font-bold text-on-surface dark:text-slate-200 uppercase tracking-wider">Current Vitals</h5>
             <div className="space-y-3">
               <div className="space-y-1">
                 <div className="flex justify-between items-center text-xs font-semibold">
-                  <div className="flex items-center gap-1.5 text-primary">
+                  <div className="flex items-center gap-1.5 text-primary dark:text-inverse-primary">
                     <span className="material-symbols-outlined text-[18px]">monitor_heart</span>
                     <span>Heart Rate</span>
                   </div>
-                  <span>72 <span className="text-[10px] text-on-surface-variant font-normal">BPM</span></span>
+                  <span className="dark:text-slate-100">72 <span className="text-[10px] text-on-surface-variant dark:text-slate-400 font-normal">BPM</span></span>
                 </div>
                 <div className="w-full h-1 bg-white/20 rounded-full overflow-hidden">
                   <div className="h-full bg-primary w-[72%]"></div>
@@ -298,11 +298,11 @@ export default function DoctorPrescriptionsPage() {
 
               <div className="space-y-1">
                 <div className="flex justify-between items-center text-xs font-semibold">
-                  <div className="flex items-center gap-1.5 text-secondary">
+                  <div className="flex items-center gap-1.5 text-secondary dark:text-secondary-container">
                     <span className="material-symbols-outlined text-[18px]">compress</span>
                     <span>Blood Pressure</span>
                   </div>
-                  <span>128/84 <span className="text-[10px] text-on-surface-variant font-normal">mmHg</span></span>
+                  <span className="dark:text-slate-100">128/84 <span className="text-[10px] text-on-surface-variant dark:text-slate-400 font-normal">mmHg</span></span>
                 </div>
                 <div className="w-full h-1 bg-white/20 rounded-full overflow-hidden">
                   <div className="h-full bg-secondary w-[85%]"></div>
@@ -313,12 +313,12 @@ export default function DoctorPrescriptionsPage() {
 
           {/* Interaction Alert */}
           {hasLisinopril && (
-            <div className="p-4 bg-surface-container-high rounded-2xl border border-primary/20 animate-pulse-slow">
+            <div className="p-4 bg-surface-container-high dark:bg-slate-900/60 rounded-2xl border border-primary/20 dark:border-white/10 animate-pulse-slow">
               <div className="flex gap-2">
-                <span className="material-symbols-outlined text-primary text-lg">info</span>
+                <span className="material-symbols-outlined text-primary dark:text-inverse-primary text-lg">info</span>
                 <div className="space-y-1">
-                  <p className="text-xs font-bold text-primary">Drug Interaction Warning</p>
-                  <p className="text-[11px] text-on-surface-variant leading-relaxed">
+                  <p className="text-xs font-bold text-primary dark:text-inverse-primary">Drug Interaction Warning</p>
+                  <p className="text-[11px] text-on-surface-variant dark:text-slate-300 leading-relaxed">
                     Lisinopril may interact with the patient's current potassium supplements. Please verify dosage levels carefully.
                   </p>
                 </div>
