@@ -1,0 +1,463 @@
+"use client";
+
+import Link from 'next/link';
+import { useState, useEffect } from 'react';
+
+interface Doctor {
+  id: string;
+  name: string;
+  specialty: string;
+  qualifications: string;
+  fee: number;
+  experience: number; // in years
+  rating: number;
+  reviewsCount: number;
+  location: string;
+  distance: number; // in miles
+  nextSlot: string;
+  image: string;
+  online: boolean;
+  hospital: string;
+}
+
+const mockDoctors: Doctor[] = [
+  {
+    id: "1",
+    name: "Dr. Sarah Jenkins",
+    specialty: "Neurology",
+    qualifications: "MBBS, MD, DM",
+    fee: 150,
+    experience: 12,
+    rating: 4.9,
+    reviewsCount: 124,
+    location: "San Francisco, CA",
+    distance: 2.4,
+    nextSlot: "Today, 2:30 PM",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDnVLhcLOOtJ-rR4YQprPmEJY-dCp730A_i5-JpLhJCzj5qlRNJ6mfakWFDNSMc-50vb0l_4knUKV13UTuX5nl24abrAJ4EjHHEQZPvFfRBKEEnXzYBTIVQp2rZruHtiGS0GyGCVrB0ahKhErUIT4qjvjlfyafWcuCqViwq7-EBY5ozfKtrO2hqYCh3uPA38qjiRVv11hdEYmdoY74L2TS6TUPfH8PRBLFh7NGT0bzItdEabwQTq3BP9tqa-YDUSOoMMW2WigdNxAJN",
+    online: true,
+    hospital: "Central Medical Institute"
+  },
+  {
+    id: "2",
+    name: "Dr. Michael Chen",
+    specialty: "Cardiology",
+    qualifications: "MBBS, MD, FACC",
+    fee: 130,
+    experience: 15,
+    rating: 4.8,
+    reviewsCount: 110,
+    location: "San Jose, CA",
+    distance: 12.1,
+    nextSlot: "Wed, 09:15 AM",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAqG3h6ozuy90NlkehoL5izF83uoB2kI2QBgcubcRcYYWECEe2dXvZRUk5WnU7wDtXUBOHNX6Ql5QmbdHtxwlbrZ-HnbJDXwCZHyAH-YkqmsHbLybmWdZxRQdtl9N068LxQGVzRvBchq5dSyFvMKNMwoArzuYSn54WvvloHPxhh2Miiq0nKsK-SxZJlRau2e57VixcPywuAfP_Xyv7Yj2tq4builHBEnAO02DmleM3yLqipGRCMH3HTSP3EwBin5ZBALQngF-GRBsxj",
+    online: false,
+    hospital: "Heart & Vascular Center"
+  },
+  {
+    id: "3",
+    name: "Dr. Elena Rodriguez",
+    specialty: "Pediatrics",
+    qualifications: "MBBS, DCH",
+    fee: 95,
+    experience: 8,
+    rating: 5.0,
+    reviewsCount: 210,
+    location: "Oakland, CA",
+    distance: 8.7,
+    nextSlot: "Tomorrow, 11:00 AM",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBjJYWo5gZYzOPY5oVRUPZ83kSjCupVP6FFr7gm90DkASjDCm4K5LXct7opNRakmH_PywJdJfKlcd6VPOI5YiSx922ZsC6DLqAjce8Tiozyh7raomBe8Brz2De88h5JI5Ns3WCBPQ-yuarL1c_enWxdJzcCRdpQukcNZKOzivx6-kgV-LlDYUFvSSHJcA1sEvwGFgloWr94ryVFhgmEDWRARGRfSiGZLmw8tkbzZs6GZ0jC0lvjhqYnWGNodMVaZr6jmYvC5vflhd_E",
+    online: true,
+    hospital: "Valley Children's Hospital"
+  },
+  {
+    id: "4",
+    name: "Dr. James Wilson",
+    specialty: "Dermatology",
+    qualifications: "MBBS, MD",
+    fee: 150,
+    experience: 20,
+    rating: 4.7,
+    reviewsCount: 142,
+    location: "Palo Alto, CA",
+    distance: 15.5,
+    nextSlot: "Fri, 04:30 PM",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDaKU6Nab3yqbEWHPLSGbGE7mLYB6hY-aqQJbhnhqAsuENsjS5MCTEZfLTwjEmvX1lxhgXXN9Oj8lDvLIB20ecalUB7SYDbIot3JJJ88S2UIjjWIIU42ocFmdxh3_8fPBUt5tVYXqqk8WkZARzfwekXtOpcJKjQwiI428snE-E8W9dP2A50txpiBmss82l0lQcYeJNflW8nwtMdVyYLLZWGk2Z4YmdxonE4ZpVyPnLQ2hdlvyknIJVEPiYHO-xUC3No9RSCYk1TUWFT",
+    online: true,
+    hospital: "Skin & Laser Clinic"
+  },
+  {
+    id: "5",
+    name: "Dr. Sarah Chen",
+    specialty: "Cardiology",
+    qualifications: "MBBS, MD, FRCP",
+    fee: 120,
+    experience: 10,
+    rating: 4.9,
+    reviewsCount: 124,
+    location: "San Francisco, CA",
+    distance: 3.2,
+    nextSlot: "Today, 2:00 PM",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDPfR7siv-cFegYXw7KFNTdViFLMoQRF8KOTKcNOX17dibHCtmG4QJk9lkP924VML0USpY7CE6fy7A2M79NIA6GzcDX2s2KUcntAJ3K5LRz3Y020PKsXvmMILtrk3uFGFY0cXCCOvgf0H3GQKIbiYrKgkG1IwHXmSCaOq8QVtSdyyCTgKGZYsfobwSa6wdmVRG1o-sO09_9bcdX5b8-E7KYiOoc_EdBuyjUdmEU0-f5vibehRhTssieVYuPgMr41351unaPoWRgk4jK",
+    online: true,
+    hospital: "Central Medical Institute"
+  },
+  {
+    id: "6",
+    name: "Dr. James Wilson (Neurology)",
+    specialty: "Neurology",
+    qualifications: "MBBS, PhD, DM",
+    fee: 150,
+    experience: 22,
+    rating: 4.8,
+    reviewsCount: 98,
+    location: "San Francisco, CA",
+    distance: 4.1,
+    nextSlot: "Tomorrow, 10:00 AM",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAJDASEJLcjyXZm-ThBsRX_8ESgGzlZ36tjZf1vYZPliwt6P-npFIRblSPVd7KbWqyMpZ7hjZ4u7DljaH61myKFRixs50W51_bcyRDsF4hbqyi3-peb708et8Kbgn9-24PLp9MTmKYxJs2rz3Y6wSh14QSYOR-562MPQQyJvoDO-OSr86RAOSzAGhnSMhJ3i2J10q4AbNDpEFh7tqTmqx_8pFvNdY0IH7dGJJ3sFEPYCvX-YZuWw2tjFWFr09nkc-fxpGhXJDwD1-gr",
+    online: true,
+    hospital: "Central Medical Institute"
+  },
+  {
+    id: "7",
+    name: "Dr. Marcus Thorne",
+    specialty: "Orthopedics",
+    qualifications: "MS, MCh (Orth)",
+    fee: 180,
+    experience: 14,
+    rating: 4.7,
+    reviewsCount: 85,
+    location: "San Francisco, CA",
+    distance: 5.5,
+    nextSlot: "Mon, 9:00 AM",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBjJYWo5gZYzOPY5oVRUPZ83kSjCupVP6FFr7gm90DkASjDCm4K5LXct7opNRakmH_PywJdJfKlcd6VPOI5YiSx922ZsC6DLqAjce8Tiozyh7raomBe8Brz2De88h5JI5Ns3WCBPQ-yuarL1c_enWxdJzcCRdpQukcNZKOzivx6-kgV-LlDYUFvSSHJcA1sEvwGFgloWr94ryVFhgmEDWRARGRfSiGZLmw8tkbzZs6GZ0jC0lvjhqYnWGNodMVaZr6jmYvC5vflhd_E",
+    online: true,
+    hospital: "Surgical Center"
+  }
+];
+
+export default function FindDoctorsPage() {
+  const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [feeFilter, setFeeFilter] = useState('All');
+  const [expFilter, setExpFilter] = useState('All');
+  const [ratingFilter, setRatingFilter] = useState('All');
+  const [sortBy, setSortBy] = useState('Highest Rated');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 4;
+
+  const [filteredDoctors, setFilteredDoctors] = useState<Doctor[]>(mockDoctors);
+
+  // Apply filters and sorting
+  useEffect(() => {
+    let result = [...mockDoctors];
+
+    // Search query: Specialty, Doctor name, Clinic
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(
+        (doc) =>
+          doc.name.toLowerCase().includes(q) ||
+          doc.specialty.toLowerCase().includes(q) ||
+          doc.hospital.toLowerCase().includes(q) ||
+          doc.location.toLowerCase().includes(q)
+      );
+    }
+
+    // Fee range filter
+    if (feeFilter !== 'All' && feeFilter !== 'Consultation Fee') {
+      if (feeFilter === '$0 - $50') {
+        result = result.filter((doc) => doc.fee <= 50);
+      } else if (feeFilter === '$50 - $100') {
+        result = result.filter((doc) => doc.fee > 50 && doc.fee <= 100);
+      } else if (feeFilter === '$100+') {
+        result = result.filter((doc) => doc.fee > 100);
+      }
+    }
+
+    // Experience filter
+    if (expFilter !== 'All' && expFilter !== 'Experience') {
+      if (expFilter === '1-5 Years') {
+        result = result.filter((doc) => doc.experience >= 1 && doc.experience <= 5);
+      } else if (expFilter === '5-10 Years') {
+        result = result.filter((doc) => doc.experience > 5 && doc.experience <= 10);
+      } else if (expFilter === '10+ Years') {
+        result = result.filter((doc) => doc.experience > 10);
+      }
+    }
+
+    // Rating filter
+    if (ratingFilter !== 'All' && ratingFilter !== 'Highest Rating') {
+      if (ratingFilter === '4.5+ Stars') {
+        result = result.filter((doc) => doc.rating >= 4.5);
+      } else if (ratingFilter === '4.0+ Stars') {
+        result = result.filter((doc) => doc.rating >= 4.0);
+      }
+    }
+
+    // Sorting
+    if (sortBy === 'Highest Rated') {
+      result.sort((a, b) => b.rating - a.rating);
+    } else if (sortBy === 'Most Experienced') {
+      result.sort((a, b) => b.experience - a.experience);
+    } else if (sortBy === 'Nearest to Me') {
+      result.sort((a, b) => a.distance - b.distance);
+    } else if (sortBy === 'Fee: Low to High') {
+      result.sort((a, b) => a.fee - b.fee);
+    } else if (sortBy === 'Fee: High to Low') {
+      result.sort((a, b) => b.fee - a.fee);
+    }
+
+    setFilteredDoctors(result);
+    setCurrentPage(1); // Reset to page 1 on filter change
+  }, [searchQuery, feeFilter, expFilter, ratingFilter, sortBy]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredDoctors.length / itemsPerPage) || 1;
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentDoctors = filteredDoctors.slice(indexOfFirstItem, indexOfLastItem);
+
+  return (
+    <main className="pt-32 pb-xl min-h-screen">
+      <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
+        {/* Hero Header */}
+        <header className="mb-lg">
+          <h1 className="font-headline-xl text-headline-xl text-on-surface mb-2">Find Your Specialist</h1>
+          <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Connect with world-class healthcare professionals tailored to your specific clinical needs. Precision care, just a click away.</p>
+        </header>
+
+        {/* Advanced Search Bar (Sticky Glass) */}
+        <div className="sticky top-20 z-40 mb-md">
+          <div className="glass-card rounded-2xl p-4 md:p-2 shadow-lg flex flex-col md:flex-row items-center gap-2 border-white/40">
+            <div className="w-full md:flex-1 relative group">
+              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+              <input 
+                className="w-full pl-12 pr-4 py-3 bg-surface-container-lowest/50 border-transparent focus:border-primary focus:ring-0 rounded-xl font-body-md transition-all text-on-surface dark:text-on-primary-container placeholder-on-surface-variant/70" 
+                placeholder="Specialty, Doctor name, location..." 
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <div className="w-full md:w-auto flex flex-wrap items-center gap-2">
+              <select 
+                className="bg-white/50 dark:bg-on-surface/50 border-outline-variant dark:border-outline rounded-lg px-md py-sm focus:ring-2 focus:ring-primary text-label-md min-w-[140px] text-on-surface"
+                value={feeFilter}
+                onChange={(e) => setFeeFilter(e.target.value)}
+              >
+                <option value="All">All Fees</option>
+                <option value="$0 - $50">$0 - $50</option>
+                <option value="$50 - $100">$50 - $100</option>
+                <option value="$100+">$100+</option>
+              </select>
+              <select 
+                className="bg-white/50 dark:bg-on-surface/50 border-outline-variant dark:border-outline rounded-lg px-md py-sm focus:ring-2 focus:ring-primary text-label-md min-w-[140px] text-on-surface"
+                value={expFilter}
+                onChange={(e) => setExpFilter(e.target.value)}
+              >
+                <option value="All">All Experience</option>
+                <option value="1-5 Years">1-5 Years</option>
+                <option value="5-10 Years">5-10 Years</option>
+                <option value="10+ Years">10+ Years</option>
+              </select>
+              <select 
+                className="bg-white/50 dark:bg-on-surface/50 border-outline-variant dark:border-outline rounded-lg px-md py-sm focus:ring-2 focus:ring-primary text-label-md min-w-[140px] text-on-surface"
+                value={ratingFilter}
+                onChange={(e) => setRatingFilter(e.target.value)}
+              >
+                <option value="All">All Ratings</option>
+                <option value="4.5+ Stars">4.5+ Stars</option>
+                <option value="4.0+ Stars">4.0+ Stars</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* Sorting & View Toggles */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-md gap-4">
+          <div className="flex items-center gap-2">
+            <span className="text-on-surface-variant dark:text-on-surface-variant/80 font-label-md">
+              Showing <span className="font-bold text-on-surface dark:text-on-primary-container">{filteredDoctors.length}</span> available doctors
+            </span>
+          </div>
+          <div className="flex items-center gap-4 w-full md:w-auto">
+            {/* Option 4: Card to Table layout toggle */}
+            <div className="flex items-center glass-card rounded-lg p-1">
+              <button 
+                onClick={() => setViewMode('grid')}
+                className={`p-2 rounded flex items-center justify-center transition-all ${viewMode === 'grid' ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-white/30'}`}
+                id="viewGrid"
+              >
+                <span className="material-symbols-outlined text-[20px]">grid_view</span>
+              </button>
+              <button 
+                onClick={() => setViewMode('table')}
+                className={`p-2 rounded flex items-center justify-center transition-all ${viewMode === 'table' ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant hover:bg-white/30'}`}
+                id="viewList"
+              >
+                <span className="material-symbols-outlined text-[20px]">list</span>
+              </button>
+            </div>
+            
+            <div className="relative w-full md:w-48">
+              <select 
+                className="w-full appearance-none bg-surface-container-low dark:bg-on-surface border border-outline-variant/50 rounded-lg px-4 py-2 font-label-md text-on-surface focus:border-primary focus:ring-0 cursor-pointer pr-10"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+              >
+                <option value="Highest Rated">Highest Rated</option>
+                <option value="Most Experienced">Most Experienced</option>
+                <option value="Nearest to Me">Nearest to Me</option>
+                <option value="Fee: Low to High">Fee: Low to High</option>
+                <option value="Fee: High to Low">Fee: High to Low</option>
+              </select>
+              <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-outline text-sm">expand_more</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Doctor List Content */}
+        {viewMode === 'grid' ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter transition-all duration-300" id="doctorGrid">
+            {currentDoctors.map((doc) => (
+              <div key={doc.id} className="glass-card rounded-2xl overflow-hidden group hover:shadow-xl transition-all duration-300 border-white/50 flex flex-col justify-between">
+                <div>
+                  <div className="relative h-48 w-full overflow-hidden">
+                    <div 
+                      className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" 
+                      style={{ backgroundImage: `url('${doc.image}')` }}
+                    ></div>
+                    <div className="absolute top-4 right-4 bg-primary/90 text-on-primary px-3 py-1 rounded-full text-label-sm backdrop-blur-md flex items-center gap-1 shadow-md">
+                      <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span> {doc.rating.toFixed(1)}
+                    </div>
+                    <div className="absolute bottom-4 left-4">
+                      <span className="bg-secondary-container/80 text-on-secondary-container px-3 py-1 rounded-full text-label-sm backdrop-blur-md font-bold">{doc.specialty}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="p-md space-y-sm">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h3 className="font-headline-md text-headline-md text-on-surface dark:text-on-primary-container">{doc.name}</h3>
+                        <p className="text-label-md text-on-surface-variant dark:text-on-surface-variant/80">{doc.hospital}</p>
+                      </div>
+                      <div 
+                        className={`w-3 h-3 rounded-full ${doc.online ? 'bg-primary status-glow' : 'bg-outline'}`} 
+                        title={doc.online ? "Online now" : "Offline"}
+                      ></div>
+                    </div>
+                    
+                    <div className="space-y-2 mb-md">
+                      <div className="flex items-center gap-2 text-on-surface-variant dark:text-on-surface-variant/80">
+                        <span className="material-symbols-outlined text-[18px]">work</span>
+                        <span className="text-label-md">{doc.experience} Years Experience</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-on-surface-variant dark:text-on-surface-variant/80">
+                        <span className="material-symbols-outlined text-[18px]">location_on</span>
+                        <span className="text-label-md">{doc.location} ({doc.distance} miles)</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-on-surface-variant dark:text-on-surface-variant/80">
+                        <span className="material-symbols-outlined text-[18px]">payments</span>
+                        <span className="text-label-md">${doc.fee} / Consultation</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-md pt-0">
+                  <div className="flex items-center justify-between gap-4 border-t border-outline-variant/30 dark:border-outline/35 pt-4">
+                    <div className="flex flex-col">
+                      <span className="text-label-sm text-outline uppercase tracking-wider">Next Slot</span>
+                      <span className="text-label-md font-bold text-primary dark:text-inverse-primary">{doc.nextSlot}</span>
+                    </div>
+                    <button className="bg-primary text-on-primary px-5 py-2 rounded-xl font-label-md hover:bg-primary-container transition-all active:scale-95 shadow">Book Now</button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          /* Table/List View (Option 4 Card-to-Table toggle) */
+          <div className="glass-card rounded-xl overflow-hidden border-white/20 shadow-xl transition-all duration-300">
+            <div className="overflow-x-auto custom-scrollbar">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-surface-container-low/50 dark:bg-on-surface/30">
+                    <th className="p-md font-label-md text-on-surface-variant dark:text-on-primary-container border-b border-outline-variant dark:border-outline/30">Doctor</th>
+                    <th className="p-md font-label-md text-on-surface-variant dark:text-on-primary-container border-b border-outline-variant dark:border-outline/30">Specialization</th>
+                    <th className="p-md font-label-md text-on-surface-variant dark:text-on-primary-container border-b border-outline-variant dark:border-outline/30">Qualifications</th>
+                    <th className="p-md font-label-md text-on-surface-variant dark:text-on-primary-container border-b border-outline-variant dark:border-outline/30 text-center">Rating</th>
+                    <th className="p-md font-label-md text-on-surface-variant dark:text-on-primary-container border-b border-outline-variant dark:border-outline/30 text-center">Fee</th>
+                    <th className="p-md font-label-md text-on-surface-variant dark:text-on-primary-container border-b border-outline-variant dark:border-outline/30">Availability</th>
+                    <th className="p-md border-b border-outline-variant dark:border-outline/30"></th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-outline-variant/30 dark:divide-outline/20">
+                  {currentDoctors.map((doc) => (
+                    <tr key={doc.id} className="hover:bg-white/30 dark:hover:bg-on-surface/20 transition-colors group">
+                      <td className="p-md">
+                        <div className="flex items-center gap-sm">
+                          <div className="w-10 h-10 rounded-full overflow-hidden border border-primary/20 shrink-0">
+                            <img className="w-full h-full object-cover" alt={doc.name} src={doc.image} />
+                          </div>
+                          <div>
+                            <p className="font-label-md text-on-surface dark:text-on-primary-container group-hover:text-primary transition-colors">{doc.name}</p>
+                            <p className="text-[12px] text-on-surface-variant dark:text-on-surface-variant/80">{doc.experience} Years Exp | {doc.location}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="p-md font-label-md text-primary dark:text-inverse-primary">{doc.specialty}</td>
+                      <td className="p-md text-label-sm text-on-surface-variant dark:text-on-surface-variant/80">{doc.qualifications}</td>
+                      <td className="p-md text-center">
+                        <div className="inline-flex items-center gap-xs bg-yellow-50 dark:bg-yellow-950/20 px-3 py-1 rounded-full border border-yellow-200 dark:border-yellow-900">
+                          <span className="material-symbols-outlined text-[14px] text-yellow-500" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                          <span className="text-label-sm text-on-surface dark:text-on-primary-container">{doc.rating.toFixed(1)}</span>
+                        </div>
+                      </td>
+                      <td className="p-md text-center font-label-md text-on-surface dark:text-on-primary-container">${doc.fee}</td>
+                      <td className="p-md">
+                        <span className="text-label-sm font-medium text-secondary">{doc.nextSlot}</span>
+                      </td>
+                      <td className="p-md text-right">
+                        <button className="bg-primary text-on-primary px-4 py-1.5 rounded-lg text-label-sm hover:bg-primary-container transition-all active:scale-95 shadow">Book</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Apple-Style Pagination */}
+        {totalPages > 1 && (
+          <div className="mt-xl flex justify-center items-center gap-xs">
+            <button 
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-surface-container-high dark:hover:bg-on-surface/20 transition-colors text-on-surface-variant disabled:opacity-30"
+            >
+              <span className="material-symbols-outlined">chevron_left</span>
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button 
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className={`w-10 h-10 flex items-center justify-center rounded-lg font-label-md transition-all ${currentPage === page ? 'bg-primary text-on-primary shadow' : 'hover:bg-surface-container-high dark:hover:bg-on-surface/20 text-on-surface-variant'}`}
+              >
+                {page}
+              </button>
+            ))}
+            <button 
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-surface-container-high dark:hover:bg-on-surface/20 transition-colors text-on-surface-variant disabled:opacity-30"
+            >
+              <span className="material-symbols-outlined">chevron_right</span>
+            </button>
+          </div>
+        )}
+      </div>
+    </main>
+  );
+}
