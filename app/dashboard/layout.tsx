@@ -139,7 +139,7 @@ export default function DashboardLayout({
                 <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-on-primary">
                   <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>medical_services</span>
                 </div>
-                <span className="font-headline-md text-headline-md font-extrabold text-primary">MediCare</span>
+                <span className="font-headline-md text-headline-md font-extrabold text-primary dark:text-inverse-primary">MediCare</span>
               </div>
               <button onClick={() => setIsMobileMenuOpen(false)} className="text-on-surface-variant dark:text-slate-400">
                 <span className="material-symbols-outlined">close</span>
