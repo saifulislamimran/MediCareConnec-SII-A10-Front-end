@@ -35,8 +35,8 @@ const specialistData = [
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white/80 dark:bg-slate-900/90 backdrop-blur-xl p-4 border border-primary/20 rounded-2xl shadow-2xl">
-        <p className="font-bold text-[#0d1c2e] dark:text-white text-sm mb-2">{label}</p>
+      <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl p-4 border border-white/20 dark:border-white/10 rounded-2xl shadow-2xl">
+        <p className="font-bold text-[#0d1c2e] dark:text-slate-100 text-sm mb-2">{label}</p>
         <div className="space-y-1">
           {payload.map((entry: any, index: number) => (
             <p key={index} style={{ color: entry.color }} className="text-xs font-bold flex items-center gap-2">
@@ -63,11 +63,11 @@ export default function AdminDashboardPage() {
       {/* Page Title Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="font-headline-lg text-headline-lg font-bold text-primary dark:text-inverse-primary">Analytics Dashboard</h1>
-          <p className="text-on-surface-variant dark:text-on-surface-variant/80 text-sm">Real-time healthcare platform statistics and growth metrics</p>
+          <h1 className="font-headline-lg text-headline-lg font-bold text-primary dark:text-slate-100">Analytics Dashboard</h1>
+          <p className="text-on-surface-variant dark:text-slate-400 text-sm">Real-time healthcare platform statistics and growth metrics</p>
         </div>
         <div className="flex items-center gap-2">
-          <select className="bg-surface-container-low dark:bg-slate-900 text-on-surface-variant dark:text-on-primary-container px-4 py-2 rounded-full text-xs font-bold border border-outline-variant/20 focus:ring-primary focus:border-primary outline-none cursor-pointer">
+          <select className="bg-surface-container-low dark:bg-slate-900 text-on-surface-variant dark:text-slate-200 px-4 py-2 rounded-full text-xs font-bold border border-outline-variant/20 dark:border-white/10 focus:ring-primary focus:border-primary outline-none cursor-pointer">
             <option>Last 24h</option>
             <option>Last 7d</option>
             <option>Last 30d</option>
@@ -81,36 +81,36 @@ export default function AdminDashboardPage() {
 
       {/* Hero Stats Section */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
-        <div className="glass-card p-6 rounded-2xl flex flex-col justify-between h-36 transition-all group hover:scale-[1.02] border-white/20 dark:border-white/10">
+        <div className="glass-card p-6 rounded-2xl flex flex-col justify-between h-36 border-white/20 dark:border-white/10">
           <div className="flex justify-between items-start">
-            <div className="bg-primary/10 p-3 rounded-xl group-hover:bg-primary/20 transition-colors">
-              <span className="material-symbols-outlined text-primary">group</span>
+            <div className="bg-primary/10 p-3 rounded-xl">
+              <span className="material-symbols-outlined text-primary dark:text-inverse-primary">group</span>
             </div>
             <span className="text-primary dark:text-inverse-primary font-bold flex items-center text-xs px-2 py-1 bg-primary/5 rounded-full">+12.5% <span className="material-symbols-outlined text-xs ml-0.5">trending_up</span></span>
           </div>
           <div className="mt-4">
-            <p className="text-on-surface-variant/70 dark:text-on-surface-variant/80 font-label-sm text-[10px] uppercase tracking-widest">Total Users</p>
-            <h3 className="font-headline-md text-headline-md font-bold text-on-surface dark:text-on-primary-container">15,248</h3>
+            <p className="text-on-surface-variant/70 dark:text-slate-400 font-label-sm text-[10px] uppercase tracking-widest font-extrabold">Total Users</p>
+            <h3 className="font-headline-md text-headline-md font-bold text-on-surface dark:text-slate-100">15,248</h3>
           </div>
         </div>
         
-        <div className="glass-card p-6 rounded-2xl flex flex-col justify-between h-36 transition-all group hover:scale-[1.02] border-white/20 dark:border-white/10">
+        <div className="glass-card p-6 rounded-2xl flex flex-col justify-between h-36 border-white/20 dark:border-white/10">
           <div className="flex justify-between items-start">
-            <div className="bg-secondary/10 p-3 rounded-xl group-hover:bg-secondary/20 transition-colors">
+            <div className="bg-secondary/10 p-3 rounded-xl">
               <span className="material-symbols-outlined text-secondary">medical_services</span>
             </div>
             <span className="text-secondary dark:text-secondary-container font-bold flex items-center text-xs px-2 py-1 bg-secondary/5 rounded-full">+3.2% <span className="material-symbols-outlined text-xs ml-0.5">trending_up</span></span>
           </div>
           <div className="mt-4">
-            <p className="text-on-surface-variant/70 dark:text-on-surface-variant/80 font-label-sm text-[10px] uppercase tracking-widest">Total Doctors</p>
-            <h3 className="font-headline-md text-headline-md font-bold text-on-surface dark:text-on-primary-container">842</h3>
+            <p className="text-on-surface-variant/70 dark:text-slate-400 font-label-sm text-[10px] uppercase tracking-widest font-extrabold">Total Doctors</p>
+            <h3 className="font-headline-md text-headline-md font-bold text-on-surface dark:text-slate-100">842</h3>
           </div>
         </div>
         
-        <div className="glass-card p-6 rounded-2xl flex flex-col justify-between h-36 transition-all group hover:scale-[1.02] border-white/20 dark:border-white/10">
+        <div className="glass-card p-6 rounded-2xl flex flex-col justify-between h-36 border-white/20 dark:border-white/10">
           <div className="flex justify-between items-start">
-            <div className="bg-primary/10 p-3 rounded-xl group-hover:bg-primary/20 transition-colors">
-              <span className="material-symbols-outlined text-primary">event_available</span>
+            <div className="bg-primary/10 p-3 rounded-xl">
+              <span className="material-symbols-outlined text-primary dark:text-inverse-primary">event_available</span>
             </div>
             <div className="flex items-center gap-1.5 px-2 py-1 bg-primary/5 rounded-full">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
@@ -118,21 +118,21 @@ export default function AdminDashboardPage() {
             </div>
           </div>
           <div className="mt-4">
-            <p className="text-on-surface-variant/70 dark:text-on-surface-variant/80 font-label-sm text-[10px] uppercase tracking-widest">Active Appointments</p>
-            <h3 className="font-headline-md text-headline-md font-bold text-on-surface dark:text-on-primary-container">128</h3>
+            <p className="text-on-surface-variant/70 dark:text-slate-400 font-label-sm text-[10px] uppercase tracking-widest font-extrabold">Active Appointments</p>
+            <h3 className="font-headline-md text-headline-md font-bold text-on-surface dark:text-slate-100">128</h3>
           </div>
         </div>
         
-        <div className="glass-card p-6 rounded-2xl flex flex-col justify-between h-36 transition-all group hover:scale-[1.02] border-white/20 dark:border-white/10">
+        <div className="glass-card p-6 rounded-2xl flex flex-col justify-between h-36 border-white/20 dark:border-white/10">
           <div className="flex justify-between items-start">
-            <div className="bg-tertiary/10 p-3 rounded-xl group-hover:bg-tertiary/20 transition-colors">
+            <div className="bg-tertiary/10 p-3 rounded-xl">
               <span className="material-symbols-outlined text-tertiary">payments</span>
             </div>
             <span className="text-primary dark:text-inverse-primary font-bold flex items-center text-xs px-2 py-1 bg-primary/5 rounded-full">+18.4% <span className="material-symbols-outlined text-xs ml-0.5">trending_up</span></span>
           </div>
           <div className="mt-4">
-            <p className="text-on-surface-variant/70 dark:text-on-surface-variant/80 font-label-sm text-[10px] uppercase tracking-widest">Platform Revenue</p>
-            <h3 className="font-headline-md text-headline-md font-bold text-on-surface dark:text-on-primary-container">$240.5k</h3>
+            <p className="text-on-surface-variant/70 dark:text-slate-400 font-label-sm text-[10px] uppercase tracking-widest font-extrabold">Platform Revenue</p>
+            <h3 className="font-headline-md text-headline-md font-bold text-on-surface dark:text-slate-100">$240.5k</h3>
           </div>
         </div>
       </section>
@@ -145,12 +145,12 @@ export default function AdminDashboardPage() {
           <div className="glass-card p-6 md:p-8 rounded-3xl border-white/20 dark:border-white/10">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
               <div>
-                <h4 className="font-headline-md text-headline-md text-on-surface dark:text-on-primary-container">Growth Metrics</h4>
-                <p className="text-on-surface-variant dark:text-on-surface-variant/80 font-body-md text-sm opacity-80">6-Month Clinical Expansion Analysis</p>
+                <h4 className="font-headline-md text-headline-md text-on-surface dark:text-slate-100">Growth Metrics</h4>
+                <p className="text-on-surface-variant dark:text-slate-400 font-body-md text-sm">6-Month Clinical Expansion Analysis</p>
               </div>
               <div className="flex gap-2 bg-surface-container-low dark:bg-slate-900 p-1 rounded-full border border-outline-variant/10">
                 <button className="px-4 py-1.5 rounded-full text-xs font-bold transition-all bg-white dark:bg-primary text-primary dark:text-on-primary shadow-sm">Patients</button>
-                <button className="px-4 py-1.5 rounded-full text-xs font-bold transition-all text-on-surface-variant dark:text-on-primary-container hover:text-primary">Doctors</button>
+                <button className="px-4 py-1.5 rounded-full text-xs font-bold transition-all text-on-surface-variant dark:text-slate-400 hover:text-primary">Doctors</button>
               </div>
             </div>
             <div className="h-[360px] w-full">
@@ -178,8 +178,8 @@ export default function AdminDashboardPage() {
           <div className="glass-card p-6 md:p-8 rounded-3xl border-white/20 dark:border-white/10">
             <div className="flex justify-between items-center mb-8">
               <div>
-                <h4 className="font-headline-md text-headline-md text-on-surface dark:text-on-primary-container">Specialist Ratings</h4>
-                <p className="text-on-surface-variant dark:text-on-surface-variant/80 font-body-md text-sm opacity-80">Top Performance Index by Department</p>
+                <h4 className="font-headline-md text-headline-md text-on-surface dark:text-slate-100">Specialist Ratings</h4>
+                <p className="text-on-surface-variant dark:text-slate-400 font-body-md text-sm">Top Performance Index by Department</p>
               </div>
               <button className="text-primary dark:text-inverse-primary font-bold text-xs flex items-center gap-1 hover:underline cursor-pointer">View All <span className="material-symbols-outlined text-sm">arrow_forward</span></button>
             </div>
@@ -204,8 +204,8 @@ export default function AdminDashboardPage() {
           {/* Appointment Distribution */}
           <div className="glass-card p-6 md:p-8 rounded-3xl border-white/20 dark:border-white/10 flex flex-col">
             <div className="mb-8 text-center lg:text-left">
-              <h4 className="font-headline-md text-headline-md text-on-surface dark:text-on-primary-container">Service Distribution</h4>
-              <p className="text-on-surface-variant dark:text-on-surface-variant/80 font-body-md text-sm opacity-80">Current Appointment Shares</p>
+              <h4 className="font-headline-md text-headline-md text-on-surface dark:text-slate-100">Service Distribution</h4>
+              <p className="text-on-surface-variant dark:text-slate-400 font-body-md text-sm">Current Appointment Shares</p>
             </div>
             <div className="h-64 w-full flex-1">
               {mounted && (
@@ -225,30 +225,30 @@ export default function AdminDashboardPage() {
               <div className="flex items-center justify-between p-3 rounded-2xl hover:bg-primary/5 transition-colors group">
                 <div className="flex items-center gap-3">
                   <span className="w-2.5 h-2.5 rounded-full bg-primary"></span>
-                  <span className="text-on-surface-variant dark:text-on-surface-variant/80 text-sm font-semibold">Consultation</span>
+                  <span className="text-on-surface-variant dark:text-slate-400 text-sm font-semibold">Consultation</span>
                 </div>
                 <div className="text-right">
-                  <p className="text-on-surface dark:text-on-primary-container font-bold text-sm">52%</p>
+                  <p className="text-on-surface dark:text-slate-100 font-bold text-sm">52%</p>
                   <p className="text-[10px] text-primary dark:text-inverse-primary font-bold">+4% vs LW</p>
                 </div>
               </div>
               <div className="flex items-center justify-between p-3 rounded-2xl hover:bg-secondary/5 transition-colors group">
                 <div className="flex items-center gap-3">
                   <span className="w-2.5 h-2.5 rounded-full bg-secondary-container"></span>
-                  <span className="text-on-surface-variant dark:text-on-surface-variant/80 text-sm font-semibold">Surgery</span>
+                  <span className="text-on-surface-variant dark:text-slate-400 text-sm font-semibold">Surgery</span>
                 </div>
                 <div className="text-right">
-                  <p className="text-on-surface dark:text-on-primary-container font-bold text-sm">18%</p>
+                  <p className="text-on-surface dark:text-slate-100 font-bold text-sm">18%</p>
                   <p className="text-[10px] text-secondary font-bold">-2% vs LW</p>
                 </div>
               </div>
               <div className="flex items-center justify-between p-3 rounded-2xl hover:bg-tertiary/5 transition-colors group">
                 <div className="flex items-center gap-3">
                   <span className="w-2.5 h-2.5 rounded-full bg-tertiary-fixed-dim"></span>
-                  <span className="text-on-surface-variant dark:text-on-surface-variant/80 text-sm font-semibold">Follow-up</span>
+                  <span className="text-on-surface-variant dark:text-slate-400 text-sm font-semibold">Follow-up</span>
                 </div>
                 <div className="text-right">
-                  <p className="text-on-surface dark:text-on-primary-container font-bold text-sm">30%</p>
+                  <p className="text-on-surface dark:text-slate-100 font-bold text-sm">30%</p>
                   <p className="text-[10px] text-tertiary font-bold">+1% vs LW</p>
                 </div>
               </div>
@@ -259,56 +259,56 @@ export default function AdminDashboardPage() {
           <div className="glass-card p-6 md:p-8 rounded-3xl border-white/20 dark:border-white/10 relative overflow-hidden group">
             <div className="relative z-10">
               <div className="flex justify-between items-center mb-6">
-                <h4 className="font-headline-md text-headline-md text-on-surface dark:text-on-primary-container">Node Health</h4>
+                <h4 className="font-headline-md text-headline-md text-on-surface dark:text-slate-100">Node Health</h4>
                 <span className="material-symbols-outlined text-primary/40 animate-spin-slow">settings</span>
               </div>
               <div className="space-y-4">
                 {/* Node Item 1 */}
-                <div className="group/node p-4 bg-white/40 dark:bg-slate-900/30 rounded-2xl border border-primary/5 hover:border-primary/20 hover:bg-white/60 dark:hover:bg-slate-900/50 transition-all cursor-pointer">
+                <div className="group/node p-4 bg-white/40 dark:bg-slate-950/40 rounded-2xl border border-primary/5 hover:border-primary/20 transition-all cursor-pointer">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-3">
                       <span className="relative flex h-2.5 w-2.5">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
                       </span>
-                      <p className="text-on-surface dark:text-on-primary-container font-bold text-sm">Northern Cluster</p>
+                      <p className="text-on-surface dark:text-slate-100 font-bold text-sm">Northern Cluster</p>
                     </div>
                     <span className="bg-primary/10 text-primary dark:text-inverse-primary px-2 py-0.5 rounded-full font-bold text-[10px] tracking-tight">OPTIMAL</span>
                   </div>
-                  <div className="flex items-center justify-between text-on-surface-variant dark:text-on-surface-variant/80 text-[10px] font-medium">
+                  <div className="flex items-center justify-between text-on-surface-variant dark:text-slate-400 text-[10px] font-medium">
                     <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[10px]">speed</span> 14ms Latency</span>
                     <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[10px]">group</span> 1.2k Sessions</span>
                   </div>
                 </div>
                 
                 {/* Node Item 2 */}
-                <div className="group/node p-4 bg-white/40 dark:bg-slate-900/30 rounded-2xl border border-primary/5 hover:border-primary/20 hover:bg-white/60 dark:hover:bg-slate-900/50 transition-all cursor-pointer">
+                <div className="group/node p-4 bg-white/40 dark:bg-slate-950/40 rounded-2xl border border-primary/5 hover:border-primary/20 transition-all cursor-pointer">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-3">
                       <span className="w-2.5 h-2.5 rounded-full bg-primary"></span>
-                      <p className="text-on-surface dark:text-on-primary-container font-bold text-sm">Southern Records</p>
+                      <p className="text-on-surface dark:text-slate-100 font-bold text-sm">Southern Records</p>
                     </div>
                     <span className="bg-primary/10 text-primary dark:text-inverse-primary px-2 py-0.5 rounded-full font-bold text-[10px] tracking-tight">ONLINE</span>
                   </div>
-                  <div className="flex items-center justify-between text-on-surface-variant dark:text-on-surface-variant/80 text-[10px] font-medium">
+                  <div className="flex items-center justify-between text-on-surface-variant dark:text-slate-400 text-[10px] font-medium">
                     <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[10px]">speed</span> 22ms Latency</span>
                     <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[10px]">group</span> 842 Sessions</span>
                   </div>
                 </div>
                 
                 {/* Node Item 3 */}
-                <div className="group/node p-4 bg-white/40 dark:bg-slate-900/30 rounded-2xl border border-error/5 hover:border-error/20 hover:bg-white/60 dark:hover:bg-slate-900/50 transition-all cursor-pointer">
+                <div className="group/node p-4 bg-white/40 dark:bg-slate-950/40 rounded-2xl border border-error/5 hover:border-error/20 transition-all cursor-pointer">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-3">
                       <span className="relative flex h-2.5 w-2.5">
                         <span className="animate-pulse absolute inline-flex h-full w-full rounded-full bg-error opacity-40"></span>
                         <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-error"></span>
                       </span>
-                      <p className="text-on-surface dark:text-on-primary-container font-bold text-sm">Western API GW</p>
+                      <p className="text-on-surface dark:text-slate-100 font-bold text-sm">Western API GW</p>
                     </div>
                     <span className="bg-error/10 text-error px-2 py-0.5 rounded-full font-bold text-[10px] tracking-tight">CRITICAL</span>
                   </div>
-                  <div className="flex items-center justify-between text-error/80 text-[10px] font-bold">
+                  <div className="flex items-center justify-between text-error/80 dark:text-red-400 text-[10px] font-bold">
                     <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[10px]">warning</span> Maintenance required</span>
                     <span className="bg-error text-white px-1.5 py-0.5 rounded">Alert</span>
                   </div>
