@@ -44,7 +44,7 @@ export default function DashboardLayout({
 
   if (!mounted || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen flex items-center justify-center bg-background dark:bg-[#0b1120]">
         <div className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
       </div>
     );
@@ -78,9 +78,9 @@ export default function DashboardLayout({
   const links = getSidebarLinks();
 
   return (
-    <div className="min-h-screen flex text-body-md text-on-surface">
+    <div className="min-h-screen flex text-body-md text-on-surface bg-background dark:bg-[#0b1120] transition-colors duration-300">
       {/* Sidebar Navigation - Desktop */}
-      <aside className="h-screen w-64 left-0 top-0 fixed bg-surface-container-low/60 dark:bg-slate-900/60 backdrop-blur-2xl border-r border-white/20 dark:border-white/10 shadow-xl flex flex-col p-md space-y-base z-50 hidden md:flex">
+      <aside className="h-screen w-64 left-0 top-0 fixed bg-white/40 dark:bg-slate-900/60 backdrop-blur-2xl border-r border-white/20 dark:border-white/10 shadow-xl flex flex-col p-md space-y-base z-50 hidden md:flex">
         <div className="mb-lg flex items-center gap-base">
           <Link href="/" className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-on-primary">
             <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>medical_services</span>
@@ -95,7 +95,11 @@ export default function DashboardLayout({
               <Link 
                 key={link.name} 
                 href={link.href}
-                className={`flex items-center gap-sm px-sm py-base rounded-lg font-bold transition-all duration-200 hover:translate-x-1 ${isActive ? 'bg-primary/10 text-primary dark:text-inverse-primary' : 'text-on-surface-variant/70 hover:bg-primary/5 hover:text-primary dark:hover:text-inverse-primary'}`}
+                className={`flex items-center gap-sm px-sm py-base rounded-lg font-bold transition-all duration-200 hover:translate-x-1 ${
+                  isActive 
+                    ? 'bg-primary/10 text-primary dark:text-inverse-primary' 
+                    : 'text-on-surface-variant/80 dark:text-slate-400 hover:bg-primary/5 hover:text-primary dark:hover:text-inverse-primary'
+                }`}
               >
                 <span className="material-symbols-outlined">{link.icon}</span>
                 <span className="font-label-md text-label-md">{link.name}</span>
@@ -107,7 +111,7 @@ export default function DashboardLayout({
         <div className="pt-base border-t border-white/20 dark:border-white/10 space-y-xs">
           <button 
             onClick={() => alert("Emergency alert broadcasted to healthcare team.")}
-            className="w-full bg-primary text-on-primary py-sm rounded-xl font-bold flex items-center justify-center gap-xs hover:bg-primary-container transition-colors active:scale-95 duration-200 cursor-pointer"
+            className="w-full bg-primary text-on-primary py-sm rounded-xl font-bold flex items-center justify-center gap-xs hover:bg-primary-container transition-colors active:scale-95 duration-200 cursor-pointer shadow-lg shadow-primary/20"
           >
             <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>emergency</span>
             Emergency Alert
@@ -115,7 +119,7 @@ export default function DashboardLayout({
           
           <button 
             onClick={handleLogout}
-            className="w-full flex items-center gap-sm px-sm py-base text-on-surface-variant/70 hover:text-error transition-all duration-200 text-left font-bold"
+            className="w-full flex items-center gap-sm px-sm py-base text-on-surface-variant/70 dark:text-slate-400 hover:text-error dark:hover:text-error transition-all duration-200 text-left font-bold cursor-pointer"
           >
             <span className="material-symbols-outlined">logout</span>
             <span className="font-label-md text-label-md">Logout</span>
@@ -129,7 +133,7 @@ export default function DashboardLayout({
           {/* Overlay */}
           <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)}></div>
           
-          <aside className="relative w-64 max-w-xs bg-surface-container-low dark:bg-slate-900/90 h-full p-md flex flex-col space-y-base shadow-2xl border-r border-white/20 animate-slide-in">
+          <aside className="relative w-64 max-w-xs bg-white/90 dark:bg-slate-900/90 h-full p-md flex flex-col space-y-base shadow-2xl border-r border-white/20 dark:border-white/10 animate-slide-in">
             <div className="mb-lg flex items-center justify-between">
               <div className="flex items-center gap-base">
                 <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-on-primary">
@@ -137,7 +141,7 @@ export default function DashboardLayout({
                 </div>
                 <span className="font-headline-md text-headline-md font-extrabold text-primary">MediCare</span>
               </div>
-              <button onClick={() => setIsMobileMenuOpen(false)} className="text-on-surface-variant">
+              <button onClick={() => setIsMobileMenuOpen(false)} className="text-on-surface-variant dark:text-slate-400">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
@@ -150,7 +154,11 @@ export default function DashboardLayout({
                     key={link.name} 
                     href={link.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex items-center gap-sm px-sm py-base rounded-lg font-bold transition-all duration-200 ${isActive ? 'bg-primary/10 text-primary' : 'text-on-surface-variant/70 hover:bg-primary/5 hover:text-primary'}`}
+                    className={`flex items-center gap-sm px-sm py-base rounded-lg font-bold transition-all duration-200 ${
+                      isActive 
+                        ? 'bg-primary/10 text-primary dark:text-inverse-primary' 
+                        : 'text-on-surface-variant/80 dark:text-slate-400 hover:bg-primary/5 hover:text-primary dark:hover:text-inverse-primary'
+                    }`}
                   >
                     <span className="material-symbols-outlined">{link.icon}</span>
                     <span className="font-label-md text-label-md">{link.name}</span>
@@ -159,13 +167,13 @@ export default function DashboardLayout({
               })}
             </nav>
             
-            <div className="pt-base border-t border-white/20 space-y-xs">
+            <div className="pt-base border-t border-white/20 dark:border-white/10 space-y-xs">
               <button 
                 onClick={() => {
                   setIsMobileMenuOpen(false);
                   alert("Emergency alert broadcasted.");
                 }}
-                className="w-full bg-primary text-on-primary py-sm rounded-xl font-bold flex items-center justify-center gap-xs"
+                className="w-full bg-primary text-on-primary py-sm rounded-xl font-bold flex items-center justify-center gap-xs shadow-lg shadow-primary/20"
               >
                 <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>emergency</span>
                 Emergency Alert
@@ -173,7 +181,7 @@ export default function DashboardLayout({
               
               <button 
                 onClick={handleLogout}
-                className="w-full flex items-center gap-sm px-sm py-base text-on-surface-variant/70 hover:text-error transition-all text-left font-bold"
+                className="w-full flex items-center gap-sm px-sm py-base text-on-surface-variant/70 dark:text-slate-400 hover:text-error dark:hover:text-error transition-all text-left font-bold"
               >
                 <span className="material-symbols-outlined">logout</span>
                 <span className="font-label-md text-label-md">Logout</span>
@@ -186,45 +194,46 @@ export default function DashboardLayout({
       {/* Main Content Wrapper */}
       <div className="flex-1 md:ml-64 flex flex-col min-h-screen">
         {/* Top Header */}
-        <header className="top-0 sticky z-45 bg-surface/75 dark:bg-slate-950/75 backdrop-blur-xl border-b border-white/20 dark:border-white/10 shadow-sm">
+        <header className="top-0 sticky z-40 bg-white/60 dark:bg-[#0b1120]/75 backdrop-blur-xl border-b border-white/20 dark:border-white/10 shadow-sm">
           <div className="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-sm max-w-7xl mx-auto h-20">
             <div className="flex items-center gap-md">
-              <button className="md:hidden p-xs text-on-surface-variant" onClick={() => setIsMobileMenuOpen(true)}>
+              <button className="md:hidden p-xs text-on-surface-variant dark:text-slate-400" onClick={() => setIsMobileMenuOpen(true)} aria-label="Open sidebar menu">
                 <span className="material-symbols-outlined">menu</span>
               </button>
               <div className="hidden lg:flex items-center gap-lg">
-                <Link className={`font-label-md text-label-md transition-colors ${pathname.includes('admin') ? 'text-primary border-b-2 border-primary pb-1 font-bold' : 'text-on-surface-variant/80 hover:text-primary'}`} href="/dashboard/admin">Admin Panel</Link>
-                <Link className={`font-label-md text-label-md transition-colors ${pathname.includes('doctor') ? 'text-primary border-b-2 border-primary pb-1 font-bold' : 'text-on-surface-variant/80 hover:text-primary'}`} href="/dashboard/doctor">Doctor Portal</Link>
-                <Link className={`font-label-md text-label-md transition-colors ${pathname.includes('patient') ? 'text-primary border-b-2 border-primary pb-1 font-bold' : 'text-on-surface-variant/80 hover:text-primary'}`} href="/dashboard/patient">Patient Portal</Link>
+                <Link className={`font-label-md text-label-md transition-colors ${pathname.includes('admin') ? 'text-primary border-b-2 border-primary pb-1 font-bold' : 'text-on-surface-variant/80 dark:text-slate-400 hover:text-primary dark:hover:text-inverse-primary'}`} href="/dashboard/admin">Admin Panel</Link>
+                <Link className={`font-label-md text-label-md transition-colors ${pathname.includes('doctor') ? 'text-primary border-b-2 border-primary pb-1 font-bold' : 'text-on-surface-variant/80 dark:text-slate-400 hover:text-primary dark:hover:text-inverse-primary'}`} href="/dashboard/doctor">Doctor Portal</Link>
+                <Link className={`font-label-md text-label-md transition-colors ${pathname.includes('patient') ? 'text-primary border-b-2 border-primary pb-1 font-bold' : 'text-on-surface-variant/80 dark:text-slate-400 hover:text-primary dark:hover:text-inverse-primary'}`} href="/dashboard/patient">Patient Portal</Link>
               </div>
             </div>
             
             <div className="flex items-center gap-md">
               <div className="relative hidden sm:block">
-                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50">search</span>
-                <input className="pl-10 pr-4 py-2 bg-surface-container-low dark:bg-slate-900 border border-outline-variant/30 rounded-full w-64 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-label-md text-on-surface placeholder:text-on-surface-variant/50" placeholder="Search patients or records..." type="text"/>
+                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50 dark:text-slate-500">search</span>
+                <input className="pl-10 pr-4 py-2 bg-surface-container-low dark:bg-slate-900 border border-outline-variant/35 dark:border-white/10 rounded-full w-64 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-label-md text-on-surface dark:text-slate-100 placeholder:text-on-surface-variant/50 dark:placeholder:text-slate-500" placeholder="Search patients or records..." type="text"/>
               </div>
               <div className="flex items-center gap-sm">
-                <button className="p-2 rounded-full hover:bg-white/30 text-on-surface-variant transition-all duration-300 relative">
+                <button className="p-2 rounded-full hover:bg-white/30 dark:hover:bg-white/5 text-on-surface-variant dark:text-slate-400 transition-all duration-300 relative" aria-label="Notifications">
                   <span className="material-symbols-outlined">notifications</span>
-                  <span className="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border border-white"></span>
+                  <span className="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border border-white dark:border-slate-900"></span>
                 </button>
                 <button 
                   onClick={() => router.push('/')}
-                  className="p-2 rounded-full hover:bg-white/30 text-on-surface-variant transition-all duration-300"
+                  className="p-2 rounded-full hover:bg-white/30 dark:hover:bg-white/5 text-on-surface-variant dark:text-slate-400 transition-all duration-300"
                   title="Go to Home"
+                  aria-label="Go to home"
                 >
                   <span className="material-symbols-outlined">home</span>
                 </button>
               </div>
               
-              <div className="flex items-center gap-sm border-l border-white/20 pl-md">
+              <div className="flex items-center gap-sm border-l border-white/20 dark:border-white/10 pl-md">
                 <div className="text-right hidden lg:block mr-2">
-                  <p className="font-label-md text-label-md font-bold text-on-surface dark:text-on-primary-container leading-tight">{user.name}</p>
-                  <p className="font-label-sm text-label-sm text-on-surface-variant/60 leading-tight uppercase">{user.role}</p>
+                  <p className="font-label-md text-label-md font-bold text-on-surface dark:text-slate-100 leading-tight">{user.name}</p>
+                  <p className="font-label-sm text-label-sm text-on-surface-variant/60 dark:text-slate-400 leading-tight uppercase">{user.role}</p>
                 </div>
-                <div className="w-10 h-10 rounded-full border-2 border-primary overflow-hidden shadow-sm flex items-center justify-center bg-primary/10">
-                  <span className="material-symbols-outlined text-primary">account_circle</span>
+                <div className="w-10 h-10 rounded-full border border-primary/30 overflow-hidden shadow-sm flex items-center justify-center bg-primary/10 dark:bg-white/5">
+                  <span className="material-symbols-outlined text-primary dark:text-inverse-primary">account_circle</span>
                 </div>
               </div>
             </div>
