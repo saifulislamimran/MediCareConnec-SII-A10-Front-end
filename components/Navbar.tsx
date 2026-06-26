@@ -44,36 +44,34 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-white/70 dark:bg-[#0b1120]/70 backdrop-blur-xl border-b border-white/20 dark:border-white/10 shadow-lg h-20 transition-all duration-300">
+    <nav className="fixed top-0 w-full z-50 bg-white/70 dark:bg-slate-900/80 backdrop-blur-md border-b border-white/20 dark:border-white/10 shadow-sm h-20 transition-all duration-300">
       <div className="flex justify-between items-center h-full px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto w-full">
-        <Link href="/" className="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary cursor-pointer select-none flex items-center gap-xs">
-          <span className="material-symbols-outlined text-primary dark:text-inverse-primary" style={{ fontVariationSettings: "'FILL' 1" }}>medical_services</span>
-          <span className="hidden sm:inline font-extrabold">MediCare Connect</span>
-          <span className="sm:hidden font-extrabold">MediCare</span>
+        <Link href="/" className="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed cursor-pointer select-none">
+          MediCare Connect
         </Link>
         
         <div className="hidden md:flex items-center gap-lg">
           <Link 
             href="/" 
-            className={`font-body-md text-body-md transition-all font-semibold ${pathname === '/' ? 'text-primary dark:text-inverse-primary border-b-2 border-primary dark:border-inverse-primary pb-1' : 'text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-inverse-primary'}`}
+            className={`font-body-md text-body-md transition-all font-semibold ${pathname === '/' ? 'text-primary dark:text-primary-fixed border-b-2 border-primary dark:border-primary-fixed pb-1' : 'text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-primary-fixed'}`}
           >
             Home
           </Link>
           <Link 
             href="/doctors" 
-            className={`font-body-md text-body-md transition-all font-semibold ${pathname === '/doctors' ? 'text-primary dark:text-inverse-primary border-b-2 border-primary dark:border-inverse-primary pb-1' : 'text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-inverse-primary'}`}
+            className={`font-body-md text-body-md transition-all font-semibold ${pathname === '/doctors' ? 'text-primary dark:text-primary-fixed border-b-2 border-primary dark:border-primary-fixed pb-1' : 'text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-primary-fixed'}`}
           >
             Find Doctors
           </Link>
           <Link 
             href="/about" 
-            className={`font-body-md text-body-md transition-all font-semibold ${pathname === '/about' ? 'text-primary dark:text-inverse-primary border-b-2 border-primary dark:border-inverse-primary pb-1' : 'text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-inverse-primary'}`}
+            className={`font-body-md text-body-md transition-all font-semibold ${pathname === '/about' ? 'text-primary dark:text-primary-fixed border-b-2 border-primary dark:border-primary-fixed pb-1' : 'text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-primary-fixed'}`}
           >
             About Us
           </Link>
           <Link 
             href="/contact" 
-            className={`font-body-md text-body-md transition-all font-semibold ${pathname === '/contact' ? 'text-primary dark:text-inverse-primary border-b-2 border-primary dark:border-inverse-primary pb-1' : 'text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-inverse-primary'}`}
+            className={`font-body-md text-body-md transition-all font-semibold ${pathname === '/contact' ? 'text-primary dark:text-primary-fixed border-b-2 border-primary dark:border-primary-fixed pb-1' : 'text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-primary-fixed'}`}
           >
             Contact Us
           </Link>
@@ -83,11 +81,11 @@ export default function Navbar() {
           {/* Theme Toggle Button */}
           <button 
             onClick={toggleTheme} 
-            className="p-2.5 text-primary dark:text-inverse-primary hover:bg-primary/10 dark:hover:bg-white/5 rounded-full transition-all active:scale-95 flex items-center justify-center border border-transparent hover:border-white/10"
+            className="p-2 text-primary dark:text-primary-fixed hover:bg-primary-container/10 dark:hover:bg-white/5 rounded-full transition-all active:scale-95 flex items-center justify-center"
             id="theme-toggle"
             aria-label="Toggle Theme"
           >
-            <span className="material-symbols-outlined text-[20px]">
+            <span className="material-symbols-outlined">
               {mounted && theme === 'dark' ? 'light_mode' : 'dark_mode'}
             </span>
           </button>
@@ -95,10 +93,10 @@ export default function Navbar() {
           {/* Authentication State */}
           {!user ? (
             <div className="flex items-center gap-sm">
-              <Link href="/login" className="text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-inverse-primary font-bold text-xs md:text-sm transition-all px-2 py-1">
+              <Link href="/login" className="hidden sm:block text-on-surface-variant dark:text-slate-400 font-label-md text-label-md hover:text-primary dark:hover:text-slate-100 transition-all px-2 py-1">
                 Login
               </Link>
-              <Link href="/register" className="bg-primary text-on-primary px-4 md:px-6 py-2 rounded-full font-bold text-xs md:text-sm hover:bg-primary-container transition-all active:scale-95 shadow-md shadow-primary/20 hover:shadow-lg">
+              <Link href="/register" className="bg-primary text-on-primary px-6 py-2 rounded-full font-label-md text-label-md hover:bg-primary-container transition-all active:scale-95 shadow-lg shadow-primary/20">
                 Register
               </Link>
             </div>
@@ -114,8 +112,8 @@ export default function Navbar() {
                   <p className="font-bold text-xs text-on-surface dark:text-slate-100 leading-tight">{user.name}</p>
                   <p className="text-[9px] text-on-surface-variant/70 dark:text-slate-400 leading-tight uppercase tracking-wider">{user.role}</p>
                 </div>
-                <div className="w-9 h-9 rounded-full border border-primary/30 dark:border-inverse-primary/30 overflow-hidden shadow-sm flex items-center justify-center bg-primary/10 dark:bg-white/5 group hover:border-primary">
-                  <span className="material-symbols-outlined text-primary dark:text-inverse-primary text-[20px]">account_circle</span>
+                <div className="w-9 h-9 rounded-full border border-primary/30 dark:border-primary-fixed/30 overflow-hidden shadow-sm flex items-center justify-center bg-primary/10 dark:bg-white/5 group hover:border-primary">
+                  <span className="material-symbols-outlined text-primary dark:text-primary-fixed text-[20px]">account_circle</span>
                 </div>
               </button>
 
