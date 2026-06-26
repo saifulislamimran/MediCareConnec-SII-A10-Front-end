@@ -83,11 +83,11 @@ export default function PatientPaymentsReviewsPage() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/20 dark:border-white/10 pb-4">
           <div>
             <h1 className="font-headline-lg text-headline-lg font-bold text-primary dark:text-inverse-primary tracking-tight">Payment History</h1>
-            <p className="text-on-surface-variant dark:text-on-surface-variant/80 text-sm font-semibold">Manage your clinical transactions, outstanding invoices, and copays.</p>
+            <p className="text-on-surface-variant dark:text-slate-400 text-sm font-semibold">Manage your clinical transactions, outstanding invoices, and copays.</p>
           </div>
           <button 
             onClick={() => alert("Simulating transaction history statement download...")}
-            className="flex items-center gap-1.5 px-4 py-2 bg-surface-container-low/60 dark:bg-slate-900 border border-outline-variant/20 hover:bg-white/40 text-on-surface text-xs font-bold rounded-xl transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-4 py-2 bg-surface-container-low/60 dark:bg-slate-900 border border-outline-variant/20 dark:border-white/10 hover:bg-white/40 dark:hover:bg-slate-800 text-on-surface dark:text-slate-200 text-xs font-bold rounded-xl transition-all cursor-pointer"
           >
             <span className="material-symbols-outlined text-[16px]">download</span> Export Statements
           </button>
@@ -115,7 +115,7 @@ export default function PatientPaymentsReviewsPage() {
                 </div>
                 <div>
                   <h4 className="font-bold text-sm text-on-surface dark:text-white">{t.title}</h4>
-                  <p className="text-xs text-on-surface-variant/70 mt-0.5">{t.invoice} • {t.dept}</p>
+                  <p className="text-xs text-on-surface-variant/70 dark:text-slate-400 mt-0.5">{t.invoice} • {t.dept}</p>
                 </div>
               </div>
 
@@ -130,7 +130,7 @@ export default function PatientPaymentsReviewsPage() {
                     {t.status}
                   </span>
                 </div>
-                <div className="hidden sm:block opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-on-surface-variant/60">
+                <div className="hidden sm:block opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-on-surface-variant/60 dark:text-slate-400">
                   <span className="material-symbols-outlined">
                     {t.status === 'Action Required' ? 'payment' : 'chevron_right'}
                   </span>
@@ -146,7 +146,7 @@ export default function PatientPaymentsReviewsPage() {
         <div className="flex justify-between items-center">
           <div>
             <h3 className="font-headline-lg text-headline-lg font-bold text-on-surface dark:text-white tracking-tight">My Reviews</h3>
-            <p className="text-on-surface-variant dark:text-on-surface-variant/80 text-sm font-semibold">Your experiences help us improve our care delivery.</p>
+            <p className="text-on-surface-variant dark:text-slate-400 text-sm font-semibold">Your experiences help us improve our care delivery.</p>
           </div>
           <button 
             onClick={() => setShowAddReviewModal(true)}
@@ -160,7 +160,7 @@ export default function PatientPaymentsReviewsPage() {
           {reviews.map((rev) => (
             <div key={rev.id} className="glass-card p-5 rounded-3xl flex flex-col h-full border border-outline-variant/15 shadow-sm hover:shadow-md transition-all hover:scale-[1.01] bg-white/10 dark:bg-slate-950/10">
               <div className="flex justify-between items-start mb-3">
-                <div className="flex items-center text-secondary">
+                <div className="flex items-center text-secondary animate-pulse-slow">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <span 
                       key={i} 
@@ -171,10 +171,10 @@ export default function PatientPaymentsReviewsPage() {
                     </span>
                   ))}
                 </div>
-                <span className="text-[10px] text-on-surface-variant/60 font-bold">{rev.date}</span>
+                <span className="text-[10px] text-on-surface-variant/60 dark:text-slate-400 font-bold">{rev.date}</span>
               </div>
               <h4 className="font-bold text-sm text-on-surface dark:text-white mb-1.5">{rev.title}</h4>
-              <p className="text-xs text-on-surface-variant dark:text-on-surface-variant/80 flex-grow leading-relaxed">
+              <p className="text-xs text-on-surface-variant dark:text-slate-300 flex-grow leading-relaxed">
                 {rev.desc}
               </p>
               <div className="mt-4 pt-3 border-t border-outline-variant/10 flex gap-4">
@@ -202,7 +202,7 @@ export default function PatientPaymentsReviewsPage() {
             <div className="w-11 h-11 rounded-full bg-surface-container-low dark:bg-slate-900 flex items-center justify-center mb-3 group-hover:scale-115 transition-transform duration-200">
               <span className="material-symbols-outlined text-primary text-xl">edit_note</span>
             </div>
-            <p className="text-xs text-on-surface-variant/80 font-bold text-center">Write another feedback?</p>
+            <p className="text-xs text-on-surface-variant/80 dark:text-slate-300 font-bold text-center">Write another feedback?</p>
             <p className="text-[10px] text-primary font-extrabold mt-1">Review medical services</p>
           </div>
         </div>
@@ -215,14 +215,14 @@ export default function PatientPaymentsReviewsPage() {
           <div className="relative bg-surface-container-lowest dark:bg-slate-900 border border-white/20 dark:border-white/10 w-full max-w-md rounded-3xl p-6 shadow-2xl animate-scale-up">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-bold text-lg text-primary dark:text-inverse-primary">Write Service Review</h3>
-              <button onClick={() => setShowAddReviewModal(false)} className="text-on-surface-variant hover:text-primary">
+              <button onClick={() => setShowAddReviewModal(false)} className="text-on-surface-variant hover:text-primary dark:text-slate-400 dark:hover:text-white">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
             
             <form onSubmit={handleAddReviewSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-on-surface-variant/80 mb-1">Star Rating</label>
+                <label className="block text-xs font-bold text-on-surface-variant/80 dark:text-slate-300 mb-1">Star Rating</label>
                 <div className="flex items-center gap-1">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button 
@@ -243,25 +243,25 @@ export default function PatientPaymentsReviewsPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-on-surface-variant/80 mb-1">Review Title</label>
+                <label className="block text-xs font-bold text-on-surface-variant/80 dark:text-slate-300 mb-1">Review Title</label>
                 <input 
                   required
                   type="text" 
                   value={newReview.title}
                   onChange={(e) => setNewReview({...newReview, title: e.target.value})}
-                  className="w-full px-4 py-2.5 bg-surface-container-low dark:bg-slate-950 border border-outline-variant/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm text-on-surface"
+                  className="w-full px-4 py-2.5 bg-surface-container-low dark:bg-slate-950 border border-outline-variant/20 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm text-on-surface dark:text-slate-100"
                   placeholder="e.g. Excellent care in Orthopedics"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-on-surface-variant/80 mb-1">Feedback Description</label>
+                <label className="block text-xs font-bold text-on-surface-variant/80 dark:text-slate-300 mb-1">Feedback Description</label>
                 <textarea 
                   required
                   value={newReview.desc}
                   onChange={(e) => setNewReview({...newReview, desc: e.target.value})}
                   rows={4}
-                  className="w-full px-4 py-2.5 bg-surface-container-low dark:bg-slate-950 border border-outline-variant/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm text-on-surface resize-none"
+                  className="w-full px-4 py-2.5 bg-surface-container-low dark:bg-slate-950 border border-outline-variant/20 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm text-on-surface dark:text-slate-100 resize-none"
                   placeholder="Write your review message..."
                 />
               </div>
@@ -270,7 +270,7 @@ export default function PatientPaymentsReviewsPage() {
                 <button 
                   type="button"
                   onClick={() => setShowAddReviewModal(false)}
-                  className="px-4 py-2 bg-surface-container-low dark:bg-slate-800 text-on-surface-variant rounded-xl text-xs font-bold hover:bg-surface-container-high transition-colors"
+                  className="px-4 py-2 bg-surface-container-low dark:bg-slate-800 text-on-surface-variant dark:text-slate-300 rounded-xl text-xs font-bold hover:bg-surface-container-high transition-colors"
                 >
                   Cancel
                 </button>
