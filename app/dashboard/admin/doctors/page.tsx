@@ -82,56 +82,56 @@ export default function AdminDoctorsPage() {
       {/* Header */}
       <div>
         <h1 className="font-headline-lg text-headline-lg font-bold text-primary dark:text-inverse-primary tracking-tight">Doctor Verification Queue</h1>
-        <p className="text-on-surface-variant dark:text-on-surface-variant/80 text-sm">Review clinical applications, verify background credentials, and manage medical registries.</p>
+        <p className="text-on-surface-variant dark:text-slate-400 text-sm">Review clinical applications, verify background credentials, and manage medical registries.</p>
       </div>
 
       {/* Top Grid Metrics */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
         <div className="glass-card p-6 rounded-2xl border-l-4 border-amber-400 border-white/20 dark:border-white/10 shadow-lg">
-          <p className="text-xs text-on-surface-variant/70 font-bold uppercase tracking-widest mb-1">Queue Status</p>
+          <p className="text-xs text-on-surface-variant/70 dark:text-slate-400 font-bold uppercase tracking-widest mb-1">Queue Status</p>
           <h3 className="text-headline-md font-bold text-on-surface dark:text-white">
             {doctors.filter(d => d.status === 'Pending').length} Pending
           </h3>
-          <p className="text-xs text-on-surface-variant/60 mt-1">Average wait: 2.4 hours</p>
+          <p className="text-xs text-on-surface-variant/60 dark:text-slate-450 mt-1">Average wait: 2.4 hours</p>
         </div>
         <div className="glass-card p-6 rounded-2xl border-l-4 border-primary border-white/20 dark:border-white/10 shadow-lg">
-          <p className="text-xs text-on-surface-variant/70 font-bold uppercase tracking-widest mb-1">Approval Rate</p>
+          <p className="text-xs text-on-surface-variant/70 dark:text-slate-400 font-bold uppercase tracking-widest mb-1">Approval Rate</p>
           <h3 className="text-headline-md font-bold text-on-surface dark:text-white">88.2%</h3>
-          <p className="text-xs text-on-surface-variant/60 mt-1">+1.2% from last month</p>
+          <p className="text-xs text-on-surface-variant/60 dark:text-slate-450 mt-1">+1.2% from last month</p>
         </div>
         <div className="glass-card p-6 rounded-2xl border-l-4 border-secondary border-white/20 dark:border-white/10 shadow-lg">
-          <p className="text-xs text-on-surface-variant/70 font-bold uppercase tracking-widest mb-1">Verified Doctors</p>
+          <p className="text-xs text-on-surface-variant/70 dark:text-slate-400 font-bold uppercase tracking-widest mb-1">Verified Doctors</p>
           <h3 className="text-headline-md font-bold text-on-surface dark:text-white">
             {doctors.filter(d => d.status === 'Verified').length + 410} Active
           </h3>
-          <p className="text-xs text-on-surface-variant/60 mt-1">Across 12 specializations</p>
+          <p className="text-xs text-on-surface-variant/60 dark:text-slate-450 mt-1">Across 12 specializations</p>
         </div>
       </section>
 
       {/* Filter Options */}
       <div className="flex flex-wrap justify-between items-center gap-4 bg-surface-container-low/40 dark:bg-slate-900/40 p-4 rounded-2xl border border-white/20 dark:border-white/10 backdrop-blur-xl">
-        <div className="text-xs font-bold text-on-surface-variant/80">
+        <div className="text-xs font-bold text-on-surface-variant/80 dark:text-slate-300">
           Filter Applications:
         </div>
         <div className="flex gap-2">
           <select 
             value={filterSpecialization}
             onChange={(e) => setFilterSpecialization(e.target.value)}
-            className="bg-white/50 dark:bg-slate-950/50 text-on-surface-variant dark:text-on-primary-container px-3 py-1.5 rounded-full text-xs font-semibold border border-outline-variant/20 focus:ring-2 focus:ring-primary/20 outline-none cursor-pointer"
+            className="bg-white/50 dark:bg-slate-900 text-on-surface-variant dark:text-slate-200 px-3 py-1.5 rounded-full text-xs font-semibold border border-outline-variant/20 dark:border-white/10 focus:ring-2 focus:ring-primary/20 outline-none cursor-pointer"
           >
             {specializations.map(spec => (
-              <option key={spec} value={spec}>{spec}</option>
+              <option key={spec} value={spec} className="dark:bg-slate-900 dark:text-slate-200">{spec}</option>
             ))}
           </select>
           <select 
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="bg-white/50 dark:bg-slate-950/50 text-on-surface-variant dark:text-on-primary-container px-3 py-1.5 rounded-full text-xs font-semibold border border-outline-variant/20 focus:ring-2 focus:ring-primary/20 outline-none cursor-pointer"
+            className="bg-white/50 dark:bg-slate-900 text-on-surface-variant dark:text-slate-200 px-3 py-1.5 rounded-full text-xs font-semibold border border-outline-variant/20 dark:border-white/10 focus:ring-2 focus:ring-primary/20 outline-none cursor-pointer"
           >
-            <option value="All">All Statuses</option>
-            <option value="Pending">Pending</option>
-            <option value="Verified">Verified</option>
-            <option value="Rejected">Rejected</option>
+            <option value="All" className="dark:bg-slate-900 dark:text-slate-200">All Statuses</option>
+            <option value="Pending" className="dark:bg-slate-900 dark:text-slate-200">Pending</option>
+            <option value="Verified" className="dark:bg-slate-900 dark:text-slate-200">Verified</option>
+            <option value="Rejected" className="dark:bg-slate-900 dark:text-slate-200">Rejected</option>
           </select>
         </div>
       </div>
@@ -141,7 +141,7 @@ export default function AdminDoctorsPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[750px]">
             <thead>
-              <tr className="bg-surface-container-low/80 dark:bg-slate-900/60 text-on-surface-variant/80 border-b border-outline-variant/10">
+              <tr className="bg-surface-container-low/80 dark:bg-slate-900/60 text-on-surface-variant/80 dark:text-slate-300 border-b border-outline-variant/10">
                 <th className="px-6 py-4 font-bold text-xs uppercase tracking-wider">Doctor Name</th>
                 <th className="px-6 py-4 font-bold text-xs uppercase tracking-wider">Specialization</th>
                 <th className="px-6 py-4 font-bold text-xs uppercase tracking-wider">Credentials</th>
@@ -164,11 +164,11 @@ export default function AdminDoctorsPage() {
                         )}
                         <div>
                           <p className="font-semibold text-sm text-on-surface dark:text-white">{doc.name}</p>
-                          <p className="text-[10px] text-on-surface-variant/60">{doc.doctorId}</p>
+                          <p className="text-[10px] text-on-surface-variant/60 dark:text-slate-400">{doc.doctorId}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-on-surface-variant text-sm font-semibold">{doc.specialization}</td>
+                    <td className="px-6 py-4 text-on-surface-variant dark:text-slate-300 text-sm font-semibold">{doc.specialization}</td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <span className="material-symbols-outlined text-primary text-[18px]">verified_user</span>
@@ -206,14 +206,14 @@ export default function AdminDoctorsPage() {
                           </button>
                         </div>
                       ) : (
-                        <span className="text-xs text-on-surface-variant/50 font-bold italic">Decision Logged</span>
+                        <span className="text-xs text-on-surface-variant/50 dark:text-slate-400 font-bold italic">Decision Logged</span>
                       )}
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="text-center py-8 text-on-surface-variant/60 font-semibold text-sm">
+                  <td colSpan={5} className="text-center py-8 text-on-surface-variant/60 dark:text-slate-400 font-semibold text-sm">
                     No doctor applications found matching filters.
                   </td>
                 </tr>
