@@ -61,7 +61,7 @@ export default function DoctorDashboardPage() {
       {/* Welcome Header */}
       <div>
         <h2 className="font-headline-lg text-headline-lg font-bold text-primary dark:text-inverse-primary">Dashboard Overview</h2>
-        <p className="text-on-surface-variant dark:text-on-surface-variant/80 text-sm">Welcome back, Doctor. You have {activeAppointmentsCount} active appointments scheduled.</p>
+        <p className="text-on-surface-variant dark:text-slate-400 text-sm">Welcome back, Doctor. You have {activeAppointmentsCount} active appointments scheduled.</p>
       </div>
 
       {/* Statistics Bento Grid */}
@@ -75,7 +75,7 @@ export default function DoctorDashboardPage() {
             <span className="text-primary dark:text-inverse-primary text-xs font-bold bg-primary/5 px-2 py-0.5 rounded-full">+12% vs last month</span>
           </div>
           <div>
-            <h3 className="font-label-sm text-[10px] text-on-surface-variant/70 uppercase tracking-widest">Total Patients</h3>
+            <h3 className="font-label-sm text-[10px] text-on-surface-variant/70 dark:text-slate-400 uppercase tracking-widest">Total Patients</h3>
             <p className="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary mt-1">1.2k</p>
           </div>
           <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-primary/10 rounded-full blur-2xl transition-all group-hover:bg-primary/20"></div>
@@ -90,7 +90,7 @@ export default function DoctorDashboardPage() {
             <span className="text-secondary text-xs font-bold bg-secondary/5 px-2 py-0.5 rounded-full">{pendingRequestsCount} new requests</span>
           </div>
           <div>
-            <h3 className="font-label-sm text-[10px] text-on-surface-variant/70 uppercase tracking-widest">Active Appointments</h3>
+            <h3 className="font-label-sm text-[10px] text-on-surface-variant/70 dark:text-slate-400 uppercase tracking-widest">Active Appointments</h3>
             <p className="font-headline-md text-headline-md font-bold text-secondary mt-1">{activeAppointmentsCount}</p>
           </div>
           <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-secondary/10 rounded-full blur-2xl transition-all group-hover:bg-secondary/20"></div>
@@ -105,10 +105,10 @@ export default function DoctorDashboardPage() {
             <span className="text-surface-tint text-xs font-bold bg-surface-tint/5 px-2 py-0.5 rounded-full">184 ratings</span>
           </div>
           <div>
-            <h3 className="font-label-sm text-[10px] text-on-surface-variant/70 uppercase tracking-widest">Reviews Received</h3>
+            <h3 className="font-label-sm text-[10px] text-on-surface-variant/70 dark:text-slate-400 uppercase tracking-widest">Reviews Received</h3>
             <div className="flex items-end gap-1 mt-1">
               <p className="font-headline-md text-headline-md font-bold text-surface-tint">4.9</p>
-              <span className="text-xs text-on-surface-variant pb-1 font-bold">/5.0</span>
+              <span className="text-xs text-on-surface-variant dark:text-slate-400 pb-1 font-bold">/5.0</span>
             </div>
           </div>
           <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-surface-tint/10 rounded-full blur-2xl transition-all group-hover:bg-surface-tint/20"></div>
@@ -120,7 +120,7 @@ export default function DoctorDashboardPage() {
         <div className="flex justify-between items-end">
           <div>
             <h2 className="font-headline-md text-headline-md font-bold text-on-surface dark:text-white">Appointment Requests</h2>
-            <p className="text-on-surface-variant dark:text-on-surface-variant/80 text-sm">Manage incoming clinical patient visits.</p>
+            <p className="text-on-surface-variant dark:text-slate-400 text-sm">Manage incoming clinical patient visits.</p>
           </div>
           <button className="text-primary dark:text-inverse-primary font-bold text-xs flex items-center gap-1 hover:underline cursor-pointer">
             View all requests <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
@@ -159,10 +159,10 @@ export default function DoctorDashboardPage() {
                 <div>
                   <h4 className="font-bold text-base text-on-surface dark:text-white">{req.patientName}</h4>
                   <div className="flex flex-wrap gap-x-md gap-y-xs mt-1">
-                    <span className="flex items-center gap-1 text-xs text-on-surface-variant dark:text-on-surface-variant/80">
+                    <span className="flex items-center gap-1 text-xs text-on-surface-variant dark:text-slate-400">
                       <span className="material-symbols-outlined text-[14px]">schedule</span> {req.time}
                     </span>
-                    <span className="flex items-center gap-1 text-xs text-on-surface-variant dark:text-on-surface-variant/80">
+                    <span className="flex items-center gap-1 text-xs text-on-surface-variant dark:text-slate-400">
                       <span className="material-symbols-outlined text-[14px]">emergency</span> {req.type}
                     </span>
                   </div>
@@ -180,7 +180,7 @@ export default function DoctorDashboardPage() {
                     </button>
                     <button 
                       onClick={() => handleReject(req.id)}
-                      className="px-4 py-2 bg-error-container text-on-error-container hover:bg-error/20 rounded-xl text-xs font-bold flex items-center gap-1 active:scale-95 transition-all cursor-pointer border border-error-container"
+                      className="px-4 py-2 bg-error-container dark:bg-red-950/40 text-on-error-container dark:text-red-300 hover:bg-error/20 border border-error-container dark:border-red-900/50 rounded-xl text-xs font-bold flex items-center gap-1 active:scale-95 transition-all cursor-pointer"
                     >
                       <span className="material-symbols-outlined text-[16px]">cancel</span> Reject
                     </button>
@@ -196,7 +196,7 @@ export default function DoctorDashboardPage() {
                     </button>
                     <button 
                       onClick={() => handleReject(req.id)}
-                      className="px-3 py-2 bg-error-container text-on-error-container rounded-xl text-xs font-bold active:scale-95 transition-all cursor-pointer"
+                      className="px-3 py-2 bg-error-container dark:bg-red-950/40 text-on-error-container dark:text-red-300 border border-error-container dark:border-red-900/50 rounded-xl text-xs font-bold active:scale-95 transition-all cursor-pointer"
                     >
                       Cancel Appointment
                     </button>
