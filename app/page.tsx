@@ -5,22 +5,31 @@ import { motion, useInView } from 'framer-motion';
 import { useEffect, useState, useRef } from 'react';
 
 // Counter Component for Stats section
-function Counter({ target, duration = 2000, suffix = '+' }: { target: number; duration?: number; suffix?: string }) {
-  const [count, setCount] = useState(0);
+function Counter({ target, suffix = '+' }: { target: number; suffix?: string }) {
+  const [count, setCount] = useState(target); // Start with target for SSR stability and instant snapshots
+  const [mounted, setMounted] = useState(false);
   const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true, amount: 0.5 });
+  const isInView = useInView(ref, { once: true, amount: 0.3 });
 
   useEffect(() => {
-    if (!isInView) return;
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted || !isInView) return;
 
     let startTime: number | null = null;
     let animationFrameId: number;
+    const duration = 1200; // Smooth 1.2s transition
 
     const updateCount = (currentTime: number) => {
       if (!startTime) startTime = currentTime;
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      const currentCount = Math.floor(progress * target);
+      
+      // Easing: easeOutQuad for premium feel
+      const easedProgress = progress * (2 - progress);
+      const currentCount = Math.floor(easedProgress * target);
 
       setCount(currentCount);
 
@@ -33,7 +42,7 @@ function Counter({ target, duration = 2000, suffix = '+' }: { target: number; du
 
     animationFrameId = requestAnimationFrame(updateCount);
     return () => cancelAnimationFrame(animationFrameId);
-  }, [isInView, target, duration]);
+  }, [mounted, isInView, target]);
 
   const formatCount = (val: number) => {
     if (target >= 1000) {
@@ -84,7 +93,7 @@ export default function HomePage() {
             className="w-full h-full object-cover" 
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFtNYfjkoYHZOBC8wjW3Q2y4EglMVTDIoCrOyTfDWVAK7BNzWKdJbJUcZvlPc8b2FC6L3L-T9jLAMyqsFwDLW-XsdMDrYqxv-ys7sM0pGputLuGwkV_PVQdDB6ieBV28Ulzf_8bLg52fWxgAVJePRwYARK3pdwoTXmgSRp35pL03TjuyvU6MQCw-KCGcVn-FMN_OW41Q78vhhAzd4Sm4S4yvD3hzqL3uDzwlBOZvUFEU57sV3nMQGTc0MvKjzGixynL09RPQeq-8Bb"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-white/80 via-white/40 to-transparent dark:from-[#0b1120]/90 dark:via-[#0b1120]/60"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-white/85 via-white/45 to-transparent dark:from-[#0b1120]/90 dark:via-[#0b1120]/60"></div>
         </div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop w-full grid grid-cols-1 lg:grid-cols-2 gap-xl">
@@ -100,16 +109,16 @@ export default function HomePage() {
             <p className="text-body-lg font-body-lg text-on-surface-variant dark:text-slate-400 mb-lg max-w-lg leading-relaxed">
               Experience clinical excellence paired with cutting-edge technology. Your personalized path to wellness starts here.
             </p>
-            <div className="flex flex-wrap gap-md">
+            <div className="flex flex-wrap gap-md items-center">
               <Link 
                 href="/doctors" 
-                className="bg-primary text-on-primary px-xl py-md rounded-xl font-headline-md text-headline-md hover:shadow-xl hover:shadow-primary/20 transition-all active:scale-95 text-center flex items-center justify-center font-bold shadow-lg shadow-primary/20"
+                className="bg-primary text-on-primary px-8 py-3.5 rounded-xl font-semibold hover:shadow-xl hover:shadow-primary/20 transition-all active:scale-95 text-center flex items-center justify-center shadow-lg shadow-primary/20 text-base"
               >
                 Book an Appointment
               </Link>
               <Link 
                 href="/about" 
-                className="glass px-xl py-md rounded-xl border border-primary/20 dark:border-white/10 text-primary dark:text-primary-fixed font-headline-md text-headline-md hover:bg-white/60 dark:hover:bg-slate-800/60 transition-all text-center flex items-center justify-center font-bold"
+                className="glass px-8 py-3.5 rounded-xl border border-primary/20 dark:border-white/10 text-primary dark:text-primary-fixed font-semibold hover:bg-white/60 dark:hover:bg-slate-800/60 transition-all text-center flex items-center justify-center text-base"
               >
                 Learn More
               </Link>
@@ -171,7 +180,7 @@ export default function HomePage() {
             variants={revealVariants}
             className="text-center mb-xl"
           >
-            <h2 className="font-headline-lg text-headline-lg text-on-surface dark:text-slate-100 mb-sm">Medical Specializations</h2>
+            <h2 className="font-headline-lg text-headline-lg text-on-surface dark:text-slate-100 mb-sm font-semibold">Medical Specializations</h2>
             <p className="text-on-surface-variant dark:text-slate-400 max-w-2xl mx-auto">Access specialized care across multiple disciplines, all powered by world-class experts.</p>
           </motion.div>
           
@@ -188,7 +197,7 @@ export default function HomePage() {
               className="glass dark:bg-slate-900/60 dark:border-white/10 p-md rounded-2xl hover:scale-105 transition-transform duration-300 group cursor-pointer shadow-sm dark:shadow-2xl border border-white/20 dark:border-white/5 text-left"
             >
               <Link href="/doctors" className="block w-full h-full">
-                <div className="w-16 h-16 bg-primary/10 dark:bg-primary-fixed/10 rounded-xl flex items-center justify-center mb-md group-hover:bg-primary dark:group-hover:bg-primary-fixed group-hover:text-white dark:group-hover:text-on-primary-fixed transition-colors text-primary dark:text-primary-fixed">
+                <div className="w-16 h-16 bg-primary/10 dark:bg-primary-fixed/10 rounded-xl flex items-center justify-center mb-md group-hover:bg-primary dark:group-hover:bg-primary-fixed group-hover:text-white dark:group-hover:text-on-primary-fixed transition-colors text-primary dark:text-primary-fixed shrink-0">
                   <span className="material-symbols-outlined text-[32px]">favorite</span>
                 </div>
                 <h3 className="font-headline-md text-headline-md text-on-surface dark:text-slate-100 mb-sm font-semibold">Cardiology</h3>
@@ -202,7 +211,7 @@ export default function HomePage() {
               className="glass dark:bg-slate-900/60 dark:border-white/10 p-md rounded-2xl hover:scale-105 transition-transform duration-300 group cursor-pointer shadow-sm dark:shadow-2xl border border-white/20 dark:border-white/5 text-left"
             >
               <Link href="/doctors" className="block w-full h-full">
-                <div className="w-16 h-16 bg-primary/10 dark:bg-primary-fixed/10 rounded-xl flex items-center justify-center mb-md group-hover:bg-primary dark:group-hover:bg-primary-fixed group-hover:text-white dark:group-hover:text-on-primary-fixed transition-colors text-primary dark:text-primary-fixed">
+                <div className="w-16 h-16 bg-primary/10 dark:bg-primary-fixed/10 rounded-xl flex items-center justify-center mb-md group-hover:bg-primary dark:group-hover:bg-primary-fixed group-hover:text-white dark:group-hover:text-on-primary-fixed transition-colors text-primary dark:text-primary-fixed shrink-0">
                   <span className="material-symbols-outlined text-[32px]">psychology</span>
                 </div>
                 <h3 className="font-headline-md text-headline-md text-on-surface dark:text-slate-100 mb-sm font-semibold">Neurology</h3>
@@ -216,7 +225,7 @@ export default function HomePage() {
               className="glass dark:bg-slate-900/60 dark:border-white/10 p-md rounded-2xl hover:scale-105 transition-transform duration-300 group cursor-pointer shadow-sm dark:shadow-2xl border border-white/20 dark:border-white/5 text-left"
             >
               <Link href="/doctors" className="block w-full h-full">
-                <div className="w-16 h-16 bg-primary/10 dark:bg-primary-fixed/10 rounded-xl flex items-center justify-center mb-md group-hover:bg-primary dark:group-hover:bg-primary-fixed group-hover:text-white dark:group-hover:text-on-primary-fixed transition-colors text-primary dark:text-primary-fixed">
+                <div className="w-16 h-16 bg-primary/10 dark:bg-primary-fixed/10 rounded-xl flex items-center justify-center mb-md group-hover:bg-primary dark:group-hover:bg-primary-fixed group-hover:text-white dark:group-hover:text-on-primary-fixed transition-colors text-primary dark:text-primary-fixed shrink-0">
                   <span className="material-symbols-outlined text-[32px]">child_care</span>
                 </div>
                 <h3 className="font-headline-md text-headline-md text-on-surface dark:text-slate-100 mb-sm font-semibold">Pediatrics</h3>
@@ -230,7 +239,7 @@ export default function HomePage() {
               className="glass dark:bg-slate-900/60 dark:border-white/10 p-md rounded-2xl hover:scale-105 transition-transform duration-300 group cursor-pointer shadow-sm dark:shadow-2xl border border-white/20 dark:border-white/5 text-left"
             >
               <Link href="/doctors" className="block w-full h-full">
-                <div className="w-16 h-16 bg-primary/10 dark:bg-primary-fixed/10 rounded-xl flex items-center justify-center mb-md group-hover:bg-primary dark:group-hover:bg-primary-fixed group-hover:text-white dark:group-hover:text-on-primary-fixed transition-colors text-primary dark:text-primary-fixed">
+                <div className="w-16 h-16 bg-primary/10 dark:bg-primary-fixed/10 rounded-xl flex items-center justify-center mb-md group-hover:bg-primary dark:group-hover:bg-primary-fixed group-hover:text-white dark:group-hover:text-on-primary-fixed transition-colors text-primary dark:text-primary-fixed shrink-0">
                   <span className="material-symbols-outlined text-[32px]">skeleton</span>
                 </div>
                 <h3 className="font-headline-md text-headline-md text-on-surface dark:text-slate-100 mb-sm font-semibold">Orthopedics</h3>
@@ -252,7 +261,7 @@ export default function HomePage() {
             className="flex justify-between items-end mb-xl"
           >
             <div className="text-left">
-              <h2 className="font-headline-lg text-headline-lg text-on-surface dark:text-slate-100 mb-sm">Featured Doctors</h2>
+              <h2 className="font-headline-lg text-headline-lg text-on-surface dark:text-slate-100 mb-sm font-semibold">Featured Doctors</h2>
               <p className="text-on-surface-variant dark:text-slate-400">Consult with our top-rated medical professionals.</p>
             </div>
             <Link href="/doctors" className="text-primary dark:text-primary-fixed font-bold flex items-center gap-xs hover:underline transition-all">
@@ -445,7 +454,7 @@ export default function HomePage() {
             variants={revealVariants}
             className="text-left"
           >
-            <h2 className="font-headline-lg text-headline-lg text-on-surface dark:text-slate-100 mb-md leading-tight">
+            <h2 className="font-headline-lg text-headline-lg text-on-surface dark:text-slate-100 mb-md leading-tight font-semibold">
               Why Choose <span className="text-primary dark:text-primary-fixed">MediCare Connect</span>?
             </h2>
             <p className="text-on-surface-variant dark:text-slate-400 mb-lg text-body-lg leading-relaxed">
@@ -455,7 +464,7 @@ export default function HomePage() {
             <div className="space-y-md">
               <div className="flex gap-md items-start">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 dark:bg-primary-fixed/10 flex items-center justify-center shrink-0 text-primary dark:text-primary-fixed">
-                  <span className="material-symbols-outlined">support_agent</span>
+                  <span className="material-symbols-outlined text-[24px]">support_agent</span>
                 </div>
                 <div>
                   <h4 className="font-headline-md text-headline-md text-on-surface dark:text-slate-100 mb-xs font-semibold">24/7 Priority Support</h4>
@@ -467,7 +476,7 @@ export default function HomePage() {
               
               <div className="flex gap-md items-start">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 dark:bg-primary-fixed/10 flex items-center justify-center shrink-0 text-primary dark:text-primary-fixed">
-                  <span className="material-symbols-outlined">security</span>
+                  <span className="material-symbols-outlined text-[24px]">security</span>
                 </div>
                 <div>
                   <h4 className="font-headline-md text-headline-md text-on-surface dark:text-slate-100 mb-xs font-semibold">Secure Medical Records</h4>
@@ -479,7 +488,7 @@ export default function HomePage() {
               
               <div className="flex gap-md items-start">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 dark:bg-primary-fixed/10 flex items-center justify-center shrink-0 text-primary dark:text-primary-fixed">
-                  <span className="material-symbols-outlined">verified</span>
+                  <span className="material-symbols-outlined text-[24px]">verified</span>
                 </div>
                 <div>
                   <h4 className="font-headline-md text-headline-md text-on-surface dark:text-slate-100 mb-xs font-semibold">Verified Expert Doctors</h4>
@@ -526,7 +535,7 @@ export default function HomePage() {
             variants={revealVariants}
             className="text-center mb-xl"
           >
-            <h2 className="font-headline-lg text-headline-lg text-on-surface dark:text-slate-100 mb-sm">Patient Success Stories</h2>
+            <h2 className="font-headline-lg text-headline-lg text-on-surface dark:text-slate-100 mb-sm font-semibold">Patient Success Stories</h2>
             <p className="text-on-surface-variant dark:text-slate-400">Hear from those who trust us with their wellbeing.</p>
           </motion.div>
           
@@ -545,7 +554,7 @@ export default function HomePage() {
               <div>
                 <div className="flex gap-xs text-yellow-500 mb-md">
                   {[...Array(5)].map((_, i) => (
-                    <span key={i} className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                    <span key={i} className="material-symbols-outlined text-yellow-500 text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
                   ))}
                 </div>
                 <p className="text-on-surface dark:text-slate-100 text-body-md mb-lg italic leading-relaxed text-left">
@@ -553,7 +562,7 @@ export default function HomePage() {
                 </p>
               </div>
               <div className="flex items-center gap-md pt-4 border-t border-outline-variant/20 dark:border-white/10">
-                <div className="w-12 h-12 rounded-full overflow-hidden bg-slate-200 border border-white/20">
+                <div className="w-12 h-12 rounded-full overflow-hidden bg-slate-200 border border-white/20 shrink-0">
                   <img 
                     className="w-full h-full object-cover" 
                     alt="Amanda J."
@@ -561,7 +570,7 @@ export default function HomePage() {
                   />
                 </div>
                 <div className="text-left">
-                  <h5 className="font-bold text-on-surface dark:text-slate-100">Amanda J.</h5>
+                  <h5 className="font-bold text-on-surface dark:text-slate-100 leading-tight">Amanda J.</h5>
                   <p className="text-xs text-on-surface-variant dark:text-slate-400">Patient since 2022</p>
                 </div>
               </div>
@@ -575,7 +584,7 @@ export default function HomePage() {
               <div>
                 <div className="flex gap-xs text-yellow-500 mb-md">
                   {[...Array(5)].map((_, i) => (
-                    <span key={i} className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                    <span key={i} className="material-symbols-outlined text-yellow-500 text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
                   ))}
                 </div>
                 <p className="text-on-surface dark:text-slate-100 text-body-md mb-lg italic leading-relaxed text-left">
@@ -583,7 +592,7 @@ export default function HomePage() {
                 </p>
               </div>
               <div className="flex items-center gap-md pt-4 border-t border-outline-variant/20 dark:border-white/10">
-                <div className="w-12 h-12 rounded-full overflow-hidden bg-slate-200 border border-white/20">
+                <div className="w-12 h-12 rounded-full overflow-hidden bg-slate-200 border border-white/20 shrink-0">
                   <img 
                     className="w-full h-full object-cover" 
                     alt="Robert K."
@@ -591,7 +600,7 @@ export default function HomePage() {
                   />
                 </div>
                 <div className="text-left">
-                  <h5 className="font-bold text-on-surface dark:text-slate-100">Robert K.</h5>
+                  <h5 className="font-bold text-on-surface dark:text-slate-100 leading-tight">Robert K.</h5>
                   <p className="text-xs text-on-surface-variant dark:text-slate-400">Patient since 2023</p>
                 </div>
               </div>
@@ -605,16 +614,16 @@ export default function HomePage() {
               <div>
                 <div className="flex gap-xs text-yellow-500 mb-md">
                   {[...Array(4)].map((_, i) => (
-                    <span key={i} className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                    <span key={i} className="material-symbols-outlined text-yellow-500 text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
                   ))}
-                  <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>star_half</span>
+                  <span className="material-symbols-outlined text-yellow-500 text-[20px]" style={{ fontVariationSettings: "'FILL' 0" }}>star</span>
                 </div>
                 <p className="text-on-surface dark:text-slate-100 text-body-md mb-lg italic leading-relaxed text-left">
                   "The video consultation felt just as personal as a clinic visit. Truly the future of medicine available today."
                 </p>
               </div>
               <div className="flex items-center gap-md pt-4 border-t border-outline-variant/20 dark:border-white/10">
-                <div className="w-12 h-12 rounded-full overflow-hidden bg-slate-200 border border-white/20">
+                <div className="w-12 h-12 rounded-full overflow-hidden bg-slate-200 border border-white/20 shrink-0">
                   <img 
                     className="w-full h-full object-cover" 
                     alt="Linda W."
@@ -622,7 +631,7 @@ export default function HomePage() {
                   />
                 </div>
                 <div className="text-left">
-                  <h5 className="font-bold text-on-surface dark:text-slate-100">Linda W.</h5>
+                  <h5 className="font-bold text-on-surface dark:text-slate-100 leading-tight">Linda W.</h5>
                   <p className="text-xs text-on-surface-variant dark:text-slate-400">Patient since 2021</p>
                 </div>
               </div>
