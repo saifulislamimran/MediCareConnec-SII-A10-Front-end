@@ -39,9 +39,9 @@ export default function NotFound() {
         
         {/* Error Content */}
         <div className="space-y-sm max-w-lg">
-          <h1 className="font-headline-xl text-headline-xl text-primary md:text-[64px] md:leading-tight">404</h1>
-          <h2 className="font-headline-lg text-headline-lg text-on-surface">Page Not Found</h2>
-          <p className="font-body-lg text-body-lg text-on-surface-variant px-4">
+          <h1 className="font-headline-xl text-headline-xl text-primary dark:text-inverse-primary md:text-[64px] md:leading-tight">404</h1>
+          <h2 className="font-headline-lg text-headline-lg text-on-surface dark:text-slate-100">Page Not Found</h2>
+          <p className="font-body-lg text-body-lg text-on-surface-variant dark:text-slate-400 px-4">
             The requested appointment, profile, or medical record could not be located in our system. It might have been moved or the diagnosis code is invalid.
           </p>
         </div>
@@ -51,7 +51,7 @@ export default function NotFound() {
           {/* Secondary Glass Action */}
           <button 
             onClick={() => router.back()} 
-            className="glass px-8 py-3 rounded-xl font-label-md text-label-md text-primary flex items-center justify-center gap-2 hover:bg-white/60 transition-all active:scale-95 border border-primary/20 cursor-pointer"
+            className="glass px-8 py-3 rounded-xl font-label-md text-label-md text-primary dark:text-inverse-primary flex items-center justify-center gap-2 hover:bg-white/60 dark:hover:bg-white/10 transition-all active:scale-95 border border-primary/20 dark:border-white/10 cursor-pointer"
           >
             <span className="material-symbols-outlined">arrow_back</span>
             Go Back
@@ -59,7 +59,7 @@ export default function NotFound() {
           
           {/* Primary Action */}
           <Link 
-            className="bg-primary text-on-primary px-8 py-3 rounded-xl font-label-md text-label-md shadow-lg shadow-primary/20 flex items-center justify-center gap-2 hover:bg-primary/90 transition-all active:scale-95" 
+            className="bg-primary text-on-primary dark:bg-inverse-primary dark:text-on-primary-fixed-variant px-8 py-3 rounded-xl font-label-md text-label-md shadow-lg shadow-primary/20 dark:shadow-inverse-primary/10 flex items-center justify-center gap-2 hover:bg-primary-container dark:hover:bg-primary-fixed transition-all active:scale-95" 
             href="/"
           >
             <span className="material-symbols-outlined">home_health</span>
@@ -69,17 +69,17 @@ export default function NotFound() {
         
         {/* Help Hints */}
         <div className="mt-xl grid grid-cols-1 md:grid-cols-3 gap-gutter w-full max-w-3xl">
-          <div className="p-md rounded-xl glass border-outline-variant/35 flex flex-col items-center text-center">
-            <span className="material-symbols-outlined text-primary mb-2">search</span>
-            <span className="font-label-md text-label-md">Check the URL</span>
+          <div className="p-md rounded-xl glass border-white/20 dark:border-white/10 flex flex-col items-center text-center">
+            <span className="material-symbols-outlined text-primary dark:text-inverse-primary mb-2">search</span>
+            <span className="font-label-md text-label-md text-on-surface dark:text-slate-200">Check the URL</span>
           </div>
-          <div className="p-md rounded-xl glass border-outline-variant/35 flex flex-col items-center text-center">
-            <span className="material-symbols-outlined text-primary mb-2">support_agent</span>
-            <span className="font-label-md text-label-md">Contact Support</span>
+          <div className="p-md rounded-xl glass border-white/20 dark:border-white/10 flex flex-col items-center text-center">
+            <span className="material-symbols-outlined text-primary dark:text-inverse-primary mb-2">support_agent</span>
+            <span className="font-label-md text-label-md text-on-surface dark:text-slate-200">Contact Support</span>
           </div>
-          <div className="p-md rounded-xl glass border-outline-variant/35 flex flex-col items-center text-center">
-            <span className="material-symbols-outlined text-primary mb-2">home_health</span>
-            <span className="font-label-md text-label-md">Visit Help Center</span>
+          <div className="p-md rounded-xl glass border-white/20 dark:border-white/10 flex flex-col items-center text-center">
+            <span className="material-symbols-outlined text-primary dark:text-inverse-primary mb-2">home_health</span>
+            <span className="font-label-md text-label-md text-on-surface dark:text-slate-200">Visit Help Center</span>
           </div>
         </div>
       </div>
