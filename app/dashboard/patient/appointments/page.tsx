@@ -84,15 +84,15 @@ export default function PatientAppointmentsPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-md border-b border-white/20 dark:border-white/10 pb-4">
         <div>
           <h2 className="font-headline-lg text-headline-lg font-bold text-primary dark:text-inverse-primary tracking-tight">My Appointments</h2>
-          <p className="text-on-surface-variant dark:text-on-surface-variant/80 text-sm">Review, reschedule, or manage your clinical schedule and care visits.</p>
+          <p className="text-on-surface-variant dark:text-slate-400 text-sm">Review, reschedule, or manage your clinical schedule and care visits.</p>
         </div>
-        <div className="flex p-1 bg-surface-container-low dark:bg-slate-900 rounded-xl border border-outline-variant/20">
+        <div className="flex p-1 bg-surface-container-low dark:bg-slate-900 rounded-xl border border-outline-variant/20 dark:border-white/10">
           <button 
             onClick={() => setActiveTab('upcoming')}
             className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'upcoming' 
                 ? 'bg-white dark:bg-primary text-primary dark:text-on-primary shadow-sm' 
-                : 'text-on-surface-variant hover:text-primary'
+                : 'text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-inverse-primary'
             }`}
           >
             Upcoming
@@ -102,7 +102,7 @@ export default function PatientAppointmentsPage() {
             className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'past' 
                 ? 'bg-white dark:bg-primary text-primary dark:text-on-primary shadow-sm' 
-                : 'text-on-surface-variant hover:text-primary'
+                : 'text-on-surface-variant dark:text-slate-400 hover:text-primary dark:hover:text-inverse-primary'
             }`}
           >
             Past & Cancelled
@@ -115,7 +115,7 @@ export default function PatientAppointmentsPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[750px]">
             <thead>
-              <tr className="bg-surface-container-low/80 dark:bg-slate-900/60 text-on-surface-variant/80 border-b border-outline-variant/10 font-bold text-xs uppercase tracking-wider">
+              <tr className="bg-surface-container-low/80 dark:bg-slate-900/60 text-on-surface-variant/80 dark:text-slate-300 border-b border-outline-variant/10 font-bold text-xs uppercase tracking-wider">
                 <th className="px-6 py-4 w-1/3">Healthcare Provider</th>
                 <th className="px-6 py-4 w-1/4">Schedule</th>
                 <th className="px-6 py-4 w-1/6">Status</th>
@@ -131,13 +131,13 @@ export default function PatientAppointmentsPage() {
                         <img className="w-12 h-12 rounded-full object-cover border border-outline-variant/30 shadow-sm" src={app.avatarUrl} alt={app.doctorName} />
                         <div>
                           <p className="font-bold text-sm text-on-surface dark:text-white">{app.doctorName}</p>
-                          <p className="text-xs text-on-surface-variant/70">{app.specialty} • {app.room}</p>
+                          <p className="text-xs text-on-surface-variant/70 dark:text-slate-400">{app.specialty} • {app.room}</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <p className="font-semibold text-sm text-on-surface dark:text-white">{app.date}</p>
-                      <p className="text-xs text-on-surface-variant/60 flex items-center gap-1 mt-0.5 font-semibold">
+                      <p className="text-xs text-on-surface-variant/60 dark:text-slate-400 flex items-center gap-1 mt-0.5 font-semibold">
                         <span className="material-symbols-outlined text-[14px]">
                           {app.type === 'telehealth' ? 'videocam' : 'schedule'}
                         </span>
@@ -164,14 +164,14 @@ export default function PatientAppointmentsPage() {
                           <>
                             <button 
                               onClick={() => handleReschedule(app.id)}
-                              className="p-1.5 rounded-lg text-on-surface-variant/60 hover:text-primary hover:bg-primary/10 transition-all cursor-pointer"
+                              className="p-1.5 rounded-lg text-on-surface-variant/60 dark:text-slate-400 hover:text-primary hover:bg-primary/10 transition-all cursor-pointer"
                               title="Reschedule Session"
                             >
                               <span className="material-symbols-outlined text-[18px]">event_repeat</span>
                             </button>
                             <button 
                               onClick={() => handleCancel(app.id)}
-                              className="p-1.5 rounded-lg text-on-surface-variant/60 hover:text-error hover:bg-error/10 transition-all cursor-pointer"
+                              className="p-1.5 rounded-lg text-on-surface-variant/60 dark:text-slate-400 hover:text-error hover:bg-error/10 transition-all cursor-pointer"
                               title="Cancel Session"
                             >
                               <span className="material-symbols-outlined text-[18px]">cancel</span>
@@ -180,7 +180,7 @@ export default function PatientAppointmentsPage() {
                         )}
                         <button 
                           onClick={() => alert(`Reviewing appointment details with ${app.doctorName}...`)}
-                          className="px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary/5 rounded-lg transition-colors cursor-pointer"
+                          className="px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary/5 dark:text-inverse-primary rounded-lg transition-colors cursor-pointer"
                         >
                           View Details
                         </button>
@@ -190,7 +190,7 @@ export default function PatientAppointmentsPage() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={4} className="text-center py-12 text-on-surface-variant/60 font-semibold text-sm">
+                  <td colSpan={4} className="text-center py-12 text-on-surface-variant/60 dark:text-slate-400 font-semibold text-sm">
                     No appointments found.
                   </td>
                 </tr>
@@ -207,8 +207,8 @@ export default function PatientAppointmentsPage() {
             <span className="material-symbols-outlined">verified_user</span>
           </div>
           <div>
-            <p className="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest">Health Score</p>
-            <p className="font-headline-md text-headline-md font-bold text-on-surface dark:text-white">92<span className="text-xs text-on-surface-variant/60 font-normal ml-0.5">/100</span></p>
+            <p className="text-[10px] font-bold text-on-surface-variant/60 dark:text-slate-400 uppercase tracking-widest">Health Score</p>
+            <p className="font-headline-md text-headline-md font-bold text-on-surface dark:text-white">92<span className="text-xs text-on-surface-variant/60 dark:text-slate-400 font-normal ml-0.5">/100</span></p>
           </div>
         </div>
         <div className="glass-card p-6 rounded-2xl flex items-center gap-4 border-white/20 dark:border-white/10 shadow-lg">
@@ -216,7 +216,7 @@ export default function PatientAppointmentsPage() {
             <span className="material-symbols-outlined">calendar_month</span>
           </div>
           <div>
-            <p className="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest">Next Session</p>
+            <p className="text-[10px] font-bold text-on-surface-variant/60 dark:text-slate-400 uppercase tracking-widest">Next Session</p>
             <p className="font-headline-md text-headline-md font-bold text-on-surface dark:text-white">24 Oct</p>
           </div>
         </div>
@@ -225,7 +225,7 @@ export default function PatientAppointmentsPage() {
             <span className="material-symbols-outlined">pending_actions</span>
           </div>
           <div>
-            <p className="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest">Action Items</p>
+            <p className="text-[10px] font-bold text-on-surface-variant/60 dark:text-slate-400 uppercase tracking-widest">Action Items</p>
             <p className="font-headline-md text-headline-md font-bold text-on-surface dark:text-white">
               {appointments.filter(a => a.status === 'Pending').length} Pending
             </p>
