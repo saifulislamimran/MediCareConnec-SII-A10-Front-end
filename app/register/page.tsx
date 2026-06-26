@@ -78,7 +78,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Auth Card Container */}
-        <div className="relative z-10 w-full max-w-xl animate-fade-in">
+        <div className="relative z-10 w-full max-w-[576px] animate-fade-in">
           <div className="glass-card p-8 md:p-12 rounded-2xl flex flex-col gap-8 border border-white/20 dark:border-white/10 bg-white/45 dark:bg-slate-900/60 backdrop-blur-2xl shadow-xl">
             <div className="text-center space-y-2">
               <h1 className="font-headline-xl text-headline-xl text-primary dark:text-inverse-primary tracking-tight font-extrabold">Create Account</h1>
@@ -214,7 +214,7 @@ export default function RegisterPage() {
 
       {/* Success Toast Notification */}
       {showToast && (
-        <div className="fixed bottom-8 right-8 z-[100] max-w-sm w-full animate-slide-in flex">
+        <div className="fixed bottom-8 right-8 z-[100] max-w-[384px] w-full animate-slide-in flex">
           <div className="glass-card bg-white/90 dark:bg-slate-900 border-l-4 border-l-primary-container dark:border-l-inverse-primary p-4 rounded-xl flex items-start gap-4 shadow-2xl border border-white/30 dark:border-white/10">
             <div className="text-primary dark:text-inverse-primary mt-0.5 animate-pulse">
               <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>

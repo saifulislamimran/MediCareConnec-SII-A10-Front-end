@@ -106,7 +106,7 @@ export default function HomePage() {
             <h1 className="font-headline-xl text-headline-xl text-on-surface dark:text-slate-100 mb-md leading-tight">
               Precision Health for a <span className="text-primary dark:text-primary-fixed">Modern Life</span>
             </h1>
-            <p className="text-body-lg font-body-lg text-on-surface-variant dark:text-slate-400 mb-lg max-w-lg leading-relaxed">
+            <p className="text-body-lg font-body-lg text-on-surface-variant dark:text-slate-400 mb-lg max-w-[512px] leading-relaxed">
               Experience clinical excellence paired with cutting-edge technology. Your personalized path to wellness starts here.
             </p>
             <div className="flex flex-wrap gap-md items-center">
@@ -181,7 +181,7 @@ export default function HomePage() {
             className="text-center mb-xl"
           >
             <h2 className="font-headline-lg text-headline-lg text-on-surface dark:text-slate-100 mb-sm font-semibold">Medical Specializations</h2>
-            <p className="text-on-surface-variant dark:text-slate-400 max-w-2xl mx-auto">Access specialized care across multiple disciplines, all powered by world-class experts.</p>
+            <p className="text-on-surface-variant dark:text-slate-400 max-w-[672px] mx-auto">Access specialized care across multiple disciplines, all powered by world-class experts.</p>
           </motion.div>
           
           <motion.div 

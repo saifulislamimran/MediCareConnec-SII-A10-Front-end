@@ -215,7 +215,7 @@ export default function PatientOverviewPage() {
 
       {/* Simulated Vital Sync Toast */}
       {showToast && (
-        <div className="fixed bottom-6 right-6 glass-card rounded-2xl p-4 shadow-2xl z-[100] flex items-center gap-3 max-w-sm border-white/20 dark:border-white/10 animate-slide-in">
+        <div className="fixed bottom-6 right-6 glass-card rounded-2xl p-4 shadow-2xl z-[100] flex items-center gap-3 max-w-[384px] border-white/20 dark:border-white/10 animate-slide-in">
           <div className="bg-primary/20 p-2 rounded-full shrink-0 text-primary">
             <span className="material-symbols-outlined">notifications_active</span>
           </div>

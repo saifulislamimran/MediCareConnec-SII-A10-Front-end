@@ -217,7 +217,7 @@ export default function AdminUsersPage() {
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowAddModal(false)}></div>
-          <div className="relative bg-surface-container-lowest dark:bg-slate-900 border border-white/20 dark:border-white/10 w-full max-w-md rounded-3xl p-6 shadow-2xl animate-scale-up">
+          <div className="relative bg-surface-container-lowest dark:bg-slate-900 border border-white/20 dark:border-white/10 w-full max-w-[448px] rounded-3xl p-6 shadow-2xl animate-scale-up">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-bold text-lg text-primary dark:text-inverse-primary">Add New User</h3>
               <button onClick={() => setShowAddModal(false)} className="text-on-surface-variant hover:text-primary dark:text-slate-400 dark:hover:text-white">

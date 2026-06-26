@@ -38,7 +38,7 @@ export default function NotFound() {
         </div>
         
         {/* Error Content */}
-        <div className="space-y-sm max-w-lg">
+        <div className="space-y-sm max-w-[512px]">
           <h1 className="font-headline-xl text-headline-xl text-primary dark:text-inverse-primary md:text-[64px] md:leading-tight">404</h1>
           <h2 className="font-headline-lg text-headline-lg text-on-surface dark:text-slate-100">Page Not Found</h2>
           <p className="font-body-lg text-body-lg text-on-surface-variant dark:text-slate-400 px-4">
@@ -47,7 +47,7 @@ export default function NotFound() {
         </div>
         
         {/* Action Area */}
-        <div className="mt-lg flex flex-col sm:flex-row gap-gutter justify-center w-full max-w-md">
+        <div className="mt-lg flex flex-col sm:flex-row gap-gutter justify-center w-full max-w-[448px]">
           {/* Secondary Glass Action */}
           <button 
             onClick={() => router.back()} 
