@@ -78,7 +78,7 @@ export default function DashboardLayout({
   const links = getSidebarLinks();
 
   return (
-    <div className="min-h-screen flex text-body-md text-on-surface bg-background dark:bg-[#0b1120] transition-colors duration-300">
+    <div className="min-h-screen flex text-body-md text-on-surface dark:text-slate-100 bg-background dark:bg-[#0b1120] transition-colors duration-300">
       {/* Sidebar Navigation - Desktop */}
       <aside className="h-screen w-64 left-0 top-0 fixed bg-white/40 dark:bg-slate-900/60 backdrop-blur-2xl border-r border-white/20 dark:border-white/10 shadow-xl flex flex-col p-md space-y-base z-50 hidden md:flex">
         <div className="mb-lg flex items-center gap-base">
