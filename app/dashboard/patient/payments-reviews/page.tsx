@@ -1,284 +1,393 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-interface Transaction {
+interface Payment {
   id: string;
-  invoice: string;
-  title: string;
-  dept: string;
-  amount: number;
-  status: 'Completed' | 'Action Required';
+  date: string;
+  provider: string;
+  service: string;
+  amount: string;
+  status: 'Paid' | 'Refunded';
 }
 
 interface Review {
   id: string;
+  doctorName: string;
+  specialty: string;
+  avatarUrl: string;
   rating: number;
+  comment: string;
   date: string;
-  title: string;
-  desc: string;
+  verified: boolean;
 }
 
 export default function PatientPaymentsReviewsPage() {
-  // Transactions State
-  const [transactions, setTransactions] = useState<Transaction[]>([
-    { id: '1', invoice: 'INV-98234', title: 'Consultation: Dr. Emily Carter', dept: 'Cardiology Department', amount: 145.00, status: 'Completed' },
-    { id: '2', invoice: 'INV-98211', title: 'Pharmacy: Atorvastatin Refill', dept: 'MediFlow Pharmacy', amount: 42.50, status: 'Completed' },
-    { id: '3', invoice: 'INV-98105', title: 'Lab Services: Blood Work Panel', dept: 'Diagnostics North', amount: 210.00, status: 'Action Required' },
+  const [payments, setPayments] = useState<Payment[]>([
+    { id: '1', date: 'Oct 12, 2024', provider: 'Dr. Sarah Jenkins', service: 'Annual Wellness Exam', amount: '$150.00', status: 'Paid' },
+    { id: '2', date: 'Sep 28, 2024', provider: 'City Radiology Lab', service: 'Chest X-Ray', amount: '$85.00', status: 'Paid' },
+    { id: '3', date: 'Sep 15, 2024', provider: 'Dr. Michael Chen', service: 'Specialist Consultation', amount: '$210.00', status: 'Refunded' }
   ]);
 
-  // Reviews State
   const [reviews, setReviews] = useState<Review[]>([
-    { id: '1', rating: 5, date: 'Oct 12, 2026', title: 'Excellent Care - Cardiology', desc: 'Dr. Carter was incredibly thorough during my checkup. The staff made me feel at ease throughout the entire process.' },
-    { id: '2', rating: 4, date: 'Sep 28, 2026', title: 'Telehealth Experience', desc: 'Connection was stable and the interface was very easy to use. I saved so much time compared to driving to the clinic.' },
+    {
+      id: '1',
+      doctorName: 'Dr. Sarah Jenkins',
+      specialty: 'General Practitioner',
+      avatarUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAyIPP2HItnAVYrmxxlyzPUiyXCp2xwzn7Jvtne1oU7jAjScLe8DV-FWkQAFdv5FVM8VfbG7KkMbbGYlBeiSIO1r39kkE_fTx_21AjLP4n1jBlBTA7tyLJbqWq8fbmBlpXbiyriXEnwN60TBgSkqwUbGrrMeZnh0qybHrPiVPxt4pgieWTrv2pu8FTrPaFcszkkl0hfyBUoYaneEuL7X4B7rkRzFHZJlD7pK4YRIUyXs9xmIpHDu9ea96MND_jmcuMz4ZKCrOMTNbuh',
+      rating: 5,
+      comment: 'Excellent listener and very thorough. She took the time to answer all my questions regarding my new treatment plan.',
+      date: 'Oct 15, 2024',
+      verified: true
+    },
+    {
+      id: '2',
+      doctorName: 'Dr. Michael Chen',
+      specialty: 'Cardiologist',
+      avatarUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuArPPre11naTt7ZObCHC1TS3IJV1RhFq1OOZjzs7WmxmZLy6_G1DTfQbi5WfTAy476jKSxIpIEs5s-MWFvF-PtOFooUp1JL80I2ByzZWlLWyHmCDmgpQwJ0GyAVdKcNOOU5zp_CJuD6TOUcu6cZ5rnARK3h0EZAAJz-AEu6hn3656bias51xr-D_nKGlr4yVrJvEmpp6NVo8KLW29z_3eCNZBt46R7DFvKtR85qPQ_w9tobHe40Yp5ULRoW3UUPYAEZeHXiFb5Ujeud',
+      rating: 4.5,
+      comment: 'Wait times were a bit long, but the consultation itself was top-notch. Highly professional and knowledgeable.',
+      date: 'Sep 20, 2024',
+      verified: true
+    }
   ]);
 
-  const [showAddReviewModal, setShowAddReviewModal] = useState(false);
-  const [newReview, setNewReview] = useState({ title: '', desc: '', rating: 5 });
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' | 'error' } | null>(null);
 
-  const handlePayTransaction = (id: string, amount: number) => {
-    if (confirm(`Do you want to pay $${amount.toFixed(2)} for this invoice?`)) {
-      setTransactions(transactions.map(t => t.id === id ? { ...t, status: 'Completed' } : t));
-      alert("Payment processed successfully.");
-    }
+  // Filter Payments state
+  const [paymentFilter, setPaymentFilter] = useState<'All' | 'Paid' | 'Refunded'>('All');
+
+  // Modal States
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [editingReview, setEditingReview] = useState<Review | null>(null);
+
+  // Review Form Fields
+  const [formDoctor, setFormDoctor] = useState("Dr. Sarah Jenkins");
+  const [formRating, setFormRating] = useState(5);
+  const [formComment, setFormComment] = useState("");
+
+  const triggerToast = (message: string, type: 'success' | 'info' | 'error' = 'success') => {
+    setToast({ message, type });
   };
 
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => setToast(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
+
+  // Open Add Review Modal
+  const openAddReview = () => {
+    setEditingReview(null);
+    setFormDoctor("Dr. Sarah Jenkins");
+    setFormRating(5);
+    setFormComment("");
+    setShowReviewModal(true);
+  };
+
+  // Open Edit Review Modal
+  const openEditReview = (review: Review) => {
+    setEditingReview(review);
+    setFormDoctor(review.doctorName);
+    setFormRating(review.rating);
+    setFormComment(review.comment);
+    setShowReviewModal(true);
+  };
+
+  // Handle Submit Review
+  const handleSubmitReview = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formComment.trim()) {
+      triggerToast("Please write a comment.", "error");
+      return;
+    }
+
+    if (editingReview) {
+      // Edit mode
+      setReviews(prev => prev.map(rev => 
+        rev.id === editingReview.id 
+          ? { ...rev, doctorName: formDoctor, rating: formRating, comment: formComment }
+          : rev
+      ));
+      triggerToast("Review updated successfully!");
+    } else {
+      // Add mode
+      const avatar = formDoctor.includes('Jenkins')
+        ? 'https://lh3.googleusercontent.com/aida-public/AB6AXuAyIPP2HItnAVYrmxxlyzPUiyXCp2xwzn7Jvtne1oU7jAjScLe8DV-FWkQAFdv5FVM8VfbG7KkMbbGYlBeiSIO1r39kkE_fTx_21AjLP4n1jBlBTA7tyLJbqWq8fbmBlpXbiyriXEnwN60TBgSkqwUbGrrMeZnh0qybHrPiVPxt4pgieWTrv2pu8FTrPaFcszkkl0hfyBUoYaneEuL7X4B7rkRzFHZJlD7pK4YRIUyXs9xmIpHDu9ea96MND_jmcuMz4ZKCrOMTNbuh'
+        : 'https://lh3.googleusercontent.com/aida-public/AB6AXuArPPre11naTt7ZObCHC1TS3IJV1RhFq1OOZjzs7WmxmZLy6_G1DTfQbi5WfTAy476jKSxIpIEs5s-MWFvF-PtOFooUp1JL80I2ByzZWlLWyHmCDmgpQwJ0GyAVdKcNOOU5zp_CJuD6TOUcu6cZ5rnARK3h0EZAAJz-AEu6hn3656bias51xr-D_nKGlr4yVrJvEmpp6NVo8KLW29z_3eCNZBt46R7DFvKtR85qPQ_w9tobHe40Yp5ULRoW3UUPYAEZeHXiFb5Ujeud';
+      const specialty = formDoctor.includes('Jenkins') ? 'General Practitioner' : 'Cardiologist';
+
+      const newReview: Review = {
+        id: Date.now().toString(),
+        doctorName: formDoctor,
+        specialty,
+        avatarUrl: avatar,
+        rating: formRating,
+        comment: formComment,
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+        verified: true
+      };
+      setReviews(prev => [newReview, ...prev]);
+      triggerToast("Review posted successfully!");
+    }
+
+    setShowReviewModal(false);
+  };
+
+  // Handle Delete Review
   const handleDeleteReview = (id: string) => {
     if (confirm("Are you sure you want to delete this review?")) {
-      setReviews(reviews.filter(r => r.id !== id));
+      setReviews(prev => prev.filter(r => r.id !== id));
+      triggerToast("Review deleted.", "info");
     }
   };
 
-  const handleUpdateReview = (id: string) => {
-    const review = reviews.find(r => r.id === id);
-    if (!review) return;
-    const newTitle = prompt("Update Title:", review.title);
-    const newDesc = prompt("Update Review Content:", review.desc);
-    if (newTitle && newDesc) {
-      setReviews(reviews.map(r => r.id === id ? { ...r, title: newTitle, desc: newDesc } : r));
-    }
-  };
-
-  const handleAddReviewSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newReview.title || !newReview.desc) return;
-
-    const reviewToAdd: Review = {
-      id: Date.now().toString(),
-      rating: newReview.rating,
-      date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
-      title: newReview.title,
-      desc: newReview.desc
-    };
-
-    setReviews([reviewToAdd, ...reviews]);
-    setNewReview({ title: '', desc: '', rating: 5 });
-    setShowAddReviewModal(false);
-  };
+  // Filtered Payments
+  const filteredPayments = payments.filter(pay => {
+    if (paymentFilter === 'All') return true;
+    return pay.status === paymentFilter;
+  });
 
   return (
-    <div className="space-y-lg">
-      {/* Payment History Section */}
-      <section className="space-y-sm">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/20 dark:border-white/10 pb-4">
-          <div>
-            <h1 className="font-headline-lg text-headline-lg font-bold text-primary dark:text-inverse-primary tracking-tight">Payment History</h1>
-            <p className="text-on-surface-variant dark:text-slate-400 text-sm font-semibold">Manage your clinical transactions, outstanding invoices, and copays.</p>
+    <div className="w-full text-left relative">
+      {/* Toast Notification */}
+      {toast && (
+        <div className="fixed top-24 right-8 z-50 animate-bounce">
+          <div className={`px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2 border text-white font-bold text-sm ${
+            toast.type === 'success' 
+              ? 'bg-emerald-600 border-emerald-500' 
+              : toast.type === 'error'
+                ? 'bg-rose-600 border-rose-500'
+                : 'bg-sky-600 border-sky-500'
+          }`}>
+            <span className="material-symbols-outlined">
+              {toast.type === 'success' ? 'check_circle' : toast.type === 'error' ? 'error' : 'info'}
+            </span>
+            {toast.message}
           </div>
-          <button 
-            onClick={() => alert("Simulating transaction history statement download...")}
-            className="flex items-center gap-1.5 px-4 py-2 bg-surface-container-low/60 dark:bg-slate-900 border border-outline-variant/20 dark:border-white/10 hover:bg-white/40 dark:hover:bg-slate-800 text-on-surface dark:text-slate-200 text-xs font-bold rounded-xl transition-all cursor-pointer"
-          >
-            <span className="material-symbols-outlined text-[16px]">download</span> Export Statements
-          </button>
         </div>
+      )}
 
-        {/* Transaction Cards List */}
-        <div className="space-y-2">
-          {transactions.map((t) => (
-            <div 
-              key={t.id}
-              onClick={() => t.status === 'Action Required' && handlePayTransaction(t.id, t.amount)}
-              className={`group flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 glass-card rounded-2xl transition-all border border-white/20 dark:border-white/10 shadow-sm ${
-                t.status === 'Action Required' 
-                  ? 'border-l-4 border-l-error cursor-pointer hover:border-l-error bg-error/5' 
-                  : 'hover:bg-primary/5 cursor-pointer'
-              }`}
+      {/* Page Title */}
+      <section className="mb-md">
+        <h2 className="font-headline-xl text-headline-xl text-on-surface dark:text-slate-100 font-bold mb-2 tracking-tight">Billing &amp; Feedback</h2>
+        <p className="font-body-md text-on-surface-variant dark:text-slate-400">Manage your clinical payments and rate your healthcare providers.</p>
+      </section>
+
+      {/* Section 1: Payment History */}
+      <section className="glass dark:bg-slate-900/60 dark:border-white/10 rounded-xl overflow-hidden shadow-sm border border-white/20">
+        <div className="p-md border-b border-white/20 dark:border-white/10 flex justify-between items-center bg-white/20 dark:bg-slate-900/40">
+          <h3 className="font-headline-md text-headline-md font-semibold text-on-surface dark:text-slate-100">Payment History</h3>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-on-surface-variant dark:text-slate-400">Filter:</span>
+            <select 
+              value={paymentFilter}
+              onChange={(e) => setPaymentFilter(e.target.value as any)}
+              className="px-3 py-1 bg-white dark:bg-white/5 border border-outline/20 dark:border-white/10 rounded-lg text-xs font-bold text-on-surface dark:text-slate-200 focus:outline-none"
             >
-              <div className="flex items-center gap-md">
-                <div className={`h-11 w-11 rounded-xl flex items-center justify-center shrink-0 ${
-                  t.status === 'Action Required' ? 'bg-error/10 text-error' : 'bg-primary-container/20 text-primary dark:text-inverse-primary'
-                }`}>
-                  <span className="material-symbols-outlined text-lg">
-                    {t.dept.includes('Pharmacy') ? 'medication' : t.dept.includes('Diagnostics') ? 'science' : 'receipt_long'}
-                  </span>
-                </div>
-                <div>
-                  <h4 className="font-bold text-sm text-on-surface dark:text-white">{t.title}</h4>
-                  <p className="text-xs text-on-surface-variant/70 dark:text-slate-400 mt-0.5">{t.invoice} • {t.dept}</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4 mt-3 sm:mt-0 w-full sm:w-auto justify-between sm:justify-end border-t border-outline-variant/10 sm:border-0 pt-2 sm:pt-0">
-                <div className="text-right">
-                  <p className="font-bold text-sm text-on-surface dark:text-white">${t.amount.toFixed(2)}</p>
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                    t.status === 'Action Required' 
-                      ? 'bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-900/50' 
-                      : 'bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-900/50'
-                  }`}>
-                    {t.status}
-                  </span>
-                </div>
-                <div className="hidden sm:block opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-on-surface-variant/60 dark:text-slate-400">
-                  <span className="material-symbols-outlined">
-                    {t.status === 'Action Required' ? 'payment' : 'chevron_right'}
-                  </span>
-                </div>
-              </div>
-            </div>
-          ))}
+              <option value="All" className="dark:bg-[#1a2236]">All</option>
+              <option value="Paid" className="dark:bg-[#1a2236]">Paid</option>
+              <option value="Refunded" className="dark:bg-[#1a2236]">Refunded</option>
+            </select>
+          </div>
+        </div>
+        <div className="overflow-x-auto scrollbar-hide">
+          <table className="w-full text-left border-collapse">
+            <thead className="bg-surface-container-low/50 dark:bg-white/5 font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant dark:text-slate-400 border-b border-white/10">
+              <tr>
+                <th className="px-md py-4">Date</th>
+                <th className="px-md py-4">Provider</th>
+                <th className="px-md py-4">Service</th>
+                <th className="px-md py-4">Amount</th>
+                <th className="px-md py-4">Status</th>
+                <th className="px-md py-4 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-white/10 dark:divide-white/5">
+              {filteredPayments.map(pay => (
+                <tr key={pay.id} className="hover:bg-white/20 dark:hover:bg-white/5 transition-colors group">
+                  <td className="px-md py-4 font-body-md text-on-surface dark:text-slate-200">{pay.date}</td>
+                  <td className="px-md py-4 font-label-md font-bold text-on-surface dark:text-slate-100">{pay.provider}</td>
+                  <td className="px-md py-4 font-body-md text-on-surface-variant dark:text-slate-300">{pay.service}</td>
+                  <td className="px-md py-4 font-body-md text-on-surface dark:text-slate-200 font-semibold">{pay.amount}</td>
+                  <td className="px-md py-4">
+                    {pay.status === 'Paid' ? (
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary dark:text-primary-fixed border border-primary/20">
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary dark:bg-primary-fixed mr-2 animate-pulse"></span> Paid
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-surface-variant/50 text-tertiary dark:text-slate-300 border border-outline/20">
+                        <span className="w-1.5 h-1.5 rounded-full bg-tertiary mr-2"></span> Refunded
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-md py-4 text-right">
+                    <button 
+                      onClick={() => triggerToast(`Downloading receipt for invoice ID #INV-${pay.id}039...`, "info")}
+                      className="p-2 text-on-surface-variant hover:text-primary dark:text-slate-400 dark:hover:text-primary-fixed cursor-pointer transition-all"
+                      title="Download Invoice"
+                    >
+                      <span className="material-symbols-outlined">receipt_long</span>
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </section>
 
-      {/* Reviews Section */}
-      <section className="space-y-md pt-lg">
+      {/* Section 2: My Reviews */}
+      <section className="space-y-md mt-lg">
         <div className="flex justify-between items-center">
-          <div>
-            <h3 className="font-headline-lg text-headline-lg font-bold text-on-surface dark:text-white tracking-tight">My Reviews</h3>
-            <p className="text-on-surface-variant dark:text-slate-400 text-sm font-semibold">Your experiences help us improve our care delivery.</p>
-          </div>
+          <h3 className="font-headline-md text-headline-md font-semibold text-on-surface dark:text-slate-100">My Reviews</h3>
           <button 
-            onClick={() => setShowAddReviewModal(true)}
-            className="px-5 py-2.5 bg-primary text-on-primary rounded-full text-xs font-bold flex items-center gap-1 hover:bg-primary-container shadow-lg shadow-primary/20 active:scale-95 transition-all cursor-pointer"
+            onClick={openAddReview}
+            className="bg-primary text-white px-6 py-2 rounded-xl font-label-md flex items-center gap-2 hover:bg-primary-container transition-all active:scale-95 shadow-lg shadow-primary/20 cursor-pointer font-bold"
           >
-            <span className="material-symbols-outlined text-[16px]">add</span> Write Review
+            <span className="material-symbols-outlined text-sm">add</span>
+            Add New Review
           </button>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
-          {reviews.map((rev) => (
-            <div key={rev.id} className="glass-card p-5 rounded-3xl flex flex-col h-full border border-outline-variant/15 shadow-sm hover:shadow-md transition-all hover:scale-[1.01] bg-white/10 dark:bg-slate-950/10">
-              <div className="flex justify-between items-start mb-3">
-                <div className="flex items-center text-secondary animate-pulse-slow">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <span 
-                      key={i} 
-                      className="material-symbols-outlined text-sm font-extrabold"
-                      style={{ fontVariationSettings: i < rev.rating ? "'FILL' 1" : "'FILL' 0" }}
-                    >
-                      star
-                    </span>
-                  ))}
+          {reviews.map(rev => (
+            <div key={rev.id} className="glass dark:bg-slate-900/60 dark:border-white/10 p-md rounded-xl shadow-sm border border-white/20 flex flex-col h-full hover:scale-[1.01] transition-transform">
+              <div className="flex justify-between items-start mb-4">
+                <div className="flex gap-3">
+                  <img className="w-12 h-12 rounded-lg object-cover" src={rev.avatarUrl} alt="" />
+                  <div className="text-left">
+                    <h4 className="font-label-md font-bold text-on-surface dark:text-slate-100">{rev.doctorName}</h4>
+                    <p className="text-label-sm text-on-surface-variant/70 dark:text-slate-400">{rev.specialty}</p>
+                  </div>
                 </div>
-                <span className="text-[10px] text-on-surface-variant/60 dark:text-slate-400 font-bold">{rev.date}</span>
+                <div className="flex gap-1">
+                  <button 
+                    onClick={() => openEditReview(rev)}
+                    className="p-1 text-on-surface-variant/60 hover:text-primary dark:text-slate-400 dark:hover:text-primary-fixed transition-colors cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-sm">edit</span>
+                  </button>
+                  <button 
+                    onClick={() => handleDeleteReview(rev.id)}
+                    className="p-1 text-on-surface-variant/60 hover:text-error dark:text-slate-400 dark:hover:text-error transition-colors cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-sm">delete</span>
+                  </button>
+                </div>
               </div>
-              <h4 className="font-bold text-sm text-on-surface dark:text-white mb-1.5">{rev.title}</h4>
-              <p className="text-xs text-on-surface-variant dark:text-slate-300 flex-grow leading-relaxed">
-                {rev.desc}
+              <div className="flex text-amber-400 mb-3 text-left">
+                {Array.from({ length: 5 }).map((_, idx) => {
+                  const fillType = idx < Math.floor(rev.rating) ? '1' : rev.rating % 1 !== 0 && idx === Math.floor(rev.rating) ? '0.5' : '0';
+                  return (
+                    <span 
+                      key={idx} 
+                      className="material-symbols-outlined" 
+                      style={{ fontVariationSettings: `'FILL' ${fillType}` }}
+                    >
+                      {fillType === '0.5' ? 'star_half' : 'star'}
+                    </span>
+                  );
+                })}
+              </div>
+              <p className="font-body-md text-on-surface-variant dark:text-slate-300 leading-relaxed italic text-left flex-grow">
+                "{rev.comment}"
               </p>
-              <div className="mt-4 pt-3 border-t border-outline-variant/10 flex gap-4">
-                <button 
-                  onClick={() => handleUpdateReview(rev.id)}
-                  className="text-primary dark:text-inverse-primary text-xs font-bold hover:underline cursor-pointer"
-                >
-                  Update
-                </button>
-                <button 
-                  onClick={() => handleDeleteReview(rev.id)}
-                  className="text-error text-xs font-bold hover:underline cursor-pointer"
-                >
-                  Delete
-                </button>
+              <div className="mt-auto pt-4 flex justify-between items-center text-label-sm text-on-surface-variant/50 dark:text-slate-400 border-t border-white/5">
+                <span>Posted {rev.date}</span>
+                <span className="flex items-center gap-1 font-semibold"><span className="material-symbols-outlined text-xs">verified</span> Verified patient</span>
               </div>
             </div>
           ))}
 
-          {/* Add New Visual Card */}
+          {/* Add Review Placeholder Card */}
           <div 
-            onClick={() => setShowAddReviewModal(true)}
-            className="border-2 border-dashed border-outline-variant/30 rounded-3xl flex flex-col items-center justify-center h-full min-h-[175px] p-5 cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all group"
+            onClick={openAddReview}
+            className="border-2 border-dashed border-outline/20 dark:border-white/10 rounded-xl flex flex-col items-center justify-center p-md group cursor-pointer hover:border-primary/50 transition-all min-h-[220px]"
           >
-            <div className="w-11 h-11 rounded-full bg-surface-container-low dark:bg-slate-900 flex items-center justify-center mb-3 group-hover:scale-115 transition-transform duration-200">
-              <span className="material-symbols-outlined text-primary text-xl">edit_note</span>
+            <div className="w-12 h-12 rounded-full bg-primary/5 group-hover:bg-primary/10 flex items-center justify-center mb-3 transition-colors">
+              <span className="material-symbols-outlined text-primary">rate_review</span>
             </div>
-            <p className="text-xs text-on-surface-variant/80 dark:text-slate-300 font-bold text-center">Write another feedback?</p>
-            <p className="text-[10px] text-primary font-extrabold mt-1">Review medical services</p>
+            <p className="font-label-md font-bold text-on-surface-variant dark:text-slate-300 group-hover:text-primary">Rate your last visit</p>
+            <p className="text-label-sm text-on-surface-variant/50 dark:text-slate-400 text-center">Your feedback helps improve our care quality.</p>
           </div>
         </div>
       </section>
 
-      {/* Write Review Modal */}
-      {showAddReviewModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowAddReviewModal(false)}></div>
-          <div className="relative bg-surface-container-lowest dark:bg-slate-900 border border-white/20 dark:border-white/10 w-full max-w-[448px] rounded-3xl p-6 shadow-2xl animate-scale-up">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="font-bold text-lg text-primary dark:text-inverse-primary">Write Service Review</h3>
-              <button onClick={() => setShowAddReviewModal(false)} className="text-on-surface-variant hover:text-primary dark:text-slate-400 dark:hover:text-white">
+      {/* Review Modal Form */}
+      {showReviewModal && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+          <div 
+            className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" 
+            onClick={() => setShowReviewModal(false)}
+          ></div>
+          <div className="glass dark:bg-[#1e293b] dark:border-white/10 relative w-full max-w-xl rounded-2xl shadow-2xl p-md md:p-lg border border-white/40 animate-in fade-in zoom-in duration-200">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="font-headline-md text-headline-md font-bold text-on-surface dark:text-white">
+                {editingReview ? "Edit Feedback Review" : "Add New Review"}
+              </h3>
+              <button 
+                className="p-2 hover:bg-white/20 dark:hover:bg-white/5 rounded-full transition-all text-on-surface dark:text-slate-300" 
+                onClick={() => setShowReviewModal(false)}
+              >
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
-            
-            <form onSubmit={handleAddReviewSubmit} className="space-y-4">
+            <form onSubmit={handleSubmitReview} className="space-y-6 text-left">
               <div>
-                <label className="block text-xs font-bold text-on-surface-variant/80 dark:text-slate-300 mb-1">Star Rating</label>
-                <div className="flex items-center gap-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button 
-                      key={star}
-                      type="button"
-                      onClick={() => setNewReview({...newReview, rating: star})}
-                      className="text-secondary p-1 hover:scale-110 transition-transform"
-                    >
-                      <span 
-                        className="material-symbols-outlined text-2xl font-extrabold"
-                        style={{ fontVariationSettings: star <= newReview.rating ? "'FILL' 1" : "'FILL' 0" }}
+                <label className="block font-label-md text-on-surface-variant dark:text-slate-400 mb-2 font-bold">Select Doctor</label>
+                <select 
+                  className="w-full px-4 py-3 bg-white/50 dark:bg-white/5 border border-outline/20 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-primary outline-none text-on-surface dark:text-slate-100"
+                  value={formDoctor}
+                  onChange={(e) => setFormDoctor(e.target.value)}
+                >
+                  <option className="dark:bg-[#1e293b]" value="Dr. Sarah Jenkins">Dr. Sarah Jenkins (GP)</option>
+                  <option className="dark:bg-[#1e293b]" value="Dr. Michael Chen">Dr. Michael Chen (Cardiologist)</option>
+                </select>
+              </div>
+              <div>
+                <label className="block font-label-md text-on-surface-variant dark:text-slate-400 mb-2 font-bold">Rating</label>
+                <div className="flex gap-2">
+                  {Array.from({ length: 5 }).map((_, idx) => {
+                    const isLit = idx < formRating;
+                    return (
+                      <button 
+                        key={idx}
+                        className="material-symbols-outlined text-3xl text-amber-400 cursor-pointer transition-transform hover:scale-110 active:scale-95" 
+                        style={{ fontVariationSettings: `'FILL' ${isLit ? '1' : '0'}` }}
+                        type="button"
+                        onClick={() => setFormRating(idx + 1)}
                       >
                         star
-                      </span>
-                    </button>
-                  ))}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
-
               <div>
-                <label className="block text-xs font-bold text-on-surface-variant/80 dark:text-slate-300 mb-1">Review Title</label>
-                <input 
-                  required
-                  type="text" 
-                  value={newReview.title}
-                  onChange={(e) => setNewReview({...newReview, title: e.target.value})}
-                  className="w-full px-4 py-2.5 bg-surface-container-low dark:bg-slate-950 border border-outline-variant/20 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm text-on-surface dark:text-slate-100"
-                  placeholder="e.g. Excellent care in Orthopedics"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-on-surface-variant/80 dark:text-slate-300 mb-1">Feedback Description</label>
+                <label className="block font-label-md text-on-surface-variant dark:text-slate-400 mb-2 font-bold">Your Experience</label>
                 <textarea 
-                  required
-                  value={newReview.desc}
-                  onChange={(e) => setNewReview({...newReview, desc: e.target.value})}
+                  className="w-full px-4 py-3 bg-white/50 dark:bg-white/5 border border-outline/20 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-primary outline-none text-on-surface dark:text-slate-100 placeholder:text-on-surface-variant/40" 
+                  placeholder="How was your visit? Share what you liked or what we can improve..." 
                   rows={4}
-                  className="w-full px-4 py-2.5 bg-surface-container-low dark:bg-slate-950 border border-outline-variant/20 dark:border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm text-on-surface dark:text-slate-100 resize-none"
-                  placeholder="Write your review message..."
-                />
+                  value={formComment}
+                  onChange={(e) => setFormComment(e.target.value)}
+                  required
+                ></textarea>
               </div>
-
-              <div className="pt-2 flex justify-end gap-2">
+              <div className="flex gap-4 pt-4">
                 <button 
+                  className="flex-1 py-3 border border-outline/20 dark:border-white/10 rounded-xl font-label-md text-on-surface-variant dark:text-slate-300 hover:bg-white/10 transition-all cursor-pointer font-bold" 
+                  onClick={() => setShowReviewModal(false)} 
                   type="button"
-                  onClick={() => setShowAddReviewModal(false)}
-                  className="px-4 py-2 bg-surface-container-low dark:bg-slate-800 text-on-surface-variant dark:text-slate-300 rounded-xl text-xs font-bold hover:bg-surface-container-high transition-colors"
                 >
                   Cancel
                 </button>
                 <button 
+                  className="flex-1 py-3 bg-primary text-white rounded-xl font-label-md hover:bg-primary-container transition-all shadow-lg shadow-primary/20 cursor-pointer font-bold" 
                   type="submit"
-                  className="px-4 py-2 bg-primary text-on-primary rounded-xl text-xs font-bold hover:bg-primary-container shadow-md transition-colors"
                 >
-                  Post Review
+                  {editingReview ? "Save Changes" : "Submit Review"}
                 </button>
               </div>
             </form>
