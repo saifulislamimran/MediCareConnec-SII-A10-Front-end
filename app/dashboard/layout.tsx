@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import { useTheme } from 'next-themes';
 
 export default function DashboardLayout({
   children,
@@ -11,6 +12,7 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { theme, setTheme } = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   // Simulated session user
@@ -84,7 +86,7 @@ export default function DashboardLayout({
   return (
     <div className="min-h-screen flex text-body-md text-on-surface dark:text-slate-100 bg-background dark:bg-[#0b1120] transition-colors duration-300">
       {/* Sidebar Navigation - Desktop */}
-      <aside className="h-screen w-64 left-0 top-0 fixed bg-white/40 dark:bg-slate-900/60 backdrop-blur-2xl border-r border-white/20 dark:border-white/10 shadow-xl flex flex-col p-md space-y-base z-50 hidden md:flex">
+      <aside className="h-screen w-64 left-0 top-0 fixed bg-white/40 dark:bg-[#0b1120]/60 backdrop-blur-2xl border-r border-white/20 dark:border-white/10 shadow-xl flex flex-col p-md space-y-base z-50 hidden md:flex">
         <div className="mb-lg flex items-center gap-base">
           <Link href="/" className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-on-primary">
             <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>medical_services</span>
@@ -137,7 +139,7 @@ export default function DashboardLayout({
           {/* Overlay */}
           <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)}></div>
           
-          <aside className="relative w-64 max-w-xs bg-white/90 dark:bg-slate-900/90 h-full p-md flex flex-col space-y-base shadow-2xl border-r border-white/20 dark:border-white/10 animate-slide-in">
+          <aside className="relative w-64 max-w-xs bg-white/90 dark:bg-[#0b1120]/90 h-full p-md flex flex-col space-y-base shadow-2xl border-r border-white/20 dark:border-white/10 animate-slide-in">
             <div className="mb-lg flex items-center justify-between">
               <div className="flex items-center gap-base">
                 <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-on-primary">
@@ -217,6 +219,16 @@ export default function DashboardLayout({
                 <input className="pl-10 pr-4 py-2 bg-surface-container-low dark:bg-slate-900 border border-outline-variant/35 dark:border-white/10 rounded-full w-64 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-label-md text-on-surface dark:text-slate-100 placeholder:text-on-surface-variant/50 dark:placeholder:text-slate-500" placeholder="Search patients or records..." type="text"/>
               </div>
               <div className="flex items-center gap-sm">
+                <button 
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  className="p-2 rounded-full hover:bg-white/30 dark:hover:bg-white/5 text-on-surface-variant dark:text-slate-400 transition-all duration-300 flex items-center justify-center cursor-pointer"
+                  title="Toggle Theme"
+                  aria-label="Toggle Theme"
+                >
+                  <span className="material-symbols-outlined">
+                    {mounted && theme === 'dark' ? 'light_mode' : 'dark_mode'}
+                  </span>
+                </button>
                 <button className="p-2 rounded-full hover:bg-white/30 dark:hover:bg-white/5 text-on-surface-variant dark:text-slate-400 transition-all duration-300 relative" aria-label="Notifications">
                   <span className="material-symbols-outlined">notifications</span>
                   <span className="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border border-white dark:border-slate-900"></span>
