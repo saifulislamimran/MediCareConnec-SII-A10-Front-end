@@ -134,28 +134,13 @@ export default function Navbar() {
                     >
                       <span className="material-symbols-outlined text-[18px]">dashboard</span> Dashboard
                     </Link>
-                    <button 
-                      onClick={() => {
-                        setIsProfileOpen(false);
-                        alert("Profile editor module loaded.");
-                      }}
+                    <Link 
+                      href="/dashboard/profile/edit"
+                      onClick={() => setIsProfileOpen(false)}
                       className="flex items-center gap-3 px-4 py-2.5 text-xs text-on-surface dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-white/5 rounded-xl transition-colors font-bold w-full text-left cursor-pointer"
                     >
-                      <span className="material-symbols-outlined text-[18px]">edit</span> Edit Profile
-                    </button>
-                    <button 
-                      onClick={() => {
-                        setIsProfileOpen(false);
-                        if (confirm("Are you sure you want to permanently delete your account? This action cannot be undone.")) {
-                          localStorage.removeItem('medicare_user');
-                          alert("Account successfully deleted.");
-                          window.location.href = "/";
-                        }
-                      }}
-                      className="flex items-center gap-3 px-4 py-2.5 text-xs text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-xl transition-colors font-bold w-full text-left cursor-pointer"
-                    >
-                      <span className="material-symbols-outlined text-[18px]">delete_forever</span> Delete Account
-                    </button>
+                      <span className="material-symbols-outlined text-[18px]">edit</span> Profile Edit
+                    </Link>
                     <div className="h-px bg-black/5 dark:bg-white/5 my-1"></div>
                     <button 
                       onClick={handleLogout}

@@ -175,14 +175,30 @@ export default function AboutPage() {
               whileInView="visible"
               viewport={{ once: true, margin: "-100px" }}
               variants={revealVariants}
-              className="md:col-span-2 md:row-span-2 glass-ultra rounded-3xl p-6 md:p-10 flex flex-col items-center justify-center text-center group overflow-hidden relative border border-white/30 dark:border-white/10 bg-white/40 dark:bg-slate-900/60"
+              className="md:col-span-2 md:row-span-2 glass-ultra rounded-3xl p-8 md:p-12 flex flex-col justify-between group overflow-hidden relative border border-white/30 dark:border-white/10 bg-white/40 dark:bg-slate-900/60"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-              <span className="material-symbols-outlined text-6xl text-primary dark:text-inverse-primary mb-6 animate-pulse">monitoring</span>
-              <div className="z-10 max-w-md">
-                <h3 className="font-headline-lg text-headline-lg text-on-surface dark:text-slate-100 font-bold">Real-time Vitals</h3>
-                <p className="text-on-surface-variant dark:text-slate-400 mt-3 max-w-sm mx-auto">Integrating 24/7 monitoring for over 2.4 million active patients worldwide.</p>
-                <div className="text-[5.5rem] font-black text-primary dark:text-inverse-primary leading-none tracking-tighter mt-6">99.9%</div>
+              {/* Background gradient chart graphic like in the mockup */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-40"></div>
+              
+              {/* Chart Line background SVG to mimic mockup */}
+              <div className="absolute right-0 bottom-0 w-[55%] h-full opacity-15 dark:opacity-25 flex items-end justify-end pointer-events-none select-none p-6">
+                <svg className="w-full h-[60%] text-primary dark:text-inverse-primary" fill="none" viewBox="0 0 100 100" preserveAspectRatio="none">
+                  <path d="M0,80 Q20,60 40,75 T80,30 T100,10" stroke="currentColor" strokeWidth="6" strokeLinecap="round" />
+                  <path d="M0,80 Q20,60 40,75 T80,30 T100,10 L100,100 L0,100 Z" fill="currentColor" opacity="0.1" />
+                </svg>
+              </div>
+
+              <div className="relative z-10 flex flex-col h-full justify-between items-start text-left">
+                <span className="material-symbols-outlined text-[3.5rem] text-primary dark:text-inverse-primary mb-6">monitoring</span>
+                <div className="flex-grow flex flex-col justify-center">
+                  <h3 className="font-headline-lg text-headline-lg text-on-surface dark:text-slate-100 font-bold tracking-tight">Real-time Vitals</h3>
+                  <p className="text-on-surface-variant dark:text-slate-400 mt-2 max-w-xs text-sm md:text-base leading-relaxed">
+                    Integrating 24/7 monitoring for over 2.4 million active patients worldwide.
+                  </p>
+                </div>
+                <div className="text-[5.5rem] font-black text-primary dark:text-inverse-primary leading-none tracking-tighter mt-8">
+                  99.9%
+                </div>
               </div>
             </motion.div>
             
