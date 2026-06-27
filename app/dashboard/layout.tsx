@@ -14,6 +14,7 @@ export default function DashboardLayout({
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   
   // Simulated session user
   const [user, setUser] = useState<{ name: string; role: 'patient' | 'doctor' | 'admin'; email: string } | null>(null);
@@ -243,14 +244,55 @@ export default function DashboardLayout({
                 </button>
               </div>
               
-              <div className="flex items-center gap-sm border-l border-white/20 dark:border-white/10 pl-md">
-                <div className="text-right hidden lg:block mr-2">
-                  <p className="font-label-md text-label-md font-bold text-on-surface dark:text-slate-100 leading-tight">{user.name}</p>
-                  <p className="font-label-sm text-label-sm text-on-surface-variant/60 dark:text-slate-400 leading-tight uppercase">{user.role}</p>
-                </div>
-                <div className="w-10 h-10 rounded-full border border-primary/30 overflow-hidden shadow-sm flex items-center justify-center bg-primary/10 dark:bg-white/5">
-                  <span className="material-symbols-outlined text-primary dark:text-inverse-primary">account_circle</span>
-                </div>
+              <div className="relative">
+                <button 
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                  className="flex items-center gap-sm border-l border-white/20 dark:border-white/10 pl-md hover:opacity-80 transition-all cursor-pointer text-left focus:outline-none"
+                  aria-label="User Menu"
+                >
+                  <div className="text-right hidden lg:block mr-2">
+                    <p className="font-label-md text-label-md font-bold text-on-surface dark:text-slate-100 leading-tight">{user.name}</p>
+                    <p className="font-label-sm text-label-sm text-on-surface-variant/60 dark:text-slate-400 leading-tight uppercase">{user.role}</p>
+                  </div>
+                  <div className="w-10 h-10 rounded-full border border-primary/30 overflow-hidden shadow-sm flex items-center justify-center bg-primary/10 dark:bg-white/5">
+                    <span className="material-symbols-outlined text-primary dark:text-inverse-primary">account_circle</span>
+                  </div>
+                </button>
+
+                {isProfileOpen && (
+                  <div className="absolute right-0 mt-3 w-52 bg-white/95 dark:bg-[#0b1120]/95 backdrop-blur-xl rounded-2xl overflow-hidden shadow-2xl z-50 border border-white/30 dark:border-white/10 animate-scale-up">
+                    <div className="p-2 flex flex-col gap-1 text-left">
+                      <div className="px-4 py-2 border-b border-black/5 dark:border-white/5 mb-1 lg:hidden">
+                        <p className="font-bold text-xs text-on-surface dark:text-slate-100 leading-tight">{user.name}</p>
+                        <p className="text-[9px] text-on-surface-variant/70 dark:text-slate-400 leading-tight uppercase tracking-wider">{user.role}</p>
+                      </div>
+                      <Link 
+                        href={`/dashboard/${user.role}`}
+                        onClick={() => setIsProfileOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-xs text-on-surface dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-white/5 rounded-xl transition-colors font-bold"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">dashboard</span> Dashboard
+                      </Link>
+                      <Link 
+                        href="/dashboard/profile/edit"
+                        onClick={() => setIsProfileOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-xs text-on-surface dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-white/5 rounded-xl transition-colors font-bold w-full text-left cursor-pointer"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">edit</span> Profile Edit
+                      </Link>
+                      <div className="h-px bg-black/5 dark:bg-white/5 my-1"></div>
+                      <button 
+                        onClick={() => {
+                          setIsProfileOpen(false);
+                          handleLogout();
+                        }}
+                        className="flex items-center gap-3 px-4 py-2.5 text-xs text-error hover:bg-error/10 rounded-xl transition-colors font-bold w-full text-left cursor-pointer"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">logout</span> Logout
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
