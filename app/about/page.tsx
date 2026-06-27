@@ -175,15 +175,15 @@ export default function AboutPage() {
               whileInView="visible"
               viewport={{ once: true, margin: "-100px" }}
               variants={revealVariants}
-              className="md:col-span-2 md:row-span-2 glass-ultra rounded-3xl p-6 md:p-10 flex flex-col justify-between group overflow-hidden relative border border-white/30 dark:border-white/10 bg-white/40 dark:bg-slate-900/60"
+              className="md:col-span-2 md:row-span-2 glass-ultra rounded-3xl p-6 md:p-10 flex flex-col items-center justify-center text-center group overflow-hidden relative border border-white/30 dark:border-white/10 bg-white/40 dark:bg-slate-900/60"
             >
-              <div className="absolute -right-20 -top-20 w-80 h-80 bg-primary/5 dark:bg-inverse-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-all duration-700"></div>
-              <span className="material-symbols-outlined text-5xl text-primary dark:text-inverse-primary mb-md">monitoring</span>
-              <div>
-                <h3 className="font-headline-lg text-headline-lg text-on-surface dark:text-slate-100">Real-time Vitals</h3>
-                <p className="text-on-surface-variant dark:text-slate-400 mt-2 max-w-xs">Integrating 24/7 monitoring for over 2.4 million active patients worldwide.</p>
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+              <span className="material-symbols-outlined text-6xl text-primary dark:text-inverse-primary mb-6 animate-pulse">monitoring</span>
+              <div className="z-10 max-w-md">
+                <h3 className="font-headline-lg text-headline-lg text-on-surface dark:text-slate-100 font-bold">Real-time Vitals</h3>
+                <p className="text-on-surface-variant dark:text-slate-400 mt-3 max-w-sm mx-auto">Integrating 24/7 monitoring for over 2.4 million active patients worldwide.</p>
+                <div className="text-[5.5rem] font-black text-primary dark:text-inverse-primary leading-none tracking-tighter mt-6">99.9%</div>
               </div>
-              <div className="text-[5rem] font-black text-primary dark:text-inverse-primary leading-none tracking-tighter mt-4">99.9%</div>
             </motion.div>
             
             {/* Metric 2 */}

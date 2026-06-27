@@ -121,8 +121,12 @@ export default function Navbar() {
 
               {/* Profile Dropdown */}
               {isProfileOpen && (
-                <div className="absolute right-0 mt-3 w-48 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl rounded-2xl overflow-hidden shadow-2xl z-50 border border-white/20 dark:border-white/10 animate-scale-up">
-                  <div className="p-2 flex flex-col gap-1">
+                <div className="absolute right-0 mt-3 w-52 bg-white/95 dark:bg-slate-900/90 backdrop-blur-xl rounded-2xl overflow-hidden shadow-2xl z-50 border border-white/30 dark:border-white/10 animate-scale-up">
+                  <div className="p-2 flex flex-col gap-1 text-left">
+                    <div className="px-4 py-2 border-b border-black/5 dark:border-white/5 mb-1 lg:hidden">
+                      <p className="font-bold text-xs text-on-surface dark:text-slate-100 leading-tight">{user.name}</p>
+                      <p className="text-[9px] text-on-surface-variant/70 dark:text-slate-400 leading-tight uppercase tracking-wider">{user.role}</p>
+                    </div>
                     <Link 
                       href={`/dashboard/${user.role}`}
                       onClick={() => setIsProfileOpen(false)}
@@ -130,6 +134,29 @@ export default function Navbar() {
                     >
                       <span className="material-symbols-outlined text-[18px]">dashboard</span> Dashboard
                     </Link>
+                    <button 
+                      onClick={() => {
+                        setIsProfileOpen(false);
+                        alert("Profile editor module loaded.");
+                      }}
+                      className="flex items-center gap-3 px-4 py-2.5 text-xs text-on-surface dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-white/5 rounded-xl transition-colors font-bold w-full text-left cursor-pointer"
+                    >
+                      <span className="material-symbols-outlined text-[18px]">edit</span> Edit Profile
+                    </button>
+                    <button 
+                      onClick={() => {
+                        setIsProfileOpen(false);
+                        if (confirm("Are you sure you want to permanently delete your account? This action cannot be undone.")) {
+                          localStorage.removeItem('medicare_user');
+                          alert("Account successfully deleted.");
+                          window.location.href = "/";
+                        }
+                      }}
+                      className="flex items-center gap-3 px-4 py-2.5 text-xs text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-xl transition-colors font-bold w-full text-left cursor-pointer"
+                    >
+                      <span className="material-symbols-outlined text-[18px]">delete_forever</span> Delete Account
+                    </button>
+                    <div className="h-px bg-black/5 dark:bg-white/5 my-1"></div>
                     <button 
                       onClick={handleLogout}
                       className="flex items-center gap-3 px-4 py-2.5 text-xs text-error hover:bg-error/10 rounded-xl transition-colors font-bold w-full text-left cursor-pointer"
