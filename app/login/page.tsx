@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -10,16 +11,13 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState<'patient' | 'doctor' | 'admin'>('patient');
   const [showPassword, setShowPassword] = useState(false);
-  
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
 
   // Handle Login
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email || !password) {
-      alert("Please fill in all fields");
+      toast.error("Please fill in all fields");
       return;
     }
 
@@ -33,14 +31,13 @@ export default function LoginPage() {
     localStorage.setItem('medicare_user', JSON.stringify(mockUser));
 
     // Trigger toast success notification
-    setToastMessage(`Redirecting to ${role === 'doctor' ? 'Doctor Clinical' : role === 'admin' ? 'Admin Analytics' : 'Patient'} Portal...`);
-    setShowToast(true);
+    toast.success(`Welcome back, ${name}! Accessing dashboard...`);
 
-    // Redirect after 2 seconds
+    // Redirect after 1.5 seconds
     setTimeout(() => {
       router.push(`/dashboard/${role}`);
       router.refresh();
-    }, 2000);
+    }, 1500);
   };
 
   return (
@@ -168,20 +165,7 @@ export default function LoginPage() {
         </div>
       </main>
       
-      {/* Success Toast Notification */}
-      {showToast && (
-        <div className="fixed top-1/2 right-margin-desktop -translate-y-1/2 z-50 pointer-events-none transition-all duration-500 flex">
-          <div className="toast-slide-in glass-card border-l-4 border-l-primary-container dark:border-l-inverse-primary bg-white/90 dark:bg-slate-900 p-md flex items-center gap-md min-w-[320px] rounded-r-xl shadow-2xl border border-white/35 dark:border-white/10">
-            <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
-              <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="font-label-md text-label-md text-on-surface dark:text-slate-150 font-bold">Authentication Successful</span>
-              <span className="font-label-sm text-label-sm text-on-surface-variant dark:text-slate-400">{toastMessage}</span>
-            </div>
-          </div>
-        </div>
-      )}
+
       
       {/* Footer Identity */}
       <footer className="fixed bottom-0 w-full py-8 px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-4 z-10 pointer-events-none">

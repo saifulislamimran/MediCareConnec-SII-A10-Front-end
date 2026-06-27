@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -17,9 +18,6 @@ export default function RegisterPage() {
   const [hasNumber, setHasNumber] = useState(false);
   const [hasSpecialChar, setHasSpecialChar] = useState(false);
 
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
-
   // Run validation checks on password input change
   useEffect(() => {
     setHasMinLength(password.length >= 6);
@@ -32,12 +30,12 @@ export default function RegisterPage() {
     e.preventDefault();
 
     if (!fullname || !email || !password) {
-      alert("Please fill in all fields");
+      toast.error("Please fill in all fields");
       return;
     }
 
     if (!hasMinLength || !hasNumber || !hasSpecialChar) {
-      alert("Please satisfy all password security requirements.");
+      toast.error("Please satisfy all password security requirements.");
       return;
     }
 
@@ -46,14 +44,13 @@ export default function RegisterPage() {
     localStorage.setItem('medicare_user', JSON.stringify(mockUser));
 
     // Trigger toast success notification
-    setToastMessage("Account created successfully. Accessing dashboard...");
-    setShowToast(true);
+    toast.success("Account created successfully. Accessing dashboard...");
 
-    // Redirect after 2 seconds
+    // Redirect after 1.5 seconds
     setTimeout(() => {
       router.push(`/dashboard/${role}`);
       router.refresh();
-    }, 2000);
+    }, 1500);
   };
 
   return (
@@ -212,20 +209,7 @@ export default function RegisterPage() {
         </div>
       </main>
 
-      {/* Success Toast Notification */}
-      {showToast && (
-        <div className="fixed bottom-8 right-8 z-[100] max-w-[384px] w-full animate-slide-in flex">
-          <div className="glass-card bg-white/90 dark:bg-slate-900 border-l-4 border-l-primary-container dark:border-l-inverse-primary p-4 rounded-xl flex items-start gap-4 shadow-2xl border border-white/30 dark:border-white/10">
-            <div className="text-primary dark:text-inverse-primary mt-0.5 animate-pulse">
-              <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-            </div>
-            <div className="flex-grow">
-              <h4 className="font-label-md text-on-surface dark:text-slate-100 font-bold">Registration Successful</h4>
-              <p className="text-label-sm text-on-surface-variant dark:text-slate-400 mt-1">{toastMessage}</p>
-            </div>
-          </div>
-        </div>
-      )}
+
 
       {/* Footer */}
       <footer className="w-full py-8 px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-4 border-t border-outline-variant/30 dark:border-white/10 mt-auto bg-white/5 dark:bg-slate-950/20">
