@@ -181,21 +181,25 @@ export default function AboutPage() {
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-40"></div>
               
               {/* Chart Line background SVG to mimic mockup */}
-              <div className="absolute right-0 bottom-0 w-[55%] h-full opacity-15 dark:opacity-25 flex items-end justify-end pointer-events-none select-none p-6">
+              <div className="absolute right-0 bottom-0 w-[55%] h-full opacity-10 dark:opacity-20 flex items-end justify-end pointer-events-none select-none p-6">
                 <svg className="w-full h-[60%] text-primary dark:text-inverse-primary" fill="none" viewBox="0 0 100 100" preserveAspectRatio="none">
                   <path d="M0,80 Q20,60 40,75 T80,30 T100,10" stroke="currentColor" strokeWidth="6" strokeLinecap="round" />
                   <path d="M0,80 Q20,60 40,75 T80,30 T100,10 L100,100 L0,100 Z" fill="currentColor" opacity="0.1" />
                 </svg>
               </div>
 
-              <div className="relative z-10 flex flex-col h-full justify-between items-start text-left">
-                <span className="material-symbols-outlined text-[3.5rem] text-primary dark:text-inverse-primary mb-6">monitoring</span>
-                <div className="flex-grow flex flex-col justify-center">
+              <div className="relative z-10 flex flex-col h-full justify-between items-start text-left w-full">
+                <div className="w-14 h-14 rounded-2xl bg-primary/10 dark:bg-inverse-primary/10 flex items-center justify-center mb-6">
+                  <span className="material-symbols-outlined text-3xl text-primary dark:text-inverse-primary">monitoring</span>
+                </div>
+                
+                <div className="w-full flex-grow flex flex-col justify-center">
                   <h3 className="font-headline-lg text-headline-lg text-on-surface dark:text-slate-100 font-bold tracking-tight">Real-time Vitals</h3>
-                  <p className="text-on-surface-variant dark:text-slate-400 mt-2 max-w-xs text-sm md:text-base leading-relaxed">
+                  <p className="text-on-surface-variant dark:text-slate-400 mt-3 max-w-[340px] text-sm md:text-base leading-relaxed w-full">
                     Integrating 24/7 monitoring for over 2.4 million active patients worldwide.
                   </p>
                 </div>
+                
                 <div className="text-[5.5rem] font-black text-primary dark:text-inverse-primary leading-none tracking-tighter mt-8">
                   99.9%
                 </div>
