@@ -1,8 +1,13 @@
 "use client";
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  if (pathname?.startsWith('/dashboard')) return null;
+
   return (
     <footer className="w-full rounded-t-xl bg-surface-container dark:bg-slate-900 border-t border-outline-variant dark:border-white/10 mt-auto relative z-10">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-lg px-margin-desktop py-xl max-w-7xl mx-auto text-left">

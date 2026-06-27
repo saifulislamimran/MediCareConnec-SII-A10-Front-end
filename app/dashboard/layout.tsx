@@ -58,6 +58,7 @@ export default function DashboardLayout({
           { name: 'Analytics Overview', href: '/dashboard/admin', icon: 'analytics' },
           { name: 'Manage Users', href: '/dashboard/admin/users', icon: 'group' },
           { name: 'Verify Doctors', href: '/dashboard/admin/doctors', icon: 'verified' },
+          { name: 'Platform Management', href: '/dashboard/admin/manage', icon: 'admin_panel_settings' },
           { name: 'System Monitoring', href: '/dashboard/admin/monitoring', icon: 'monitor_heart' },
         ];
       case 'doctor':

@@ -43,6 +43,8 @@ export default function Navbar() {
     router.refresh();
   };
 
+  if (pathname?.startsWith('/dashboard')) return null;
+
   return (
     <nav className="fixed top-0 w-full z-50 bg-white/70 dark:bg-slate-900/80 backdrop-blur-md border-b border-white/20 dark:border-white/10 shadow-sm h-20 transition-all duration-300">
       <div className="flex justify-between items-center h-full px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto w-full">
