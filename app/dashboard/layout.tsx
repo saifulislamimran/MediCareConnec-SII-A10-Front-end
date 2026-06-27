@@ -64,6 +64,7 @@ export default function DashboardLayout({
         return [
           { name: 'Doctor Overview', href: '/dashboard/doctor', icon: 'home_health' },
           { name: 'Schedule Management', href: '/dashboard/doctor/schedule', icon: 'calendar_today' },
+          { name: 'Appointment Requests', href: '/dashboard/doctor/requests', icon: 'pending_actions' },
           { name: 'Prescriptions', href: '/dashboard/doctor/prescriptions', icon: 'medication' },
         ];
       case 'patient':
