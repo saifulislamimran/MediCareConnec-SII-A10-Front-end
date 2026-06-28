@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 interface Doctor {
   id: string;
@@ -146,6 +147,33 @@ export default function FindDoctorsPage() {
   const itemsPerPage = 4;
 
   const [filteredDoctors, setFilteredDoctors] = useState<Doctor[]>(mockDoctors);
+
+  const handleBookAppointment = async (doctorId: string, nextSlot: string) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://medi-care-connec-sii-a10-back-end.vercel.app'}/api/appointments/book`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          doctorId,
+          appointmentTime: nextSlot,
+          symptoms: 'Standard Consultation'
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success("Appointment booked successfully!");
+      } else {
+        toast.error(data.message || "Failed to book appointment.");
+      }
+    } catch (error) {
+      console.error("BOOKING ERROR:", error);
+      toast.error("An error occurred while booking the appointment.");
+    }
+  };
 
   // Apply filters and sorting
   useEffect(() => {
@@ -370,7 +398,7 @@ export default function FindDoctorsPage() {
                       <span className="text-label-sm text-outline dark:text-slate-450 uppercase tracking-wider">Next Slot</span>
                       <span className="text-label-md font-bold text-primary dark:text-inverse-primary">{doc.nextSlot}</span>
                     </div>
-                    <button className="bg-primary dark:bg-inverse-primary text-on-primary dark:text-on-primary-fixed-variant px-5 py-2 rounded-xl font-label-md hover:bg-primary-container dark:hover:bg-primary-fixed transition-all active:scale-95 shadow">Book Now</button>
+                    <button onClick={() => handleBookAppointment(doc.id, doc.nextSlot)} className="bg-primary dark:bg-inverse-primary text-on-primary dark:text-on-primary-fixed-variant px-5 py-2 rounded-xl font-label-md hover:bg-primary-container dark:hover:bg-primary-fixed transition-all active:scale-95 shadow">Book Now</button>
                   </div>
                 </div>
               </div>
