@@ -23,6 +23,7 @@ export default function LoginPage() {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://medi-care-connec-sii-a10-back-end.vercel.app'}/api/auth/google`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // <--- এই জাদুকরী লাইনটি যোগ করা হয়েছে
         body: JSON.stringify({
           name: user.displayName,
           email: user.email,
@@ -152,7 +153,7 @@ export default function LoginPage() {
                   </button>
                 </div>
               </div>
- 
+
               {/* Role Simulation Selector */}
               <div className="flex flex-col gap-xs">
                 <label className="font-label-md text-label-md text-on-surface dark:text-slate-100 ml-xs" htmlFor="role">Access Portal Role (Simulation)</label>

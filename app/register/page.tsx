@@ -220,6 +220,7 @@ export default function RegisterPage() {
                     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://medi-care-connec-sii-a10-back-end.vercel.app'}/api/auth/google`, {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
+                      credentials: 'include', // <--- এই জাদুকরী লাইনটি এখানে যোগ করা হয়েছে
                       body: JSON.stringify({
                         name: user.displayName,
                         email: user.email,
@@ -279,8 +280,6 @@ export default function RegisterPage() {
           </div>
         </div>
       </main>
-
-
 
       {/* Footer */}
       <footer className="w-full py-8 px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-4 border-t border-outline-variant/30 dark:border-white/10 mt-auto bg-white/5 dark:bg-slate-950/20">
