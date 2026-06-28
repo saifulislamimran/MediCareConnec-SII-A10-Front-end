@@ -1,306 +1,187 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface Appointment {
-  id: string;
+  _id: string;
   doctorName: string;
   hospital: string;
   avatarUrl: string;
-  date: string;
-  time: string;
-  specialty: string;
-  status: 'Confirmed' | 'Pending' | 'Completed';
-}
-
-interface PastAppointment {
-  id: string;
-  title: string;
-  doctorName: string;
-  specialty: string;
-  day: string;
-  month: string;
+  appointmentDate: string;
+  appointmentTime: string;
+  specialization: string;
+  appointmentStatus: 'Confirmed' | 'Pending' | 'Completed';
+  paymentStatus: 'Pending' | 'Paid';
+  consultationFee: number;
 }
 
 export default function PatientAppointmentsPage() {
-  const [appointments, setAppointments] = useState<Appointment[]>([
-    {
-      id: '1',
-      doctorName: 'Dr. Sarah Mitchell',
-      hospital: 'City General Hospital',
-      avatarUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCyT0hhYaVASQASck5qtbBVEa9nT4Jty2H9d3CxO7N3dWf1T-u7ZqIJkhMeDrzAY6Qj0ufl7TW8HDNpz56NCvuGaJnUjPoQ5yIzN1ySjP9jopUrfBsLJ-C0pnVvlDSrAU1dVGRVy_UvMOSiZlkiyCFEaN8QhX3U1PWYeBAHFQXkcsriAxymXOq0250wKXlSDfNh5xElwqmVdAhwsSnkP1iMQeaVtjdz1Qul0oKg0_j8AqcIv5HixggyMXhCjhnToKk8L_OqMCr_CyoJ',
-      date: 'Oct 24, 2023',
-      time: '09:30 AM (In-person)',
-      specialty: 'Cardiology',
-      status: 'Confirmed'
-    },
-    {
-      id: '2',
-      doctorName: 'Dr. Marcus Thorne',
-      hospital: 'SkinCare Specialists',
-      avatarUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDOyZjRtmSiHPlrZ0BIPpj8WwlZdkr4rEEAJxz1Kk0DBFECDN6eacZ8O_MqvS6JFOF4G02dqe_dpKJt1TxmG5vM8jze_nkrq-_JebHzmvVBCDuujcl0aZxizVevCR05gnZ6B0jbXlc6ZZdBs9tVrZPsBxsRQ3hA2p6ebixtxlwJ968-1shbgqBuISFkxTmj4gpQqFSMpCnEqR_FvlSny04WSKbt1DP9LYpJ1tIFBGG1Jjlst1t2BJEJE6kzR5OUHSQirP-UFxI3Hk1f',
-      date: 'Oct 28, 2023',
-      time: '02:15 PM (Video Call)',
-      specialty: 'Dermatology',
-      status: 'Pending'
+  const router = useRouter();
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [toastMsg, setToastMsg] = useState<{ message: string; type: 'success' | 'info' | 'error' } | null>(null);
+
+  const fetchAppointments = async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://medi-care-connec-sii-a10-back-end.vercel.app'}/api/appointments/my-list`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
+      });
+      const data = await response.json();
+      if (data.success) {
+        const mappedData = data.data.map((app: any) => ({
+          _id: app._id,
+          doctorName: app.doctorId?.doctorName || 'Unknown Doctor',
+          hospital: 'City General Hospital',
+          avatarUrl: 'https://via.placeholder.com/150',
+          appointmentDate: app.appointmentDate,
+          appointmentTime: app.appointmentTime,
+          specialization: app.doctorId?.specialization || 'General',
+          appointmentStatus: app.appointmentStatus,
+          paymentStatus: app.paymentStatus,
+          consultationFee: app.doctorId?.consultationFee || 100
+        }));
+        setAppointments(mappedData);
+      } else {
+        triggerToast(data.message || 'Failed to fetch appointments', 'error');
+      }
+    } catch (error) {
+      console.error(error);
+      triggerToast('Error fetching appointments', 'error');
+    } finally {
+      setIsLoading(false);
     }
-  ]);
-
-  const [pastAppointments, setPastAppointments] = useState<PastAppointment[]>([
-    {
-      id: 'p1',
-      title: 'Annual Wellness Exam',
-      doctorName: 'Dr. Emily Chen',
-      specialty: 'Internal Medicine',
-      day: '12',
-      month: 'Sep'
-    },
-    {
-      id: 'p2',
-      title: 'Orthopedic Consultation',
-      doctorName: 'Dr. Robert Vance',
-      specialty: 'Orthopedics',
-      day: '28',
-      month: 'Aug'
-    }
-  ]);
-
-  const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' | 'error' } | null>(null);
-
-  // Modal States
-  const [showScheduleModal, setShowScheduleModal] = useState(false);
-  const [showRescheduleModal, setShowRescheduleModal] = useState(false);
-  const [showViewModal, setShowViewModal] = useState(false);
-  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
-
-  // New Appointment Fields
-  const [newDoc, setNewDoc] = useState("Dr. Sarah Chen");
-  const [newSpecialty, setNewSpecialty] = useState("Cardiology");
-  const [newDate, setNewDate] = useState("2023-11-05");
-  const [newTime, setNewTime] = useState("10:00 AM");
-  const [newType, setNewType] = useState("In-person");
-
-  // Reschedule Fields
-  const [rescheduleDate, setRescheduleDate] = useState("");
-  const [rescheduleTime, setRescheduleTime] = useState("10:00 AM");
-
-  const triggerToast = (message: string, type: 'success' | 'info' | 'error' = 'success') => {
-    setToast({ message, type });
   };
 
   useEffect(() => {
-    if (toast) {
-      const timer = setTimeout(() => setToast(null), 3000);
+    fetchAppointments();
+  }, []);
+
+  const triggerToast = (message: string, type: 'success' | 'info' | 'error' = 'success') => {
+    setToastMsg({ message, type });
+  };
+
+  useEffect(() => {
+    if (toastMsg) {
+      const timer = setTimeout(() => setToastMsg(null), 3000);
       return () => clearTimeout(timer);
     }
-  }, [toast]);
-
-  const handleScheduleNew = (e: React.FormEvent) => {
-    e.preventDefault();
-    const formattedDate = new Date(newDate).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
-    const newAppointment: Appointment = {
-      id: Date.now().toString(),
-      doctorName: newDoc,
-      hospital: 'City General Hospital',
-      avatarUrl: newDoc.includes('Chen')
-        ? 'https://lh3.googleusercontent.com/aida-public/AB6AXuDiR5RYTGvSTO29od2n487K8uvvRxjLO9tYt1Piz_3Le5JPzRo5tWkJjaP-1qcVOAJmZAut9PNOF8eDTGD5UvqpO-q2HjqmV6CXviOjtAqpctFIwQxJ5X1CvW7h9wac0E86rZx2QrQ8FdLVEmYBxfW4dtKB02F7KDJLuqLrCFmF0XB2Y0B6INMeD-pupa_EkR7S84-cXyvAFsylO0gqYkeFUW1LpIa8skhF7m8PV8b-6uosRHQP-DwKjMYY9JMr2BLCJ4dkk4Ithm7x'
-        : 'https://lh3.googleusercontent.com/aida-public/AB6AXuCyT0hhYaVASQASck5qtbBVEa9nT4Jty2H9d3CxO7N3dWf1T-u7ZqIJkhMeDrzAY6Qj0ufl7TW8HDNpz56NCvuGaJnUjPoQ5yIzN1ySjP9jopUrfBsLJ-C0pnVvlDSrAU1dVGRVy_UvMOSiZlkiyCFEaN8QhX3U1PWYeBAHFQXkcsriAxymXOq0250wKXlSDfNh5xElwqmVdAhwsSnkP1iMQeaVtjdz1Qul0oKg0_j8AqcIv5HixggyMXhCjhnToKk8L_OqMCr_CyoJ',
-      date: formattedDate,
-      time: `${newTime} (${newType})`,
-      specialty: newSpecialty,
-      status: 'Pending'
-    };
-
-    setAppointments(prev => [...prev, newAppointment]);
-    setShowScheduleModal(false);
-    triggerToast("Appointment scheduled successfully!");
-  };
-
-  const handleRescheduleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedAppointment) return;
-    const formattedDate = new Date(rescheduleDate).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
-
-    setAppointments(prev => prev.map(app => 
-      app.id === selectedAppointment.id 
-        ? { ...app, date: formattedDate, time: `${rescheduleTime} (In-person)`, status: 'Pending' }
-        : app
-    ));
-    setShowRescheduleModal(false);
-    setSelectedAppointment(null);
-    triggerToast("Appointment reschedule request submitted.", "info");
-  };
-
-  const handleCancelAppointment = (id: string) => {
-    if (confirm("Are you sure you want to cancel this appointment?")) {
-      setAppointments(prev => prev.filter(app => app.id !== id));
-      triggerToast("Appointment cancelled successfully.", "info");
-    }
-  };
+  }, [toastMsg]);
 
   return (
-    <div className="w-full text-left relative">
-      {/* Toast Notification */}
-      {toast && (
-        <div className="fixed top-24 right-8 z-50 animate-bounce">
-          <div className={`px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2 border text-white font-bold text-sm ${
-            toast.type === 'success' 
-              ? 'bg-emerald-600 border-emerald-500' 
-              : toast.type === 'error'
-                ? 'bg-rose-600 border-rose-500'
-                : 'bg-sky-600 border-sky-500'
-          }`}>
-            <span className="material-symbols-outlined">
-              {toast.type === 'success' ? 'check_circle' : toast.type === 'error' ? 'error' : 'info'}
+    <div className="min-h-screen bg-surface dark:bg-slate-950 p-4 md:p-8 lg:p-12 relative overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[-10%] right-[-5%] w-[40vw] h-[40vw] bg-primary/20 dark:bg-primary-fixed-dim/10 rounded-full blur-[100px] mix-blend-multiply dark:mix-blend-lighten animate-blob"></div>
+        <div className="absolute bottom-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-tertiary/20 dark:bg-tertiary-fixed-dim/10 rounded-full blur-[100px] mix-blend-multiply dark:mix-blend-lighten animate-blob animation-delay-2000"></div>
+      </div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        {toastMsg && (
+          <div className="fixed top-24 right-4 z-50 animate-fade-in-up">
+            <div className={`glass px-lg py-sm rounded-xl shadow-2xl flex items-center gap-sm font-label-md text-white border border-white/20 ${
+              toastMsg.type === 'success' ? 'bg-emerald-600 border-emerald-500' : toastMsg.type === 'error' ? 'bg-rose-600 border-rose-500' : 'bg-sky-600 border-sky-500'
+            }`}>
+              <span className="material-symbols-outlined">{toastMsg.type === 'success' ? 'check_circle' : toastMsg.type === 'error' ? 'error' : 'info'}</span>
+              {toastMsg.message}
+            </div>
+          </div>
+        )}
+
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-xl gap-md">
+          <div>
+            <h2 className="font-headline-xl text-headline-xl text-on-surface dark:text-slate-100 font-bold tracking-tight">My Appointments</h2>
+            <p className="font-body-lg text-body-lg text-on-surface-variant dark:text-slate-400 max-w-2xl mt-xs">
+              Manage your clinical schedule and complete pending payments for upcoming appointments.
+            </p>
+          </div>
+        </div>
+
+        <section className="mb-xl">
+          <div className="flex items-center gap-sm mb-md">
+            <h3 className="font-headline-md text-headline-md text-on-surface dark:text-slate-100 font-semibold">Upcoming Appointments</h3>
+            <span className="px-3 py-1 bg-primary/10 dark:bg-primary-fixed-dim/20 text-primary dark:text-primary-fixed-dim rounded-full font-label-sm text-label-sm font-bold">
+              {appointments.length} Scheduled
             </span>
-            {toast.message}
-          </div>
-        </div>
-      )}
-
-      {/* Header and Action */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-xl gap-md">
-        <div>
-          <h2 className="font-headline-xl text-headline-xl text-on-surface dark:text-slate-100 font-bold tracking-tight">My Appointments</h2>
-          <p className="font-body-lg text-body-lg text-on-surface-variant dark:text-slate-400 max-w-2xl mt-xs">
-            Manage your clinical schedule, review past visits, and stay connected with your healthcare providers.
-          </p>
-        </div>
-        <button 
-          onClick={() => {
-            setShowScheduleModal(true);
-          }}
-          className="bg-primary hover:bg-primary-container text-on-primary px-lg py-3 rounded-xl font-label-md text-label-md shadow-lg shadow-primary/20 transition-all flex items-center gap-sm group cursor-pointer font-bold"
-        >
-          <span className="material-symbols-outlined group-hover:rotate-90 transition-transform">add</span>
-          Schedule New Appointment
-        </button>
-      </div>
-
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-xl">
-        <div className="glass p-md rounded-xl shadow-sm border border-white/20 dark:bg-slate-900/60 dark:border-white/10">
-          <div className="flex justify-between items-start mb-sm">
-            <span className="material-symbols-outlined text-primary dark:text-primary-fixed-dim p-xs bg-primary/10 dark:bg-primary-fixed-dim/10 rounded-lg">calendar_month</span>
-            <span className="text-on-surface-variant dark:text-slate-400 font-label-sm">+{appointments.length} Total</span>
-          </div>
-          <p className="font-label-md text-label-md text-on-surface-variant dark:text-slate-400 font-bold uppercase tracking-wide">Upcoming</p>
-          <p className="font-headline-md text-headline-md text-on-surface dark:text-slate-100 font-bold">0{appointments.length}</p>
-        </div>
-        <div className="glass p-md rounded-xl border-l-4 border-l-secondary shadow-sm dark:bg-slate-900/60 dark:border-white/10">
-          <div className="flex justify-between items-start mb-sm">
-            <span className="material-symbols-outlined text-secondary dark:text-secondary-fixed-dim p-xs bg-secondary/10 dark:bg-secondary-fixed-dim/10 rounded-lg">history</span>
-            <span className="text-on-surface-variant dark:text-slate-400 font-label-sm">Past 30 Days</span>
-          </div>
-          <p className="font-label-md text-label-md text-on-surface-variant dark:text-slate-400 font-bold uppercase tracking-wide">Total Completed</p>
-          <p className="font-headline-md text-headline-md text-on-surface dark:text-slate-100 font-bold">12</p>
-        </div>
-        <div className="glass p-md rounded-xl shadow-sm border border-white/20 dark:bg-slate-900/60 dark:border-white/10">
-          <div className="flex justify-between items-start mb-sm">
-            <span className="material-symbols-outlined text-tertiary dark:text-tertiary-fixed-dim p-xs bg-tertiary/10 dark:bg-tertiary-fixed-dim/10 rounded-lg">lab_research</span>
-            <span className="text-on-surface-variant dark:text-slate-400 font-label-sm">2 Pending</span>
-          </div>
-          <p className="font-label-md text-label-md text-on-surface-variant dark:text-slate-400 font-bold uppercase tracking-wide">Reports Ready</p>
-          <p className="font-headline-md text-headline-md text-on-surface dark:text-slate-100 font-bold">08</p>
-        </div>
-        <div className="glass p-md rounded-xl shadow-sm border border-white/20 dark:bg-slate-900/60 dark:border-white/10">
-          <div className="flex justify-between items-start mb-sm">
-            <span className="material-symbols-outlined text-error dark:text-red-400 p-xs bg-error/10 dark:bg-red-400/10 rounded-lg">favorite</span>
-            <span className="text-error dark:text-red-400 font-label-sm font-semibold">Stable</span>
-          </div>
-          <p className="font-label-md text-label-md text-on-surface-variant dark:text-slate-400 font-bold uppercase tracking-wide">Vitals Check</p>
-          <p className="font-headline-md text-headline-md text-on-surface dark:text-slate-100 font-bold">Normal</p>
-        </div>
-      </div>
-
-      {/* Upcoming Appointments Table */}
-      <section className="mb-xl">
-        <div className="flex items-center gap-sm mb-md">
-          <h3 className="font-headline-md text-headline-md text-on-surface dark:text-slate-100 font-semibold">Upcoming Appointments</h3>
-          <span className="px-3 py-1 bg-primary/10 dark:bg-primary-fixed-dim/20 text-primary dark:text-primary-fixed-dim rounded-full font-label-sm text-label-sm font-bold">
-            {appointments.length} Scheduled
-          </span>
-        </div>
-        <div className="glass rounded-xl overflow-hidden shadow-xl border border-white/20 dark:border-white/10 dark:bg-slate-900/60">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-surface-variant/30 dark:bg-white/5 text-on-surface-variant dark:text-slate-400 font-label-sm text-label-sm border-b border-white/10 dark:border-white/5">
-                  <th className="p-md font-bold uppercase tracking-wider">Provider</th>
-                  <th className="p-md font-bold uppercase tracking-wider">Date &amp; Time</th>
-                  <th className="p-md font-bold uppercase tracking-wider">Specialty</th>
-                  <th className="p-md font-bold uppercase tracking-wider">Status</th>
-                  <th className="p-md font-bold uppercase tracking-wider text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/10 dark:divide-white/5">
-                {appointments.map(app => (
-                  <tr key={app.id} className="hover:bg-primary/5 dark:hover:bg-white/5 transition-colors group">
-                    <td className="p-md">
-                      <div className="flex items-center gap-sm">
-                        <img 
-                          className="w-12 h-12 rounded-full object-cover border border-white/20 shadow-sm" 
-                          src={app.avatarUrl} 
-                          alt={app.doctorName}
-                        />
-                        <div>
-                          <p className="font-label-md text-label-md text-on-surface dark:text-slate-100 font-bold">{app.doctorName}</p>
-                          <p className="font-label-sm text-label-sm text-on-surface-variant dark:text-slate-400">{app.hospital}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="p-md">
-                      <p className="font-label-md text-label-md text-on-surface dark:text-slate-100 font-semibold">{app.date}</p>
-                      <p className="font-label-sm text-label-sm text-on-surface-variant dark:text-slate-400">{app.time}</p>
-                    </td>
                     <td className="p-md">
                       <span className="px-3 py-1 bg-secondary/15 text-secondary dark:text-secondary-fixed-dim rounded-full font-label-sm text-label-sm font-bold">{app.specialty}</span>
                     </td>
                     <td className="p-md">
                       <div className="flex items-center gap-xs">
                         <span className={`w-2 h-2 rounded-full ${app.status === 'Confirmed' ? 'bg-primary animate-pulse' : 'bg-outline'}`}></span>
-                        <span className={`font-label-sm text-label-sm font-bold ${app.status === 'Confirmed' ? 'text-primary dark:text-primary-fixed-dim' : 'text-on-surface-variant dark:text-slate-400'}`}>
-                          {app.status}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="p-md text-right">
-                      <div className="flex justify-end gap-2">
-                        <button 
-                          onClick={() => {
-                            setSelectedAppointment(app);
-                            setShowViewModal(true);
-                          }}
-                          className="px-3 py-1.5 bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-fixed-dim rounded-lg font-label-sm font-bold hover:bg-primary hover:text-white transition-all cursor-pointer"
-                        >
-                          View
-                        </button>
-                        <button 
-                          onClick={() => {
-                            setSelectedAppointment(app);
-                            setRescheduleDate("2023-10-30");
-                            setRescheduleTime("10:00 AM");
-                            setShowRescheduleModal(true);
-                          }}
-                          className="px-3 py-1.5 bg-secondary/10 dark:bg-secondary/20 text-secondary dark:text-secondary-fixed-dim rounded-lg font-label-sm font-bold hover:bg-secondary hover:text-white transition-all cursor-pointer"
-                        >
-                          Reschedule
-                        </button>
-                        <button 
-                          onClick={() => handleCancelAppointment(app.id)}
-                          className="p-1.5 text-on-surface-variant dark:text-slate-400 hover:text-error transition-colors cursor-pointer"
-                        >
-                          <span className="material-symbols-outlined">delete</span>
-                        </button>
-                      </div>
-                    </td>
+          </div>
+          <div className="glass overflow-x-auto rounded-2xl border border-white/10">
+            <table className="w-full text-left border-collapse">
+              <thead className="bg-white/5 border-b border-white/10">
+                <tr>
+                  <th className="p-md font-label-sm text-label-sm uppercase text-on-surface-variant dark:text-slate-400">Doctor</th>
+                  <th className="p-md font-label-sm text-label-sm uppercase text-on-surface-variant dark:text-slate-400">Date & Time</th>
+                  <th className="p-md font-label-sm text-label-sm uppercase text-on-surface-variant dark:text-slate-400">Status</th>
+                  <th className="p-md font-label-sm text-label-sm uppercase text-on-surface-variant dark:text-slate-400">Payment</th>
+                  <th className="p-md font-label-sm text-label-sm uppercase text-on-surface-variant dark:text-slate-400 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/10 dark:divide-white/5">
+                {isLoading ? (
+                  <tr>
+                    <td colSpan={5} className="p-xl text-center text-on-surface-variant dark:text-slate-400">Loading appointments...</td>
                   </tr>
-                ))}
+                ) : appointments.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="p-xl text-center text-on-surface-variant dark:text-slate-400">No appointments found.</td>
+                  </tr>
+                ) : (
+                  appointments.map(app => (
+                    <tr key={app._id} className="hover:bg-primary/5 dark:hover:bg-white/5 transition-colors group">
+                      <td className="p-md">
+                        <div className="flex items-center gap-sm">
+                          <img 
+                            className="w-12 h-12 rounded-full object-cover border border-white/20 shadow-sm" 
+                            src={app.avatarUrl} 
+                            alt={app.doctorName}
+                          />
+                          <div>
+                            <p className="font-label-md text-label-md text-on-surface dark:text-slate-100 font-bold">{app.doctorName}</p>
+                            <p className="font-label-sm text-label-sm text-on-surface-variant dark:text-slate-400">{app.specialization}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="p-md">
+                        <p className="font-label-md text-label-md text-on-surface dark:text-slate-100 font-semibold">{new Date(app.appointmentDate).toLocaleDateString()}</p>
+                        <p className="font-label-sm text-label-sm text-on-surface-variant dark:text-slate-400">{app.appointmentTime}</p>
+                      </td>
+                      <td className="p-md">
+                        <span className={`px-3 py-1 rounded-full font-label-sm text-label-sm font-bold ${app.appointmentStatus === 'Confirmed' ? 'bg-emerald-600/10 text-emerald-600 dark:text-emerald-400' : app.appointmentStatus === 'Pending' ? 'bg-amber-600/10 text-amber-600 dark:text-amber-400' : 'bg-primary/10 text-primary dark:text-primary-fixed-dim'}`}>
+                          {app.appointmentStatus}
+                        </span>
+                      </td>
+                      <td className="p-md">
+                        <span className={`px-3 py-1 rounded-full font-label-sm text-label-sm font-bold ${app.paymentStatus === 'Paid' ? 'bg-emerald-600/10 text-emerald-600 dark:text-emerald-400' : 'bg-error/10 text-error dark:text-red-400'}`}>
+                          {app.paymentStatus}
+                        </span>
+                      </td>
+                      <td className="p-md text-right flex items-center justify-end gap-sm">
+                        {app.paymentStatus === 'Pending' ? (
+                          <button 
+                            onClick={() => router.push(`/dashboard/patient/payment?appointmentId=${app._id}&amount=${app.consultationFee}`)}
+                            className="bg-primary hover:bg-primary-container text-on-primary px-4 py-2 rounded-lg font-label-sm font-bold shadow-md transition-colors"
+                          >
+                            Pay ${app.consultationFee}
+                          </button>
+                        ) : (
+                          <button className="bg-surface-variant dark:bg-white/10 text-on-surface dark:text-slate-200 px-4 py-2 rounded-lg font-label-sm font-bold hover:bg-white/20 transition-colors">
+                            Details
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
-        </div>
-      </section>
+        </section>
 
       {/* History Section */}
       <section>
