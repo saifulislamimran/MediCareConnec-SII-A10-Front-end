@@ -17,18 +17,38 @@ export default function LoginPage() {
   const handleGoogleSignIn = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
       
-      const mockUser = { name: result.user.displayName, role: 'patient', email: result.user.email };
-      localStorage.setItem('medicare_user', JSON.stringify(mockUser));
+      // Sync with MongoDB backend
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://medi-care-connec-sii-a10-back-end.vercel.app'}/api/auth/google`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: user.displayName,
+          email: user.email,
+          googleId: user.uid,
+          avatar: user.photoURL
+        })
+      });
       
-      toast.success(`Welcome back, ${result.user.displayName}! Accessing dashboard...`);
-      setTimeout(() => {
-        router.push('/dashboard/patient');
-        router.refresh();
-      }, 1500);
+      const data = await response.json();
+      
+      if (data.success) {
+        // Set authenticated session with role from DB
+        const authUser = { name: data.user.name, role: data.user.role, email: data.user.email, avatar: data.user.avatar };
+        localStorage.setItem('medicare_user', JSON.stringify(authUser));
+        
+        toast.success(`Welcome back, ${data.user.name}! Accessing dashboard...`);
+        setTimeout(() => {
+          router.push(`/dashboard/${data.user.role}`);
+          router.refresh();
+        }, 1500);
+      } else {
+        toast.error("Failed to sync with backend database.");
+      }
     } catch (error) {
       console.error("FIREBASE GOOGLE AUTH ERROR:", error);
-      toast.error("Failed to authenticate with Google");
+      toast.error("An error occurred during Google Authentication.");
     }
   };
 

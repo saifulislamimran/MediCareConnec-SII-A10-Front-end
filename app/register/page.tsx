@@ -210,7 +210,33 @@ export default function RegisterPage() {
 
               <button 
                 type="button"
-                onClick={() => alert("Google Auth Simulated")} 
+                onClick={async () => {
+                  try {
+                    const { signInWithPopup } = await import("firebase/auth");
+                    const { auth, googleProvider } = await import("@/lib/firebase");
+                    const result = await signInWithPopup(auth, googleProvider);
+                    const user = result.user;
+                    
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://medi-care-connec-sii-a10-back-end.vercel.app'}/api/auth/google`, {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                        name: user.displayName,
+                        email: user.email,
+                        googleId: user.uid,
+                        avatar: user.photoURL
+                      })
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                      localStorage.setItem('medicare_user', JSON.stringify({ name: data.user.name, role: data.user.role, email: data.user.email }));
+                      toast.success(`Welcome ${data.user.name}! Accessing dashboard...`);
+                      setTimeout(() => { router.push(`/dashboard/${data.user.role}`); router.refresh(); }, 1500);
+                    } else toast.error("Failed to sync with backend.");
+                  } catch (error) {
+                    console.error("FIREBASE GOOGLE AUTH ERROR:", error);
+                  }
+                }}
                 className="flex w-full items-center justify-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200"
               >
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="h-5 w-5" />
@@ -219,7 +245,7 @@ export default function RegisterPage() {
 
               <button 
                 type="button"
-                onClick={() => alert("Phone Auth Simulated")} 
+                onClick={() => toast.info("Coming soon in v2.0")} 
                 className="flex w-full items-center justify-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-200"
               >
                 <svg className="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -230,7 +256,7 @@ export default function RegisterPage() {
 
               <button 
                 type="button"
-                onClick={() => alert("Game Center Auth Simulated")} 
+                onClick={() => toast.info("Coming soon in v2.0")} 
                 className="flex w-full items-center justify-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-200"
               >
                 <svg className="h-5 w-5 text-gray-600" viewBox="0 0 24 24" fill="currentColor">
