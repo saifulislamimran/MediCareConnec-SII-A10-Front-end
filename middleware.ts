@@ -7,14 +7,17 @@ export function middleware(request: NextRequest) {
 
   // Protect all dashboard routes
   if (pathname.startsWith('/dashboard')) {
-    // 1. Check Token Existence
+    // 1. Strict Token Verification (Vercel Persistence)
     if (!token || token === 'none') {
       const loginUrl = new URL('/login', request.url);
       loginUrl.searchParams.set('callbackUrl', pathname);
-      return NextResponse.redirect(loginUrl);
+      // Optional: purge corrupt UI cookie state
+      const response = NextResponse.redirect(loginUrl);
+      response.cookies.delete('medicare_user');
+      return response;
     }
 
-    // 2. Prevent /dashboard/undefined loops
+    // 2. Prevent /dashboard/undefined infinite loops
     if (pathname === '/dashboard/undefined' || pathname === '/dashboard/') {
        return NextResponse.redirect(new URL('/dashboard/patient', request.url));
     }

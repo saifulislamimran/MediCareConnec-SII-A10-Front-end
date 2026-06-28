@@ -20,29 +20,62 @@ export default function Navbar() {
   const [user, setUser] = useState<{ name: string; role: 'patient' | 'doctor' | 'admin' } | null>(null);
 
   useEffect(() => {
-    const loadUser = () => {
-      const storedUser = localStorage.getItem('medicare_user');
+    // Phase 1: Rapid UI update from localStorage (No latency)
+    const loadUserFromStorage = () => {
+      const storedUser = localStorage.getItem("medicare_user");
       if (storedUser) {
-        try { setUser(JSON.parse(storedUser)); } 
-        catch (e) { console.error(e); }
+        try {
+          setUser(JSON.parse(storedUser));
+        } catch (e) {
+          setUser(null);
+        }
       } else {
         setUser(null);
       }
     };
 
-    // Load initially
+    // Phase 2: Bulletproof Session Verification from Backend (Cross-domain)
+    const verifySessionWithBackend = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://medi-care-connec-sii-a10-back-end.vercel.app'}/api/auth/me`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include', // Crucial to send the httpOnly token cookie
+        });
+        
+        const data = await response.json();
+        if (data.success && data.user) {
+          // Session is valid, silently update local state and storage
+          setUser(data.user);
+          localStorage.setItem("medicare_user", JSON.stringify(data.user));
+          document.cookie = `medicare_user=${JSON.stringify(data.user)}; path=/; max-age=604800`;
+        } else {
+          // Token is dead/expired. Nuke the session entirely.
+          setUser(null);
+          localStorage.removeItem("medicare_user");
+          document.cookie = "medicare_user=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        }
+      } catch (error) {
+        console.error("Session verification failed:", error);
+      }
+    };
+
     if (typeof window !== 'undefined') {
-      loadUser();
-      // Listen for custom auth events from Login/Register pages
-      window.addEventListener('auth-change', loadUser);
-      // Also listen for multi-tab sync
-      window.addEventListener('storage', loadUser);
+      // Initialize
+      loadUserFromStorage();
+      verifySessionWithBackend();
+
+      // Listeners for multi-tab sync and immediate login reaction
+      window.addEventListener("auth-change", loadUserFromStorage);
+      window.addEventListener("auth-change", verifySessionWithBackend);
+      window.addEventListener("storage", loadUserFromStorage);
     }
 
     return () => {
       if (typeof window !== 'undefined') {
-        window.removeEventListener('auth-change', loadUser);
-        window.removeEventListener('storage', loadUser);
+        window.removeEventListener("auth-change", loadUserFromStorage);
+        window.removeEventListener("auth-change", verifySessionWithBackend);
+        window.removeEventListener("storage", loadUserFromStorage);
       }
     };
   }, []);

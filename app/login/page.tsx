@@ -18,41 +18,42 @@ export default function LoginPage() {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-      
-      // Sync with MongoDB backend
+
+      // 1. Post to Backend with credentials: 'include'
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://medi-care-connec-sii-a10-back-end.vercel.app'}/api/auth/google`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include', // <--- এই জাদুকরী লাইনটি যোগ করা হয়েছে
+        credentials: 'include', // Non-negotiable for Vercel cross-domain cookies
         body: JSON.stringify({
           name: user.displayName,
           email: user.email,
           googleId: user.uid,
-          avatar: user.photoURL
-        })
+          avatar: user.photoURL,
+        }),
       });
-      
+
       const data = await response.json();
-      
+
       if (data.success) {
-        // Set authenticated session with role from DB
-        const authUser = { name: data.user.name, role: data.user.role, email: data.user.email, avatar: data.user.avatar };
-        localStorage.setItem('medicare_user', JSON.stringify(authUser));
+        toast.success("Successfully logged in!");
         
-        // DISPATCH CUSTOM EVENT FOR INSTANT UI SYNC
-        window.dispatchEvent(new Event('auth-change'));
+        // 2. Save user metadata for UI rendering
+        localStorage.setItem("medicare_user", JSON.stringify(data.user));
+        // 3. Keep a non-HttpOnly cookie for middleware fallback routing
+        document.cookie = `medicare_user=${JSON.stringify(data.user)}; path=/; max-age=604800`;
         
-        toast.success(`Welcome back, ${data.user.name}! Accessing dashboard...`);
-        setTimeout(() => {
-          // Force a hard refresh on route change to guarantee middleware cookie hydration
-          window.location.href = `/dashboard/${data.user.role}`;
-        }, 1000);
+        // 4. Dispatch auth change event for Navbar to pick up immediately
+        window.dispatchEvent(new Event("auth-change"));
+
+        // 5. Hard Redirect
+        const callbackUrl = searchParams?.get('callbackUrl') || `/dashboard/${data.user.role || 'patient'}`;
+        window.location.href = callbackUrl;
       } else {
-        toast.error("Failed to sync with backend database.");
+        toast.error(data.message || "Failed to sync with database.");
       }
-    } catch (error) {
-      console.error("FIREBASE GOOGLE AUTH ERROR:", error);
-      toast.error("An error occurred during Google Authentication.");
+    } catch (error: any) {
+      console.error("Google Auth Error:", error);
+      toast.error(error.message || "An error occurred during sign in.");
     }
   };
 
