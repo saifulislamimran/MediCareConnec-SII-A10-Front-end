@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "@/lib/firebase";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -11,6 +13,24 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState<'patient' | 'doctor' | 'admin'>('patient');
   const [showPassword, setShowPassword] = useState(false);
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      
+      const mockUser = { name: result.user.displayName, role: 'patient', email: result.user.email };
+      localStorage.setItem('medicare_user', JSON.stringify(mockUser));
+      
+      toast.success(`Welcome back, ${result.user.displayName}! Accessing dashboard...`);
+      setTimeout(() => {
+        router.push('/dashboard/patient');
+        router.refresh();
+      }, 1500);
+    } catch (error) {
+      console.error("FIREBASE GOOGLE AUTH ERROR:", error);
+      toast.error("Failed to authenticate with Google");
+    }
+  };
 
   // Handle Login
   const handleLogin = (e: React.FormEvent) => {
@@ -146,11 +166,7 @@ export default function LoginPage() {
             <div className="flex flex-col gap-md">
               <button 
                 type="button"
-                onClick={() => {
-                  setEmail('test@medicare.com');
-                  setPassword('Password123!');
-                  alert('Mock credentials pre-filled. Select role and click Login.');
-                }}
+                onClick={handleGoogleSignIn}
                 className="glass-card bg-white/20 dark:bg-white/5 hover:bg-white/40 dark:hover:bg-white/10 border border-white/50 dark:border-white/10 py-3 rounded-lg flex items-center justify-center gap-md transition-all cursor-pointer shadow-sm"
               >
                 <img alt="Google" className="w-6 h-6" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzHkiYTkeS9MvH-MzeuWG7aN-2Qx-O7zPE0o6zOrEB9nD-tSdi7XlpLLS2QTTfL4qsdKjm5Xp33IulzCdigBEsmO_dvD39VLL7frXGeoYIvOWQdm__hIND-Uw0Ju4IZtXFwCrfh0e6goLqpSuBdS9Ebbwg30-Vn-4m8-JVFc9veAAib8Ojl7o5kzrWn2kqtiM6m7Ois86S4mXjSz2wZsetZKfb1gL9HnZPWmHNouhHFmf6BJZSbC8HpuHwsH22qPpBviXdvfXpKBSx" />
