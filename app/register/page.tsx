@@ -26,7 +26,7 @@ export default function RegisterPage() {
     setHasSpecialChar(/[!@#$%^&*(),.?":{}|<>_+\-\[\]\\\/]/.test(password));
   }, [password]);
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!fullname || !email || !password) {
@@ -39,18 +39,36 @@ export default function RegisterPage() {
       return;
     }
 
-    // Set simulated session
-    const mockUser = { name: fullname, role, email };
-    localStorage.setItem('medicare_user', JSON.stringify(mockUser));
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://medi-care-connec-sii-a10-back-end.vercel.app'}/api/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // Non-negotiable for session persistence
+        body: JSON.stringify({ name: fullname, email, password, role }),
+      });
 
-    // Trigger toast success notification
-    toast.success("Account created successfully. Accessing dashboard...");
+      const data = await response.json();
 
-    // Redirect after 1.5 seconds
-    setTimeout(() => {
-      router.push(`/dashboard/${role}`);
-      router.refresh();
-    }, 1500);
+      if (data.success) {
+        toast.success("Account created successfully. Accessing dashboard...");
+        
+        // Save user metadata for UI rendering
+        localStorage.setItem("medicare_user", JSON.stringify(data.user));
+        // Keep a non-HttpOnly cookie for middleware fallback routing
+        document.cookie = `medicare_user=${JSON.stringify(data.user)}; path=/; max-age=604800`;
+        
+        window.dispatchEvent(new Event("auth-change"));
+        
+        setTimeout(() => {
+          window.location.href = `/dashboard/${data.user.role || role}`;
+        }, 1500);
+      } else {
+        toast.error(data.message || "Failed to register account.");
+      }
+    } catch (error: any) {
+      console.error("Register Error:", error);
+      toast.error(error.message || "An error occurred during registration.");
+    }
   };
 
   return (

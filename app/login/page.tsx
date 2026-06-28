@@ -59,7 +59,7 @@ export default function LoginPage() {
   };
 
   // Handle Login
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email || !password) {
@@ -67,23 +67,39 @@ export default function LoginPage() {
       return;
     }
 
-    // Determine mock name based on role
-    let name = "John Doe";
-    if (role === 'doctor') name = "Dr. Sarah Smith";
-    if (role === 'admin') name = "Administrator";
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://medi-care-connec-sii-a10-back-end.vercel.app'}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // Non-negotiable for session persistence
+        body: JSON.stringify({ email, password, role }),
+      });
 
-    // Set simulated session
-    const mockUser = { name, role, email };
-    localStorage.setItem('medicare_user', JSON.stringify(mockUser));
+      const data = await response.json();
 
-    // Trigger toast success notification
-    toast.success(`Welcome back, ${name}! Accessing dashboard...`);
+      if (data.success) {
+        toast.success(`Welcome back! Accessing dashboard...`);
+        
+        // Save user metadata for UI rendering
+        localStorage.setItem("medicare_user", JSON.stringify(data.user));
+        // Keep a non-HttpOnly cookie for middleware fallback routing
+        document.cookie = `medicare_user=${JSON.stringify(data.user)}; path=/; max-age=604800`;
+        
+        window.dispatchEvent(new Event("auth-change"));
 
-    // Redirect after 1.5 seconds
-    setTimeout(() => {
-      router.push(`/dashboard/${role}`);
-      router.refresh();
-    }, 1500);
+        const urlParams = new URLSearchParams(window.location.search);
+        const callbackUrl = urlParams.get('callbackUrl') || `/dashboard/${data.user.role || role}`;
+        
+        setTimeout(() => {
+          window.location.href = callbackUrl;
+        }, 1000);
+      } else {
+        toast.error(data.message || "Invalid credentials");
+      }
+    } catch (error: any) {
+      console.error("Login Error:", error);
+      toast.error(error.message || "An error occurred during sign in.");
+    }
   };
 
   return (
