@@ -1,17 +1,18 @@
 "use client";
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import Image from 'next/image';
 import { toast } from 'react-toastify';
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "@/lib/firebase";
 
+type RoleType = 'patient' | 'doctor' | 'admin';
+
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState<'patient' | 'doctor' | 'admin'>('patient');
+  const [role, setRole] = useState<RoleType>('patient');
   const [showPassword, setShowPassword] = useState(false);
 
   const handleGoogleSignIn = async () => {
@@ -52,9 +53,10 @@ export default function LoginPage() {
       } else {
         toast.error(data.message || "Failed to sync with database.");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Google Auth Error:", error);
-      toast.error(error.message || "An error occurred during sign in.");
+      const err = error as Error;
+      toast.error(err.message || "An error occurred during sign in.");
     }
   };
 
@@ -96,9 +98,10 @@ export default function LoginPage() {
       } else {
         toast.error(data.message || "Invalid credentials");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Login Error:", error);
-      toast.error(error.message || "An error occurred during sign in.");
+      const err = error as Error;
+      toast.error(err.message || "An error occurred during sign in.");
     }
   };
 
@@ -181,7 +184,7 @@ export default function LoginPage() {
                     className="w-full pl-10 pr-10 py-3 rounded-lg font-body-md text-body-md text-on-surface dark:text-slate-100 bg-white/30 dark:bg-slate-800/40 border border-white/20 dark:border-white/10 focus:border-primary dark:focus:border-inverse-primary outline-none transition-all focus:ring-2 focus:ring-primary/20 dark:focus:ring-inverse-primary/20 appearance-none cursor-pointer"
                     id="role"
                     value={role}
-                    onChange={(e) => setRole(e.target.value as any)}
+                    onChange={(e) => setRole(e.target.value as RoleType)}
                   >
                     <option value="patient" className="dark:bg-slate-900 dark:text-slate-100">Patient Portal</option>
                     <option value="doctor" className="dark:bg-slate-900 dark:text-slate-100">Doctor Clinic Portal</option>
@@ -211,11 +214,18 @@ export default function LoginPage() {
                 onClick={handleGoogleSignIn}
                 className="glass-card bg-white/20 dark:bg-white/5 hover:bg-white/40 dark:hover:bg-white/10 border border-white/50 dark:border-white/10 py-3 rounded-lg flex items-center justify-center gap-md transition-all cursor-pointer shadow-sm"
               >
-                <img alt="Google" className="w-6 h-6" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzHkiYTkeS9MvH-MzeuWG7aN-2Qx-O7zPE0o6zOrEB9nD-tSdi7XlpLLS2QTTfL4qsdKjm5Xp33IulzCdigBEsmO_dvD39VLL7frXGeoYIvOWQdm__hIND-Uw0Ju4IZtXFwCrfh0e6goLqpSuBdS9Ebbwg30-Vn-4m8-JVFc9veAAib8Ojl7o5kzrWn2kqtiM6m7Ois86S4mXjSz2wZsetZKfb1gL9HnZPWmHNouhHFmf6BJZSbC8HpuHwsH22qPpBviXdvfXpKBSx" />
+                <Image 
+                  alt="Google" 
+                  className="w-6 h-6" 
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzHkiYTkeS9MvH-MzeuWG7aN-2Qx-O7zPE0o6zOrEB9nD-tSdi7XlpLLS2QTTfL4qsdKjm5Xp33IulzCdigBEsmO_dvD39VLL7frXGeoYIvOWQdm__hIND-Uw0Ju4IZtXFwCrfh0e6goLqpSuBdS9Ebbwg30-Vn-4m8-JVFc9veAAib8Ojl7o5kzrWn2kqtiM6m7Ois86S4mXjSz2wZsetZKfb1gL9HnZPWmHNouhHFmf6BJZSbC8HpuHwsH22qPpBviXdvfXpKBSx"
+                  width={24}
+                  height={24}
+                  unoptimized={true}
+                />
                 <span className="font-label-md text-label-md text-on-surface dark:text-slate-200">Sign in with Google</span>
               </button>
               <p className="text-center font-label-md text-label-md text-on-surface-variant dark:text-slate-400">
-                Don't have an account? {' '}
+                Don&apos;t have an account? {' '}
                 <Link className="text-primary dark:text-inverse-primary font-bold hover:underline" href="/register">Register Clinic</Link>
               </p>
             </div>

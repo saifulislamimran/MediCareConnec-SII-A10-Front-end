@@ -10,8 +10,15 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const auth = getAuth(app);
-const googleProvider = new GoogleAuthProvider();
+// Ensure Firebase is only initialized if an API key is available, preventing build crashes on Vercel prerendering.
+let app;
+if (firebaseConfig.apiKey) {
+  app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+} else {
+  app = getApps().length ? getApp() : undefined;
+}
+
+const auth = app ? getAuth(app) : null as any;
+const googleProvider = typeof window !== 'undefined' ? new GoogleAuthProvider() : null as any;
 
 export { app, auth, googleProvider };
