@@ -201,7 +201,46 @@ export default function RegisterPage() {
               </button>
             </form>
             
-            <p className="text-center font-body-md text-on-surface-variant dark:text-slate-400">
+            {/* Social Authentication Block */}
+            <div className="mt-6 flex flex-col gap-3">
+              <div className="relative flex items-center justify-center text-sm mb-2">
+                <span className="absolute inset-x-0 h-px bg-gray-200"></span>
+                <span className="relative bg-white px-4 text-gray-500 font-medium">Or sign up with</span>
+              </div>
+
+              <button 
+                type="button"
+                onClick={() => alert("Google Auth Simulated")} 
+                className="flex w-full items-center justify-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200"
+              >
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="h-5 w-5" />
+                Sign up with Google
+              </button>
+
+              <button 
+                type="button"
+                onClick={() => alert("Phone Auth Simulated")} 
+                className="flex w-full items-center justify-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-200"
+              >
+                <svg className="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                Sign up with Phone
+              </button>
+
+              <button 
+                type="button"
+                onClick={() => alert("Game Center Auth Simulated")} 
+                className="flex w-full items-center justify-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-200"
+              >
+                <svg className="h-5 w-5 text-gray-600" viewBox="0 0 24 24" fill="currentColor">
+                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+                </svg>
+                Sign up with Game Center
+              </button>
+            </div>
+            
+            <p className="text-center mt-6 font-body-md text-on-surface-variant dark:text-slate-400">
               Already have an account?{' '}
               <Link className="text-primary dark:text-inverse-primary font-bold hover:underline decoration-2 underline-offset-4" href="/login">Log in</Link>
             </p>
