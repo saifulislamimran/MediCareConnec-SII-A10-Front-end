@@ -20,16 +20,31 @@ export default function Navbar() {
   const [user, setUser] = useState<{ name: string; role: 'patient' | 'doctor' | 'admin' } | null>(null);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    const loadUser = () => {
       const storedUser = localStorage.getItem('medicare_user');
       if (storedUser) {
-        try {
-          setUser(JSON.parse(storedUser));
-        } catch (e) {
-          console.error(e);
-        }
+        try { setUser(JSON.parse(storedUser)); } 
+        catch (e) { console.error(e); }
+      } else {
+        setUser(null);
       }
+    };
+
+    // Load initially
+    if (typeof window !== 'undefined') {
+      loadUser();
+      // Listen for custom auth events from Login/Register pages
+      window.addEventListener('auth-change', loadUser);
+      // Also listen for multi-tab sync
+      window.addEventListener('storage', loadUser);
     }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('auth-change', loadUser);
+        window.removeEventListener('storage', loadUser);
+      }
+    };
   }, []);
 
   const toggleTheme = () => {
@@ -96,7 +111,7 @@ export default function Navbar() {
               {isProfileOpen && (
                 <div className="absolute right-0 mt-3 w-52 bg-white/95 dark:bg-slate-900/90 backdrop-blur-xl rounded-2xl overflow-hidden shadow-2xl z-50 border border-white/30 dark:border-white/10 animate-scale-up">
                   <div className="p-2 flex flex-col gap-1 text-left">
-                    <Link href={`/dashboard/${user.role}`} onClick={() => setIsProfileOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-xs text-on-surface dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-white/5 rounded-xl transition-colors font-bold"><span className="material-symbols-outlined text-[18px]">dashboard</span> Dashboard</Link>
+                    <Link href={`/dashboard/${user?.role || 'patient'}`} onClick={() => setIsProfileOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-xs text-on-surface dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-white/5 rounded-xl transition-colors font-bold"><span className="material-symbols-outlined text-[18px]">dashboard</span> Dashboard</Link>
                     <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-2.5 text-xs text-error hover:bg-error/10 rounded-xl transition-colors font-bold w-full text-left cursor-pointer"><span className="material-symbols-outlined text-[18px]">logout</span> Logout</button>
                   </div>
                 </div>
@@ -128,7 +143,7 @@ export default function Navbar() {
 
             {user ? (
               <>
-                <Link href={`/dashboard/${user.role}`} onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-primary dark:text-primary-fixed hover:bg-gray-50 dark:hover:bg-slate-800">Dashboard</Link>
+                <Link href={`/dashboard/${user?.role || 'patient'}`} onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-primary dark:text-primary-fixed hover:bg-gray-50 dark:hover:bg-slate-800">Dashboard</Link>
                 <button onClick={handleLogout} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-error hover:bg-gray-50 dark:hover:bg-slate-800">Logout</button>
               </>
             ) : (

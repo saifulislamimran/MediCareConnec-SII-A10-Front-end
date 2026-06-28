@@ -38,11 +38,14 @@ export default function LoginPage() {
         const authUser = { name: data.user.name, role: data.user.role, email: data.user.email, avatar: data.user.avatar };
         localStorage.setItem('medicare_user', JSON.stringify(authUser));
         
+        // DISPATCH CUSTOM EVENT FOR INSTANT UI SYNC
+        window.dispatchEvent(new Event('auth-change'));
+        
         toast.success(`Welcome back, ${data.user.name}! Accessing dashboard...`);
         setTimeout(() => {
-          router.push(`/dashboard/${data.user.role}`);
-          router.refresh();
-        }, 1500);
+          // Force a hard refresh on route change to guarantee middleware cookie hydration
+          window.location.href = `/dashboard/${data.user.role}`;
+        }, 1000);
       } else {
         toast.error("Failed to sync with backend database.");
       }

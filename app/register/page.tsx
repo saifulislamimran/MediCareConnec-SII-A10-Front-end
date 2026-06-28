@@ -230,8 +230,14 @@ export default function RegisterPage() {
                     const data = await response.json();
                     if (data.success) {
                       localStorage.setItem('medicare_user', JSON.stringify({ name: data.user.name, role: data.user.role, email: data.user.email }));
+                      
+                      // DISPATCH CUSTOM EVENT FOR INSTANT UI SYNC
+                      window.dispatchEvent(new Event('auth-change'));
+                      
                       toast.success(`Welcome ${data.user.name}! Accessing dashboard...`);
-                      setTimeout(() => { router.push(`/dashboard/${data.user.role}`); router.refresh(); }, 1500);
+                      setTimeout(() => { 
+                        window.location.href = `/dashboard/${data.user.role}`; 
+                      }, 1000);
                     } else toast.error("Failed to sync with backend.");
                   } catch (error) {
                     console.error("FIREBASE GOOGLE AUTH ERROR:", error);

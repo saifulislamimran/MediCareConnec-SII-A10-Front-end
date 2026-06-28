@@ -7,27 +7,31 @@ export function middleware(request: NextRequest) {
 
   // Protect all dashboard routes
   if (pathname.startsWith('/dashboard')) {
+    // 1. Check Token Existence
     if (!token || token === 'none') {
-      return NextResponse.redirect(new URL('/login', request.url));
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('callbackUrl', pathname);
+      return NextResponse.redirect(loginUrl);
     }
 
-    // Since Edge Middleware cannot easily decode JWTs without extra libraries,
-    // we use a secure client-cookie fallback or strict server-side validation in the layouts.
-    // For pure route-based isolation based on paths (basic level):
+    // 2. Prevent /dashboard/undefined loops
+    if (pathname === '/dashboard/undefined' || pathname === '/dashboard/') {
+       return NextResponse.redirect(new URL('/dashboard/patient', request.url));
+    }
+
+    // 3. Strict RBAC based on local cookie fallback
     const userCookie = request.cookies.get('medicare_user')?.value;
     if (userCookie) {
       try {
         const user = JSON.parse(userCookie);
-        
         if (pathname.startsWith('/dashboard/admin') && user.role !== 'admin') {
            return NextResponse.redirect(new URL('/dashboard/patient', request.url));
         }
-        
         if (pathname.startsWith('/dashboard/doctor') && user.role !== 'doctor') {
            return NextResponse.redirect(new URL('/dashboard/patient', request.url));
         }
       } catch (e) {
-        // Invalid cookie data
+        // Silently catch corrupt JSON
       }
     }
   }
