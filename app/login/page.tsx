@@ -204,8 +204,6 @@ export default function LoginPage() {
         </div>
       </main>
       
-
-      
       {/* Footer Identity */}
       <footer className="fixed bottom-0 w-full py-8 px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-4 z-10 pointer-events-none">
         <p className="font-label-sm text-label-sm text-on-surface-variant/70 dark:text-slate-500">© 2024 MediCare Connect. Clinical Excellence & Precision.</p>
