@@ -46,7 +46,8 @@ export default function LoginPage() {
         window.dispatchEvent(new Event("auth-change"));
 
         // 5. Hard Redirect
-        const callbackUrl = searchParams?.get('callbackUrl') || `/dashboard/${data.user.role || 'patient'}`;
+        const urlParams = new URLSearchParams(window.location.search);
+        const callbackUrl = urlParams.get('callbackUrl') || `/dashboard/${data.user.role || 'patient'}`;
         window.location.href = callbackUrl;
       } else {
         toast.error(data.message || "Failed to sync with database.");
