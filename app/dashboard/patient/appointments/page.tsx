@@ -104,12 +104,6 @@ export default function PatientAppointmentsPage() {
             <span className="px-3 py-1 bg-primary/10 dark:bg-primary-fixed-dim/20 text-primary dark:text-primary-fixed-dim rounded-full font-label-sm text-label-sm font-bold">
               {appointments.length} Scheduled
             </span>
-                    <td className="p-md">
-                      <span className="px-3 py-1 bg-secondary/15 text-secondary dark:text-secondary-fixed-dim rounded-full font-label-sm text-label-sm font-bold">{app.specialty}</span>
-                    </td>
-                    <td className="p-md">
-                      <div className="flex items-center gap-xs">
-                        <span className={`w-2 h-2 rounded-full ${app.status === 'Confirmed' ? 'bg-primary animate-pulse' : 'bg-outline'}`}></span>
           </div>
           <div className="glass overflow-x-auto rounded-2xl border border-white/10">
             <table className="w-full text-left border-collapse">
@@ -423,6 +417,7 @@ export default function PatientAppointmentsPage() {
         <span className="material-symbols-outlined text-[28px] transition-transform group-hover:rotate-12">add_comment</span>
         <span className="absolute right-full mr-4 bg-on-surface dark:bg-slate-800 text-surface dark:text-slate-100 px-3 py-1 rounded-lg text-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-xl border border-white/10">Help Support</span>
       </button>
+      </div>
     </div>
   );
 }
