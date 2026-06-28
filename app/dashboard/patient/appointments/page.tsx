@@ -22,6 +22,59 @@ export default function PatientAppointmentsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [toastMsg, setToastMsg] = useState<{ message: string; type: 'success' | 'info' | 'error' } | null>(null);
 
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [showRescheduleModal, setShowRescheduleModal] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
+
+  const handleReschedule = (e: React.FormEvent) => {
+    e.preventDefault();
+    setShowRescheduleModal(false);
+    triggerToast('Appointment rescheduled successfully!');
+  };
+  
+  const [newDoc, setNewDoc] = useState("Dr. Sarah Chen");
+  const [newSpecialty, setNewSpecialty] = useState("Cardiology");
+  const [newDate, setNewDate] = useState("2023-11-05");
+  const [newTime, setNewTime] = useState("10:00 AM");
+  const [newType, setNewType] = useState("In-person");
+  const [rescheduleDate, setRescheduleDate] = useState("");
+  const [rescheduleTime, setRescheduleTime] = useState("");
+
+  const handleScheduleNew = (e: React.FormEvent) => {
+    e.preventDefault();
+    setShowScheduleModal(false);
+    triggerToast('Appointment request submitted successfully!');
+  };
+
+  interface PastAppointment {
+    id: string;
+    title: string;
+    doctorName: string;
+    specialty: string;
+    day: string;
+    month: string;
+  }
+
+  const [pastAppointments, setPastAppointments] = useState<PastAppointment[]>([
+    {
+      id: 'p1',
+      title: 'Annual Wellness Exam',
+      doctorName: 'Dr. Emily Chen',
+      specialty: 'Internal Medicine',
+      day: '12',
+      month: 'Sep'
+    },
+    {
+      id: 'p2',
+      title: 'Orthopedic Consultation',
+      doctorName: 'Dr. Robert Vance',
+      specialty: 'Orthopedics',
+      day: '28',
+      month: 'Aug'
+    }
+  ]);
+
   const fetchAppointments = async () => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://medi-care-connec-sii-a10-back-end.vercel.app'}/api/appointments/my-list`, {
@@ -324,7 +377,7 @@ export default function PatientAppointmentsPage() {
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
-            <form onSubmit={handleRescheduleSubmit} className="space-y-4 text-left">
+            <form onSubmit={handleReschedule} className="space-y-4 text-left">
               <p className="text-xs text-on-surface-variant dark:text-slate-400">
                 Request a new date/time with <span className="font-bold text-on-surface dark:text-slate-200">{selectedAppointment.doctorName}</span>.
               </p>
