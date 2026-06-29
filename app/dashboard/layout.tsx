@@ -208,9 +208,19 @@ export default function DashboardLayout({
                 <span className="material-symbols-outlined">menu</span>
               </button>
               <div className="hidden lg:flex items-center gap-lg">
-                <Link className={`font-label-md text-label-md transition-colors ${pathname.includes('admin') ? 'text-primary border-b-2 border-primary pb-1 font-bold' : 'text-on-surface-variant/80 dark:text-slate-400 hover:text-primary dark:hover:text-inverse-primary'}`} href="/dashboard/admin">Admin Panel</Link>
-                <Link className={`font-label-md text-label-md transition-colors ${pathname.includes('doctor') ? 'text-primary border-b-2 border-primary pb-1 font-bold' : 'text-on-surface-variant/80 dark:text-slate-400 hover:text-primary dark:hover:text-inverse-primary'}`} href="/dashboard/doctor">Doctor Portal</Link>
-                <Link className={`font-label-md text-label-md transition-colors ${pathname.includes('patient') ? 'text-primary border-b-2 border-primary pb-1 font-bold' : 'text-on-surface-variant/80 dark:text-slate-400 hover:text-primary dark:hover:text-inverse-primary'}`} href="/dashboard/patient">Patient Portal</Link>
+                {user.role === 'admin' && (
+                  <>
+                    <Link className={`font-label-md text-label-md transition-colors ${pathname.includes('admin') ? 'text-primary border-b-2 border-primary pb-1 font-bold' : 'text-on-surface-variant/80 dark:text-slate-400 hover:text-primary dark:hover:text-inverse-primary'}`} href="/dashboard/admin">Admin Panel</Link>
+                    <Link className={`font-label-md text-label-md transition-colors ${pathname.includes('doctor') ? 'text-primary border-b-2 border-primary pb-1 font-bold' : 'text-on-surface-variant/80 dark:text-slate-400 hover:text-primary dark:hover:text-inverse-primary'}`} href="/dashboard/doctor">Doctor Portal</Link>
+                    <Link className={`font-label-md text-label-md transition-colors ${pathname.includes('patient') ? 'text-primary border-b-2 border-primary pb-1 font-bold' : 'text-on-surface-variant/80 dark:text-slate-400 hover:text-primary dark:hover:text-inverse-primary'}`} href="/dashboard/patient">Patient Portal</Link>
+                  </>
+                )}
+                {user.role === 'doctor' && (
+                  <Link className="text-2xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight transition-colors border-b-2 border-primary pb-1" href="/dashboard/doctor">Doctor Portal</Link>
+                )}
+                {user.role === 'patient' && (
+                  <Link className="text-2xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight transition-colors border-b-2 border-primary pb-1" href="/dashboard/patient">Patient Portal</Link>
+                )}
               </div>
             </div>
             
