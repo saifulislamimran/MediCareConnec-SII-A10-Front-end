@@ -316,18 +316,15 @@ export default function PatientPaymentsReviewsPage() {
 
       {/* Review Modal Form */}
       {showReviewModal && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-          <div 
-            className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" 
-            onClick={() => setShowReviewModal(false)}
-          ></div>
-          <div className="glass dark:bg-[#1e293b] dark:border-white/10 relative w-full max-w-xl rounded-2xl shadow-2xl p-md md:p-lg border border-white/40 animate-in fade-in zoom-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="absolute inset-0" onClick={() => setShowReviewModal(false)}></div>
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg p-6 relative">
             <div className="flex justify-between items-center mb-6">
               <h3 className="font-headline-md text-headline-md font-bold text-on-surface dark:text-white">
                 {editingReview ? "Edit Feedback Review" : "Add New Review"}
               </h3>
               <button 
-                className="p-2 hover:bg-white/20 dark:hover:bg-white/5 rounded-full transition-all text-on-surface dark:text-slate-300" 
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-800" 
                 onClick={() => setShowReviewModal(false)}
               >
                 <span className="material-symbols-outlined">close</span>
@@ -337,7 +334,7 @@ export default function PatientPaymentsReviewsPage() {
               <div>
                 <label className="block font-label-md text-on-surface-variant dark:text-slate-400 mb-2 font-bold">Select Doctor</label>
                 <select 
-                  className="w-full px-4 py-3 bg-white/50 dark:bg-white/5 border border-outline/20 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-primary outline-none text-on-surface dark:text-slate-100"
+                  className="w-full mt-2 p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary"
                   value={formDoctor}
                   onChange={(e) => setFormDoctor(e.target.value)}
                 >
@@ -367,7 +364,7 @@ export default function PatientPaymentsReviewsPage() {
               <div>
                 <label className="block font-label-md text-on-surface-variant dark:text-slate-400 mb-2 font-bold">Your Experience</label>
                 <textarea 
-                  className="w-full px-4 py-3 bg-white/50 dark:bg-white/5 border border-outline/20 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-primary outline-none text-on-surface dark:text-slate-100 placeholder:text-on-surface-variant/40" 
+                  className="w-full mt-2 p-3 border border-slate-300 rounded-lg min-h-[120px] resize-y focus:ring-2 focus:ring-primary" 
                   placeholder="How was your visit? Share what you liked or what we can improve..." 
                   rows={4}
                   value={formComment}
@@ -375,16 +372,16 @@ export default function PatientPaymentsReviewsPage() {
                   required
                 ></textarea>
               </div>
-              <div className="flex gap-4 pt-4">
+              <div className="flex justify-end items-center gap-4 mt-6">
                 <button 
-                  className="flex-1 py-3 border border-outline/20 dark:border-white/10 rounded-xl font-label-md text-on-surface-variant dark:text-slate-300 hover:bg-white/10 transition-all cursor-pointer font-bold" 
+                  className="px-5 py-2.5 rounded-lg font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 transition" 
                   onClick={() => setShowReviewModal(false)} 
                   type="button"
                 >
                   Cancel
                 </button>
                 <button 
-                  className="flex-1 py-3 bg-primary text-white rounded-xl font-label-md hover:bg-primary-container transition-all shadow-lg shadow-primary/20 cursor-pointer font-bold" 
+                  className="px-5 py-2.5 rounded-lg font-medium text-white bg-teal-600 hover:bg-teal-700 transition" 
                   type="submit"
                 >
                   {editingReview ? "Save Changes" : "Submit Review"}
