@@ -83,6 +83,7 @@ export default function FindDoctorsPage() {
         credentials: 'include',
         body: JSON.stringify({
           doctorId,
+          appointmentDate: new Date().toISOString().split('T')[0],
           appointmentTime: nextSlot,
           symptoms: 'Standard Consultation'
         })
