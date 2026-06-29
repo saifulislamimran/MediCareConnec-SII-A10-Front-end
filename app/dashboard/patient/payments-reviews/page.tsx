@@ -316,11 +316,11 @@ export default function PatientPaymentsReviewsPage() {
 
       {/* Review Modal Form */}
       {showReviewModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4 transition-all duration-300">
           <div className="absolute inset-0" onClick={() => setShowReviewModal(false)}></div>
-          <div className="relative w-full max-w-lg md:max-w-xl bg-white rounded-2xl shadow-2xl p-6 sm:p-8 flex flex-col gap-6">
-            <div className="flex justify-between items-center w-full border-b pb-4">
-              <h3 className="font-headline-md text-headline-md font-bold text-on-surface dark:text-slate-900">
+          <div className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl p-8 flex flex-col gap-6 transform transition-all">
+            <div className="w-full flex justify-between items-center border-b pb-4">
+              <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
                 {editingReview ? "Edit Feedback Review" : "Add New Review"}
               </h3>
               <button 
@@ -331,10 +331,10 @@ export default function PatientPaymentsReviewsPage() {
               </button>
             </div>
             <form onSubmit={handleSubmitReview} className="flex flex-col gap-6 text-left w-full">
-              <div className="flex flex-col gap-2 w-full">
-                <label className="block font-label-md text-on-surface-variant dark:text-slate-600 font-bold">Select Doctor</label>
+              <div className="w-full flex flex-col gap-2">
+                <label className="block font-label-md text-on-surface-variant dark:text-slate-400 font-bold">Select Doctor</label>
                 <select 
-                  className="w-full border rounded-lg p-3 text-on-surface dark:text-slate-900"
+                  className="w-full p-4 border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none dark:bg-slate-800 dark:border-slate-700 dark:text-white"
                   value={formDoctor}
                   onChange={(e) => setFormDoctor(e.target.value)}
                 >
@@ -342,8 +342,8 @@ export default function PatientPaymentsReviewsPage() {
                   <option value="Dr. Michael Chen">Dr. Michael Chen (Cardiologist)</option>
                 </select>
               </div>
-              <div className="flex flex-col gap-2 w-full">
-                <label className="block font-label-md text-on-surface-variant dark:text-slate-600 font-bold">Rating</label>
+              <div className="w-full flex flex-col gap-2">
+                <label className="block font-label-md text-on-surface-variant dark:text-slate-400 font-bold">Rating</label>
                 <div className="flex gap-2">
                   {Array.from({ length: 5 }).map((_, idx) => {
                     const isLit = idx < formRating;
@@ -361,10 +361,10 @@ export default function PatientPaymentsReviewsPage() {
                   })}
                 </div>
               </div>
-              <div className="flex flex-col gap-2 w-full">
-                <label className="block font-label-md text-on-surface-variant dark:text-slate-600 font-bold">Your Experience</label>
+              <div className="w-full flex flex-col gap-2">
+                <label className="block font-label-md text-on-surface-variant dark:text-slate-400 font-bold">Your Experience</label>
                 <textarea 
-                  className="w-full border rounded-lg p-3 text-on-surface dark:text-slate-900 placeholder:text-slate-400" 
+                  className="w-full p-4 border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none min-h-[150px] dark:bg-slate-800 dark:border-slate-700 dark:text-white" 
                   placeholder="How was your visit? Share what you liked or what we can improve..." 
                   rows={4}
                   value={formComment}
@@ -372,16 +372,16 @@ export default function PatientPaymentsReviewsPage() {
                   required
                 ></textarea>
               </div>
-              <div className="flex justify-end items-center gap-4 mt-2 pt-4 border-t w-full">
+              <div className="flex justify-end gap-4 mt-4 pt-4 border-t w-full">
                 <button 
-                  className="px-5 py-2.5 rounded-lg font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 transition" 
+                  className="px-6 py-2.5 rounded-xl font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200" 
                   onClick={() => setShowReviewModal(false)} 
                   type="button"
                 >
                   Cancel
                 </button>
                 <button 
-                  className="px-5 py-2.5 rounded-lg font-medium text-white bg-teal-600 hover:bg-teal-700 transition" 
+                  className="px-6 py-2.5 rounded-xl font-semibold text-white bg-teal-600 hover:bg-teal-700 shadow-md" 
                   type="submit"
                 >
                   {editingReview ? "Save Changes" : "Submit Review"}
