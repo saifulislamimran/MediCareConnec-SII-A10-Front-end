@@ -1,8 +1,9 @@
 // Global Standard RBAC Middleware
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { jwtVerify } from 'jose';
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Allow public paths
@@ -22,22 +23,25 @@ export function middleware(request: NextRequest) {
     
     let role = null;
 
-    // Try to extract role from userCookie first (fastest)
+    // Fast check via userCookie
     if (userCookie) {
       try {
         role = JSON.parse(userCookie).role;
       } catch (e) {}
     }
 
-    // Fallback: extract from JWT token payload if userCookie is missing
-    if (!role && token) {
+    // Cryptographically verify token if present
+    if (token) {
       try {
-        const payload = token.split('.')[1];
-        if (payload) {
-          const decoded = JSON.parse(atob(payload));
-          role = decoded.role;
-        }
-      } catch (e) {}
+        const secret = new TextEncoder().encode(
+          process.env.JWT_SECRET || 'fallback_secret_for_local_dev'
+        );
+        const { payload } = await jwtVerify(token, secret);
+        role = payload.role as string;
+      } catch (error) {
+        // Verification failed (tampered or expired)
+        return NextResponse.redirect(new URL('/login', request.url));
+      }
     }
 
     if (!role) {

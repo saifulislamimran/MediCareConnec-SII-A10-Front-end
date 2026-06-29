@@ -37,17 +37,26 @@ export default function FindDoctorsPage() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [filteredDoctors, setFilteredDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(true);
+  const [totalPages, setTotalPages] = useState(1);
 
-  // FETCH REAL DOCTORS
+  // FETCH REAL DOCTORS (Server-Side Paginated)
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://medi-care-connec-sii-a10-back-end.vercel.app'}/api/doctors`);
+        let url = `${process.env.NEXT_PUBLIC_API_URL || 'https://medi-care-connec-sii-a10-back-end.vercel.app'}/api/doctors?page=${currentPage}&limit=${itemsPerPage}`;
+        if (searchQuery) {
+          url += `&search=${encodeURIComponent(searchQuery)}`;
+        }
+        
+        const response = await fetch(url);
         const result = await response.json();
         
         if (result.success && result.data) {
           setDoctors(result.data);
+          if (result.total) {
+             setTotalPages(Math.ceil(result.total / itemsPerPage) || 1);
+          }
         } else {
           toast.error("Failed to load doctors.");
         }
@@ -60,7 +69,7 @@ export default function FindDoctorsPage() {
     };
 
     fetchDoctors();
-  }, []);
+  }, [currentPage, searchQuery]);
 
   const handleBookAppointment = async (doctorId: string, nextSlot: string = 'Soon') => {
     try {
@@ -102,26 +111,9 @@ export default function FindDoctorsPage() {
     }
   };
 
-  // Apply filters and sorting
+  // Apply filters and sorting (Client-side for fee, exp, rating, sort since backend doesn't explicitly handle these mappings yet)
   useEffect(() => {
     let result = [...doctors];
-
-    // Search query: Specialization, Doctor name, Clinic
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      result = result.filter(
-        (doc) => {
-          const name = doc.doctorName || doc.userId?.name || '';
-          const spec = doc.specialization || '';
-          const loc = doc.location || '';
-          const hosp = doc.hospital || '';
-          return name.toLowerCase().includes(q) ||
-                 spec.toLowerCase().includes(q) ||
-                 hosp.toLowerCase().includes(q) ||
-                 loc.toLowerCase().includes(q);
-        }
-      );
-    }
 
     // Fee range filter
     if (feeFilter !== 'All' && feeFilter !== 'Consultation Fee') {
@@ -168,14 +160,9 @@ export default function FindDoctorsPage() {
     }
 
     setFilteredDoctors(result);
-    setCurrentPage(1); // Reset to page 1 on filter change
-  }, [doctors, searchQuery, feeFilter, expFilter, ratingFilter, sortBy]);
+  }, [doctors, feeFilter, expFilter, ratingFilter, sortBy]);
 
-  // Pagination calculations
-  const totalPages = Math.ceil(filteredDoctors.length / itemsPerPage) || 1;
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentDoctors = filteredDoctors.slice(indexOfFirstItem, indexOfLastItem);
+  const currentDoctors = filteredDoctors;
 
   return (
     <main className="pt-32 pb-xl min-h-screen">

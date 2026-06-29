@@ -27,7 +27,7 @@ function PaymentContent() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
-          body: JSON.stringify({ appointmentId, amount: Number(amount) }),
+          body: JSON.stringify({ appointmentId }),
         });
         const data = await response.json();
         if (data.success) {
@@ -41,7 +41,7 @@ function PaymentContent() {
     };
 
     fetchPaymentIntent();
-  }, [appointmentId, amount]);
+  }, [appointmentId]);
 
   const appearance = {
     theme: 'night' as 'night',
