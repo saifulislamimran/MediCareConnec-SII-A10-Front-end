@@ -1,37 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏥 MediCare - Enterprise Medical Portal (Frontend)
 
-## Getting Started
+![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)
+![React](https://img.shields.io/badge/React-18-blue?style=for-the-badge&logo=react)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Stripe](https://img.shields.io/badge/Stripe-6772E5?style=for-the-badge&logo=stripe&logoColor=white)
+![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-black?style=for-the-badge&logo=vercel)
 
-First, run the development server:
+A highly scalable, visually stunning, and secure Full-Stack Medical Patient-Doctor Portal built with Next.js App Router. This application features strict Enterprise-Grade Role-Based Access Control (RBAC), secure payment gateways, and real-time appointment scheduling.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+🔗 **[Live Frontend Demo](https://medi-care-connec-sii-a10-front-end.vercel.app)** | 🔗 **[Live Backend API](https://medi-care-connec-sii-a10-back-end.vercel.app)**
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ✨ Key Features & Functionalities
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+*   **🛡️ Edge-Compatible RBAC Middleware:** Cryptographically secured route isolation using `jose`. Patients cannot access Doctor portals, and Doctors cannot access Admin panels.
+*   **🩺 Dynamic Role-Based UI:** The Navbar and UI strictly render options based on the authenticated user's role (Patient, Doctor, Admin).
+*   **📅 Conflict-Free Appointment Booking:** Real-time scheduling interface that communicates with the backend to prevent infinite overbooking.
+*   **💳 Secure Stripe Integration:** Encrypted checkout flow. Pricing is strictly authorized by the server to prevent client-side price manipulation.
+*   **⭐ Interactive Review Modal:** A custom, fully responsive Tailwind CSS modal for patients to rate and review their completed appointments.
+*   **📱 100% Mobile Responsive:** Fluid grids, adaptive modals, and intelligent layouts that look perfect on any device.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Tech Stack & Libraries
 
-## Learn More
+| Category          | Technology / Library |
+| ----------------- | -------------------- |
+| **Framework**     | Next.js (App Router) |
+| **Styling**       | Tailwind CSS         |
+| **Authentication**| JWT (jose edge-compatible) |
+| **Payment**       | Stripe Elements      |
+| **State/Fetch**   | React Hooks, Fetch API |
+| **Icons**         | React Icons / Lucide |
 
-To learn more about Next.js, take a look at the following resources:
+## ⚙️ Environment Variables
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Create a `.env.local` file in the root directory and configure the following:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Variable | Description |
+| :--- | :--- |
+| `NEXT_PUBLIC_API_URL` | The live URL of the deployed Express backend. |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Your Stripe Public Key for client-side elements. |
+| `JWT_SECRET` | Must match the backend secret for Edge middleware decoding. |
 
-## Deploy on Vercel
+## 🚀 Installation & Setup
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-"# MediCareConnec-SII-A10-Front-end" 
+1. **Clone the repository:**
+   ```bash
+   git clone <your-frontend-repo-url>
+   cd frontend
