@@ -152,7 +152,7 @@ export default function LoginPage() {
               <div className="flex flex-col gap-xs">
                 <div className="flex justify-between items-center px-xs">
                   <label className="font-label-md text-label-md text-on-surface dark:text-slate-100" htmlFor="password">Password</label>
-                  <Link className="font-label-sm text-label-sm text-primary dark:text-inverse-primary hover:underline transition-all" href="#">Forgot Password?</Link>
+                  <Link className="font-label-sm text-label-sm text-primary dark:text-inverse-primary hover:underline transition-all" href="/login">Forgot Password?</Link>
                 </div>
                 <div className="relative">
                   <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline dark:text-slate-400">lock</span>
@@ -237,8 +237,8 @@ export default function LoginPage() {
       <footer className="fixed bottom-0 w-full py-8 px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-4 z-10 pointer-events-none">
         <p className="font-label-sm text-label-sm text-on-surface-variant/70 dark:text-slate-500">© 2024 MediCare Connect. Clinical Excellence & Precision.</p>
         <div className="flex gap-lg pointer-events-auto">
-          <Link className="font-label-sm text-label-sm text-on-surface-variant/70 dark:text-slate-500 hover:text-primary dark:hover:text-inverse-primary transition-colors" href="#">HIPAA Compliance</Link>
-          <Link className="font-label-sm text-label-sm text-on-surface-variant/70 dark:text-slate-500 hover:text-primary dark:hover:text-inverse-primary transition-colors" href="#">Help Center</Link>
+          <Link className="font-label-sm text-label-sm text-on-surface-variant/70 dark:text-slate-500 hover:text-primary dark:hover:text-inverse-primary transition-colors" href="/">HIPAA Compliance</Link>
+          <Link className="font-label-sm text-label-sm text-on-surface-variant/70 dark:text-slate-500 hover:text-primary dark:hover:text-inverse-primary transition-colors" href="/contact">Help Center</Link>
         </div>
       </footer>
     </div>

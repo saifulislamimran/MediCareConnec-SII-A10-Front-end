@@ -21,21 +21,26 @@ function PaymentContent() {
       return;
     }
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://medi-care-connec-sii-a10-back-end.vercel.app'}/api/payments/create-intent`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ appointmentId, amount: Number(amount) }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchPaymentIntent = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://medi-care-connec-sii-a10-back-end.vercel.app'}/api/payments/create-intent`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ appointmentId, amount: Number(amount) }),
+        });
+        const data = await response.json();
         if (data.success) {
           setClientSecret(data.clientSecret);
         } else {
           toast.error(data.message || "Failed to initialize payment");
         }
-      })
-      .catch(() => toast.error("Network error while starting payment"));
+      } catch (error) {
+        toast.error("Network error while starting payment");
+      }
+    };
+
+    fetchPaymentIntent();
   }, [appointmentId, amount]);
 
   const appearance = {

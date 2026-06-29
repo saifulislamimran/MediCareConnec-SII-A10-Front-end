@@ -79,7 +79,7 @@ export default function RegisterPage() {
           <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>medical_services</span>
           MediCare Connect
         </Link>
-        <Link className="text-primary dark:text-inverse-primary font-label-md flex items-center gap-1 hover:opacity-80 transition-opacity" href="#">
+        <Link className="text-primary dark:text-inverse-primary font-label-md flex items-center gap-1 hover:opacity-80 transition-opacity" href="/">
           <span className="material-symbols-outlined">help_outline</span>
           Support
         </Link>
@@ -303,8 +303,8 @@ export default function RegisterPage() {
       <footer className="w-full py-8 px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-4 border-t border-outline-variant/30 dark:border-white/10 mt-auto bg-white/5 dark:bg-slate-950/20">
         <p className="font-label-sm text-label-sm text-on-surface-variant/70 dark:text-slate-500">© 2024 MediCare Connect. Clinical Excellence & Precision.</p>
         <div className="flex gap-lg">
-          <Link className="font-label-sm text-label-sm text-on-surface-variant/70 dark:text-slate-500 hover:text-primary dark:hover:text-inverse-primary transition-colors" href="#">HIPAA Compliance</Link>
-          <Link className="font-label-sm text-label-sm text-on-surface-variant/70 dark:text-slate-500 hover:text-primary dark:hover:text-inverse-primary transition-colors" href="#">Help Center</Link>
+          <Link className="font-label-sm text-label-sm text-on-surface-variant/70 dark:text-slate-500 hover:text-primary dark:hover:text-inverse-primary transition-colors" href="/">HIPAA Compliance</Link>
+          <Link className="font-label-sm text-label-sm text-on-surface-variant/70 dark:text-slate-500 hover:text-primary dark:hover:text-inverse-primary transition-colors" href="/contact">Help Center</Link>
         </div>
       </footer>
     </div>
