@@ -316,34 +316,34 @@ export default function PatientPaymentsReviewsPage() {
 
       {/* Review Modal Form */}
       {showReviewModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
           <div className="absolute inset-0" onClick={() => setShowReviewModal(false)}></div>
-          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg p-6 relative">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="font-headline-md text-headline-md font-bold text-on-surface dark:text-white">
+          <div className="relative w-full max-w-lg md:max-w-xl bg-white rounded-2xl shadow-2xl p-6 sm:p-8 flex flex-col gap-6">
+            <div className="flex justify-between items-center w-full border-b pb-4">
+              <h3 className="font-headline-md text-headline-md font-bold text-on-surface dark:text-slate-900">
                 {editingReview ? "Edit Feedback Review" : "Add New Review"}
               </h3>
               <button 
-                className="absolute top-4 right-4 text-gray-500 hover:text-gray-800" 
+                className="text-gray-500 hover:text-gray-800 transition-colors" 
                 onClick={() => setShowReviewModal(false)}
               >
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
-            <form onSubmit={handleSubmitReview} className="space-y-6 text-left">
-              <div>
-                <label className="block font-label-md text-on-surface-variant dark:text-slate-400 mb-2 font-bold">Select Doctor</label>
+            <form onSubmit={handleSubmitReview} className="flex flex-col gap-6 text-left w-full">
+              <div className="flex flex-col gap-2 w-full">
+                <label className="block font-label-md text-on-surface-variant dark:text-slate-600 font-bold">Select Doctor</label>
                 <select 
-                  className="w-full mt-2 p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary"
+                  className="w-full border rounded-lg p-3 text-on-surface dark:text-slate-900"
                   value={formDoctor}
                   onChange={(e) => setFormDoctor(e.target.value)}
                 >
-                  <option className="dark:bg-[#1e293b]" value="Dr. Sarah Jenkins">Dr. Sarah Jenkins (GP)</option>
-                  <option className="dark:bg-[#1e293b]" value="Dr. Michael Chen">Dr. Michael Chen (Cardiologist)</option>
+                  <option value="Dr. Sarah Jenkins">Dr. Sarah Jenkins (GP)</option>
+                  <option value="Dr. Michael Chen">Dr. Michael Chen (Cardiologist)</option>
                 </select>
               </div>
-              <div>
-                <label className="block font-label-md text-on-surface-variant dark:text-slate-400 mb-2 font-bold">Rating</label>
+              <div className="flex flex-col gap-2 w-full">
+                <label className="block font-label-md text-on-surface-variant dark:text-slate-600 font-bold">Rating</label>
                 <div className="flex gap-2">
                   {Array.from({ length: 5 }).map((_, idx) => {
                     const isLit = idx < formRating;
@@ -361,10 +361,10 @@ export default function PatientPaymentsReviewsPage() {
                   })}
                 </div>
               </div>
-              <div>
-                <label className="block font-label-md text-on-surface-variant dark:text-slate-400 mb-2 font-bold">Your Experience</label>
+              <div className="flex flex-col gap-2 w-full">
+                <label className="block font-label-md text-on-surface-variant dark:text-slate-600 font-bold">Your Experience</label>
                 <textarea 
-                  className="w-full mt-2 p-3 border border-slate-300 rounded-lg min-h-[120px] resize-y focus:ring-2 focus:ring-primary" 
+                  className="w-full border rounded-lg p-3 text-on-surface dark:text-slate-900 placeholder:text-slate-400" 
                   placeholder="How was your visit? Share what you liked or what we can improve..." 
                   rows={4}
                   value={formComment}
@@ -372,7 +372,7 @@ export default function PatientPaymentsReviewsPage() {
                   required
                 ></textarea>
               </div>
-              <div className="flex justify-end items-center gap-4 mt-6">
+              <div className="flex justify-end items-center gap-4 mt-2 pt-4 border-t w-full">
                 <button 
                   className="px-5 py-2.5 rounded-lg font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 transition" 
                   onClick={() => setShowReviewModal(false)} 
