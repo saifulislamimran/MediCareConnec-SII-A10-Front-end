@@ -150,11 +150,23 @@ export default function FindDoctorsPage() {
 
   const handleBookAppointment = async (doctorId: string, nextSlot: string) => {
     try {
+      let token = '';
+      if (typeof window !== 'undefined') {
+        token = localStorage.getItem('token') || '';
+        if (!token) {
+           const cookies = document.cookie.split(';');
+           const tokenCookie = cookies.find(c => c.trim().startsWith('token='));
+           if (tokenCookie) token = tokenCookie.split('=')[1];
+        }
+      }
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://medi-care-connec-sii-a10-back-end.vercel.app'}/api/appointments/book`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
         },
+        credentials: 'include',
         body: JSON.stringify({
           doctorId,
           appointmentTime: nextSlot,

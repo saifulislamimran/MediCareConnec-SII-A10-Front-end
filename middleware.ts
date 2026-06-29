@@ -14,11 +14,52 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // For all dashboard routes, simply allow the request to pass.
-  // DO NOT force a redirect if token is missing inside the middleware for now,
-  // let the React component handle the redirect based on local state.
+  // Dashboard Isolation
   if (pathname.startsWith('/dashboard')) {
-    return NextResponse.next();
+    const token = request.cookies.get('token')?.value;
+    const userCookie = request.cookies.get('medicare_user')?.value;
+    
+    let role = null;
+
+    // Try to extract role from userCookie first (fastest)
+    if (userCookie) {
+      try {
+        role = JSON.parse(userCookie).role;
+      } catch (e) {}
+    }
+
+    // Fallback: extract from JWT token payload if userCookie is missing
+    if (!role && token) {
+      try {
+        const payload = token.split('.')[1];
+        if (payload) {
+          const decoded = JSON.parse(atob(payload));
+          role = decoded.role;
+        }
+      } catch (e) {}
+    }
+
+    if (!role) {
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+
+    // Strict RBAC Rules
+    if (pathname.startsWith('/dashboard/admin') && role !== 'admin') {
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+
+    if (pathname.startsWith('/dashboard/doctor') && role !== 'doctor' && role !== 'admin') {
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+
+    if (pathname.startsWith('/dashboard/patient') && role !== 'patient' && role !== 'admin') {
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+
+    // Redirect generic dashboard path to correct specific portal
+    if (pathname === '/dashboard' || pathname === '/dashboard/') {
+      return NextResponse.redirect(new URL(`/dashboard/${role}`, request.url));
+    }
   }
 
   return NextResponse.next();
