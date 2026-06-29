@@ -144,9 +144,21 @@ export default function Navbar() {
               {isProfileOpen && (
                 <div className="absolute right-0 mt-3 w-52 bg-white/95 dark:bg-slate-900/90 backdrop-blur-xl rounded-2xl overflow-hidden shadow-2xl z-50 border border-white/30 dark:border-white/10 animate-scale-up">
                   <div className="p-2 flex flex-col gap-1 text-left">
-                    <Link href={`/dashboard/${user?.role || 'patient'}`} onClick={() => setIsProfileOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-xs text-on-surface dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-white/5 rounded-xl transition-colors font-bold">
-                      <span className="material-symbols-outlined text-[18px]">dashboard</span> Dashboard
-                    </Link>
+                    {(user?.role === 'patient' || user?.role === 'admin') && (
+                      <Link href="/dashboard/patient" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-xs text-on-surface dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-white/5 rounded-xl transition-colors font-bold">
+                        <span className="material-symbols-outlined text-[18px]">personal_injury</span> Patient Dashboard
+                      </Link>
+                    )}
+                    {(user?.role === 'doctor' || user?.role === 'admin') && (
+                      <Link href="/dashboard/doctor" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-xs text-on-surface dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-white/5 rounded-xl transition-colors font-bold">
+                        <span className="material-symbols-outlined text-[18px]">stethoscope</span> Doctor Dashboard
+                      </Link>
+                    )}
+                    {user?.role === 'admin' && (
+                      <Link href="/dashboard/admin" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-xs text-on-surface dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-white/5 rounded-xl transition-colors font-bold">
+                        <span className="material-symbols-outlined text-[18px]">admin_panel_settings</span> Admin Dashboard
+                      </Link>
+                    )}
                     <Link href="/dashboard/profile" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-xs text-on-surface dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-white/5 rounded-xl transition-colors font-bold w-full text-left cursor-pointer">
                       <span className="material-symbols-outlined text-[18px]">edit</span> Edit Profile
                     </Link>
@@ -183,7 +195,15 @@ export default function Navbar() {
 
             {user ? (
               <>
-                <Link href={`/dashboard/${user?.role || 'patient'}`} onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-primary dark:text-primary-fixed hover:bg-gray-50 dark:hover:bg-slate-800">Dashboard</Link>
+                {(user?.role === 'patient' || user?.role === 'admin') && (
+                  <Link href="/dashboard/patient" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-primary dark:text-primary-fixed hover:bg-gray-50 dark:hover:bg-slate-800">Patient Dashboard</Link>
+                )}
+                {(user?.role === 'doctor' || user?.role === 'admin') && (
+                  <Link href="/dashboard/doctor" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-primary dark:text-primary-fixed hover:bg-gray-50 dark:hover:bg-slate-800">Doctor Dashboard</Link>
+                )}
+                {user?.role === 'admin' && (
+                  <Link href="/dashboard/admin" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-primary dark:text-primary-fixed hover:bg-gray-50 dark:hover:bg-slate-800">Admin Dashboard</Link>
+                )}
                 <Link href="/dashboard/profile" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-primary dark:text-primary-fixed hover:bg-gray-50 dark:hover:bg-slate-800">Edit Profile</Link>
                 <button onClick={handleLogout} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-error hover:bg-gray-50 dark:hover:bg-slate-800">Logout</button>
               </>
