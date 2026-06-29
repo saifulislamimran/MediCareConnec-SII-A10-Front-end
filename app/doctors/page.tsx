@@ -5,136 +5,24 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 interface Doctor {
-  id: string;
-  name: string;
-  specialty: string;
-  qualifications: string;
-  fee: number;
-  experience: number; // in years
-  rating: number;
-  reviewsCount: number;
-  location: string;
-  distance: number; // in miles
-  nextSlot: string;
-  image: string;
-  online: boolean;
-  hospital: string;
+  _id: string;
+  doctorName?: string;
+  specialization?: string;
+  qualifications?: string;
+  consultationFee?: number;
+  experience?: number;
+  averageRating?: number;
+  location?: string;
+  userId?: {
+    name?: string;
+    photo?: string;
+  };
+  // fallbacks for UI
+  nextSlot?: string;
+  online?: boolean;
+  hospital?: string;
+  distance?: number;
 }
-
-const mockDoctors: Doctor[] = [
-  {
-    id: "64a1b2c3d4e5f6a7b8c9d0e1",
-    name: "Dr. Sarah Jenkins",
-    specialty: "Neurology",
-    qualifications: "MBBS, MD, DM",
-    fee: 150,
-    experience: 12,
-    rating: 4.9,
-    reviewsCount: 124,
-    location: "San Francisco, CA",
-    distance: 2.4,
-    nextSlot: "Today, 2:30 PM",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDnVLhcLOOtJ-rR4YQprPmEJY-dCp730A_i5-JpLhJCzj5qlRNJ6mfakWFDNSMc-50vb0l_4knUKV13UTuX5nl24abrAJ4EjHHEQZPvFfRBKEEnXzYBTIVQp2rZruHtiGS0GyGCVrB0ahKhErUIT4qjvjlfyafWcuCqViwq7-EBY5ozfKtrO2hqYCh3uPA38qjiRVv11hdEYmdoY74L2TS6TUPfH8PRBLFh7NGT0bzItdEabwQTq3BP9tqa-YDUSOoMMW2WigdNxAJN",
-    online: true,
-    hospital: "Central Medical Institute"
-  },
-  {
-    id: "64a1b2c3d4e5f6a7b8c9d0e2",
-    name: "Dr. Michael Chen",
-    specialty: "Cardiology",
-    qualifications: "MBBS, MD, FACC",
-    fee: 130,
-    experience: 15,
-    rating: 4.8,
-    reviewsCount: 110,
-    location: "San Jose, CA",
-    distance: 12.1,
-    nextSlot: "Wed, 09:15 AM",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAqG3h6ozuy90NlkehoL5izF83uoB2kI2QBgcubcRcYYWECEe2dXvZRUk5WnU7wDtXUBOHNX6Ql5QmbdHtxwlbrZ-HnbJDXwCZHyAH-YkqmsHbLybmWdZxRQdtl9N068LxQGVzRvBchq5dSyFvMKNMwoArzuYSn54WvvloHPxhh2Miiq0nKsK-SxZJlRau2e57VixcPywuAfP_Xyv7Yj2tq4builHBEnAO02DmleM3yLqipGRCMH3HTSP3EwBin5ZBALQngF-GRBsxj",
-    online: false,
-    hospital: "Heart & Vascular Center"
-  },
-  {
-    id: "64a1b2c3d4e5f6a7b8c9d0e3",
-    name: "Dr. Elena Rodriguez",
-    specialty: "Pediatrics",
-    qualifications: "MBBS, DCH",
-    fee: 95,
-    experience: 8,
-    rating: 5.0,
-    reviewsCount: 210,
-    location: "Oakland, CA",
-    distance: 8.7,
-    nextSlot: "Tomorrow, 11:00 AM",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBjJYWo5gZYzOPY5oVRUPZ83kSjCupVP6FFr7gm90DkASjDCm4K5LXct7opNRakmH_PywJdJfKlcd6VPOI5YiSx922ZsC6DLqAjce8Tiozyh7raomBe8Brz2De88h5JI5Ns3WCBPQ-yuarL1c_enWxdJzcCRdpQukcNZKOzivx6-kgV-LlDYUFvSSHJcA1sEvwGFgloWr94ryVFhgmEDWRARGRfSiGZLmw8tkbzZs6GZ0jC0lvjhqYnWGNodMVaZr6jmYvC5vflhd_E",
-    online: true,
-    hospital: "Valley Children's Hospital"
-  },
-  {
-    id: "64a1b2c3d4e5f6a7b8c9d0e4",
-    name: "Dr. James Wilson",
-    specialty: "Dermatology",
-    qualifications: "MBBS, MD",
-    fee: 150,
-    experience: 20,
-    rating: 4.7,
-    reviewsCount: 142,
-    location: "Palo Alto, CA",
-    distance: 15.5,
-    nextSlot: "Fri, 04:30 PM",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDaKU6Nab3yqbEWHPLSGbGE7mLYB6hY-aqQJbhnhqAsuENsjS5MCTEZfLTwjEmvX1lxhgXXN9Oj8lDvLIB20ecalUB7SYDbIot3JJJ88S2UIjjWIIU42ocFmdxh3_8fPBUt5tVYXqqk8WkZARzfwekXtOpcJKjQwiI428snE-E8W9dP2A50txpiBmss82l0lQcYeJNflW8nwtMdVyYLLZWGk2Z4YmdxonE4ZpVyPnLQ2hdlvyknIJVEPiYHO-xUC3No9RSCYk1TUWFT",
-    online: true,
-    hospital: "Skin & Laser Clinic"
-  },
-  {
-    id: "64a1b2c3d4e5f6a7b8c9d0e5",
-    name: "Dr. Sarah Chen",
-    specialty: "Cardiology",
-    qualifications: "MBBS, MD, FRCP",
-    fee: 120,
-    experience: 10,
-    rating: 4.9,
-    reviewsCount: 124,
-    location: "San Francisco, CA",
-    distance: 3.2,
-    nextSlot: "Today, 2:00 PM",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDPfR7siv-cFegYXw7KFNTdViFLMoQRF8KOTKcNOX17dibHCtmG4QJk9lkP924VML0USpY7CE6fy7A2M79NIA6GzcDX2s2KUcntAJ3K5LRz3Y020PKsXvmMILtrk3uFGFY0cXCCOvgf0H3GQKIbiYrKgkG1IwHXmSCaOq8QVtSdyyCTgKGZYsfobwSa6wdmVRG1o-sO09_9bcdX5b8-E7KYiOoc_EdBuyjUdmEU0-f5vibehRhTssieVYuPgMr41351unaPoWRgk4jK",
-    online: true,
-    hospital: "Central Medical Institute"
-  },
-  {
-    id: "64a1b2c3d4e5f6a7b8c9d0e6",
-    name: "Dr. James Wilson (Neurology)",
-    specialty: "Neurology",
-    qualifications: "MBBS, PhD, DM",
-    fee: 150,
-    experience: 22,
-    rating: 4.8,
-    reviewsCount: 98,
-    location: "San Francisco, CA",
-    distance: 4.1,
-    nextSlot: "Tomorrow, 10:00 AM",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAJDASEJLcjyXZm-ThBsRX_8ESgGzlZ36tjZf1vYZPliwt6P-npFIRblSPVd7KbWqyMpZ7hjZ4u7DljaH61myKFRixs50W51_bcyRDsF4hbqyi3-peb708et8Kbgn9-24PLp9MTmKYxJs2rz3Y6wSh14QSYOR-562MPQQyJvoDO-OSr86RAOSzAGhnSMhJ3i2J10q4AbNDpEFh7tqTmqx_8pFvNdY0IH7dGJJ3sFEPYCvX-YZuWw2tjFWFr09nkc-fxpGhXJDwD1-gr",
-    online: true,
-    hospital: "Central Medical Institute"
-  },
-  {
-    id: "64a1b2c3d4e5f6a7b8c9d0e7",
-    name: "Dr. Marcus Thorne",
-    specialty: "Orthopedics",
-    qualifications: "MS, MCh (Orth)",
-    fee: 180,
-    experience: 14,
-    rating: 4.7,
-    reviewsCount: 85,
-    location: "San Francisco, CA",
-    distance: 5.5,
-    nextSlot: "Mon, 9:00 AM",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBjJYWo5gZYzOPY5oVRUPZ83kSjCupVP6FFr7gm90DkASjDCm4K5LXct7opNRakmH_PywJdJfKlcd6VPOI5YiSx922ZsC6DLqAjce8Tiozyh7raomBe8Brz2De88h5JI5Ns3WCBPQ-yuarL1c_enWxdJzcCRdpQukcNZKOzivx6-kgV-LlDYUFvSSHJcA1sEvwGFgloWr94ryVFhgmEDWRARGRfSiGZLmw8tkbzZs6GZ0jC0lvjhqYnWGNodMVaZr6jmYvC5vflhd_E",
-    online: true,
-    hospital: "Surgical Center"
-  }
-];
 
 export default function FindDoctorsPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
@@ -144,11 +32,37 @@ export default function FindDoctorsPage() {
   const [ratingFilter, setRatingFilter] = useState('All');
   const [sortBy, setSortBy] = useState('Highest Rated');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4;
+  const itemsPerPage = 6;
 
-  const [filteredDoctors, setFilteredDoctors] = useState<Doctor[]>(mockDoctors);
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [filteredDoctors, setFilteredDoctors] = useState<Doctor[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleBookAppointment = async (doctorId: string, nextSlot: string) => {
+  // FETCH REAL DOCTORS
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://medi-care-connec-sii-a10-back-end.vercel.app'}/api/doctors`);
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+          setDoctors(result.data);
+        } else {
+          toast.error("Failed to load doctors.");
+        }
+      } catch (error) {
+        console.error("Error fetching doctors:", error);
+        toast.error("An error occurred while fetching doctors.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDoctors();
+  }, []);
+
+  const handleBookAppointment = async (doctorId: string, nextSlot: string = 'Soon') => {
     try {
       let token = '';
       if (typeof window !== 'undefined') {
@@ -189,67 +103,72 @@ export default function FindDoctorsPage() {
 
   // Apply filters and sorting
   useEffect(() => {
-    let result = [...mockDoctors];
+    let result = [...doctors];
 
-    // Search query: Specialty, Doctor name, Clinic
+    // Search query: Specialization, Doctor name, Clinic
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       result = result.filter(
-        (doc) =>
-          doc.name.toLowerCase().includes(q) ||
-          doc.specialty.toLowerCase().includes(q) ||
-          doc.hospital.toLowerCase().includes(q) ||
-          doc.location.toLowerCase().includes(q)
+        (doc) => {
+          const name = doc.doctorName || doc.userId?.name || '';
+          const spec = doc.specialization || '';
+          const loc = doc.location || '';
+          const hosp = doc.hospital || '';
+          return name.toLowerCase().includes(q) ||
+                 spec.toLowerCase().includes(q) ||
+                 hosp.toLowerCase().includes(q) ||
+                 loc.toLowerCase().includes(q);
+        }
       );
     }
 
     // Fee range filter
     if (feeFilter !== 'All' && feeFilter !== 'Consultation Fee') {
       if (feeFilter === '$0 - $50') {
-        result = result.filter((doc) => doc.fee <= 50);
+        result = result.filter((doc) => (doc.consultationFee || 0) <= 50);
       } else if (feeFilter === '$50 - $100') {
-        result = result.filter((doc) => doc.fee > 50 && doc.fee <= 100);
+        result = result.filter((doc) => (doc.consultationFee || 0) > 50 && (doc.consultationFee || 0) <= 100);
       } else if (feeFilter === '$100+') {
-        result = result.filter((doc) => doc.fee > 100);
+        result = result.filter((doc) => (doc.consultationFee || 0) > 100);
       }
     }
 
     // Experience filter
     if (expFilter !== 'All' && expFilter !== 'Experience') {
       if (expFilter === '1-5 Years') {
-        result = result.filter((doc) => doc.experience >= 1 && doc.experience <= 5);
+        result = result.filter((doc) => (doc.experience || 0) >= 1 && (doc.experience || 0) <= 5);
       } else if (expFilter === '5-10 Years') {
-        result = result.filter((doc) => doc.experience > 5 && doc.experience <= 10);
+        result = result.filter((doc) => (doc.experience || 0) > 5 && (doc.experience || 0) <= 10);
       } else if (expFilter === '10+ Years') {
-        result = result.filter((doc) => doc.experience > 10);
+        result = result.filter((doc) => (doc.experience || 0) > 10);
       }
     }
 
     // Rating filter
     if (ratingFilter !== 'All' && ratingFilter !== 'Highest Rating') {
       if (ratingFilter === '4.5+ Stars') {
-        result = result.filter((doc) => doc.rating >= 4.5);
+        result = result.filter((doc) => (doc.averageRating || 0) >= 4.5);
       } else if (ratingFilter === '4.0+ Stars') {
-        result = result.filter((doc) => doc.rating >= 4.0);
+        result = result.filter((doc) => (doc.averageRating || 0) >= 4.0);
       }
     }
 
     // Sorting
     if (sortBy === 'Highest Rated') {
-      result.sort((a, b) => b.rating - a.rating);
+      result.sort((a, b) => (b.averageRating || 0) - (a.averageRating || 0));
     } else if (sortBy === 'Most Experienced') {
-      result.sort((a, b) => b.experience - a.experience);
+      result.sort((a, b) => (b.experience || 0) - (a.experience || 0));
     } else if (sortBy === 'Nearest to Me') {
-      result.sort((a, b) => a.distance - b.distance);
+      result.sort((a, b) => (a.distance || 0) - (b.distance || 0));
     } else if (sortBy === 'Fee: Low to High') {
-      result.sort((a, b) => a.fee - b.fee);
+      result.sort((a, b) => (a.consultationFee || 0) - (b.consultationFee || 0));
     } else if (sortBy === 'Fee: High to Low') {
-      result.sort((a, b) => b.fee - a.fee);
+      result.sort((a, b) => (b.consultationFee || 0) - (a.consultationFee || 0));
     }
 
     setFilteredDoctors(result);
     setCurrentPage(1); // Reset to page 1 on filter change
-  }, [searchQuery, feeFilter, expFilter, ratingFilter, sortBy]);
+  }, [doctors, searchQuery, feeFilter, expFilter, ratingFilter, sortBy]);
 
   // Pagination calculations
   const totalPages = Math.ceil(filteredDoctors.length / itemsPerPage) || 1;
@@ -356,49 +275,61 @@ export default function FindDoctorsPage() {
           </div>
         </div>
 
+        {/* Loading State */}
+        {loading && (
+          <div className="flex justify-center py-20">
+            <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )}
+
         {/* Doctor List Content */}
-        {viewMode === 'grid' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter transition-all duration-300" id="doctorGrid">
-            {currentDoctors.map((doc) => (
-              <div key={doc.id} className="glass-card rounded-2xl overflow-hidden group hover:shadow-xl transition-all duration-300 border-white/20 dark:border-white/10 flex flex-col justify-between bg-white/40 dark:bg-slate-900/60 backdrop-blur-xl">
+        {!loading && viewMode === 'grid' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 transition-all duration-300" id="doctorGrid">
+            {currentDoctors.map((doc) => {
+              const displayName = doc.doctorName || doc.userId?.name || 'Dr. Unknown';
+              const displayImage = doc.userId?.photo || 'https://via.placeholder.com/150';
+              const displaySpecialty = doc.specialization || 'General';
+              
+              return (
+              <div key={doc._id} className="glass-card rounded-2xl overflow-hidden group hover:shadow-xl transition-all duration-300 border-white/20 dark:border-white/10 flex flex-col justify-between bg-white/40 dark:bg-slate-900/60 backdrop-blur-xl">
                 <div>
                   <div className="relative h-48 w-full overflow-hidden">
                     <div 
                       className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" 
-                      style={{ backgroundImage: `url('${doc.image}')` }}
+                      style={{ backgroundImage: `url('${displayImage}')` }}
                     ></div>
                     <div className="absolute top-4 right-4 bg-primary/90 text-on-primary px-3 py-1 rounded-full text-label-sm backdrop-blur-md flex items-center gap-1 shadow-md font-bold">
-                      <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span> {doc.rating.toFixed(1)}
+                      <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span> {(doc.averageRating || 0).toFixed(1)}
                     </div>
                     <div className="absolute bottom-4 left-4">
-                      <span className="bg-secondary-container/90 dark:bg-slate-800 text-on-secondary-container dark:text-slate-200 px-3 py-1 rounded-full text-label-sm backdrop-blur-md font-bold">{doc.specialty}</span>
+                      <span className="bg-secondary-container/90 dark:bg-slate-800 text-on-secondary-container dark:text-slate-200 px-3 py-1 rounded-full text-label-sm backdrop-blur-md font-bold">{displaySpecialty}</span>
                     </div>
                   </div>
                   
                   <div className="p-md space-y-sm">
                     <div className="flex justify-between items-start mb-2">
                       <div>
-                        <h3 className="font-headline-md text-headline-md text-on-surface dark:text-slate-100">{doc.name}</h3>
-                        <p className="text-label-md text-on-surface-variant dark:text-slate-400">{doc.hospital}</p>
+                        <h3 className="font-headline-md text-headline-md text-on-surface dark:text-slate-100">{displayName}</h3>
+                        <p className="text-label-md text-on-surface-variant dark:text-slate-400">{doc.hospital || 'Medical Center'}</p>
                       </div>
                       <div 
-                        className={`w-3 h-3 rounded-full ${doc.online ? 'bg-primary status-glow' : 'bg-outline'}`} 
-                        title={doc.online ? "Online now" : "Offline"}
+                        className={`w-3 h-3 rounded-full ${doc.online !== false ? 'bg-primary status-glow' : 'bg-outline'}`} 
+                        title={doc.online !== false ? "Online now" : "Offline"}
                       ></div>
                     </div>
                     
                     <div className="space-y-2 mb-md">
                       <div className="flex items-center gap-2 text-on-surface-variant dark:text-slate-400">
                         <span className="material-symbols-outlined text-[18px]">work</span>
-                        <span className="text-label-md">{doc.experience} Years Experience</span>
+                        <span className="text-label-md">{doc.experience || 0} Years Experience</span>
                       </div>
                       <div className="flex items-center gap-2 text-on-surface-variant dark:text-slate-400">
                         <span className="material-symbols-outlined text-[18px]">location_on</span>
-                        <span className="text-label-md">{doc.location} ({doc.distance} miles)</span>
+                        <span className="text-label-md">{doc.location || 'Local'} ({doc.distance || 0} miles)</span>
                       </div>
                       <div className="flex items-center gap-2 text-on-surface-variant dark:text-slate-400">
                         <span className="material-symbols-outlined text-[18px]">payments</span>
-                        <span className="text-label-md">${doc.fee} / Consultation</span>
+                        <span className="text-label-md">${doc.consultationFee || 0} / Consultation</span>
                       </div>
                     </div>
                   </div>
@@ -408,16 +339,17 @@ export default function FindDoctorsPage() {
                   <div className="flex items-center justify-between gap-4 border-t border-outline-variant/30 dark:border-white/10 pt-4">
                     <div className="flex flex-col">
                       <span className="text-label-sm text-outline dark:text-slate-450 uppercase tracking-wider">Next Slot</span>
-                      <span className="text-label-md font-bold text-primary dark:text-inverse-primary">{doc.nextSlot}</span>
+                      <span className="text-label-md font-bold text-primary dark:text-inverse-primary">{doc.nextSlot || 'Tomorrow, 10:00 AM'}</span>
                     </div>
-                    <button onClick={() => handleBookAppointment(doc.id, doc.nextSlot)} className="bg-primary dark:bg-inverse-primary text-on-primary dark:text-on-primary-fixed-variant px-5 py-2 rounded-xl font-label-md hover:bg-primary-container dark:hover:bg-primary-fixed transition-all active:scale-95 shadow">Book Now</button>
+                    <button onClick={() => handleBookAppointment(doc._id, doc.nextSlot || 'Tomorrow, 10:00 AM')} className="bg-primary dark:bg-inverse-primary text-on-primary dark:text-on-primary-fixed-variant px-5 py-2 rounded-xl font-label-md hover:bg-primary-container dark:hover:bg-primary-fixed transition-all active:scale-95 shadow">Book Now</button>
                   </div>
                 </div>
               </div>
-            ))}
+            )})}
           </div>
-        ) : (
-          /* Table/List View (Option 4 Card-to-Table toggle) */
+        )}
+
+        {!loading && viewMode === 'table' && (
           <div className="glass-card rounded-xl overflow-hidden border-white/20 dark:border-white/10 shadow-xl transition-all duration-300 bg-white/40 dark:bg-slate-900/60 backdrop-blur-xl">
             <div className="overflow-x-auto custom-scrollbar">
               <table className="w-full text-left border-collapse">
@@ -433,36 +365,41 @@ export default function FindDoctorsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-outline-variant/20 dark:divide-white/5">
-                  {currentDoctors.map((doc) => (
-                    <tr key={doc.id} className="hover:bg-white/30 dark:hover:bg-white/5 transition-colors group">
+                  {currentDoctors.map((doc) => {
+                    const displayName = doc.doctorName || doc.userId?.name || 'Dr. Unknown';
+                    const displayImage = doc.userId?.photo || 'https://via.placeholder.com/150';
+                    const displaySpecialty = doc.specialization || 'General';
+
+                    return (
+                    <tr key={doc._id} className="hover:bg-white/30 dark:hover:bg-white/5 transition-colors group">
                       <td className="p-md">
                         <div className="flex items-center gap-sm">
                           <div className="w-10 h-10 rounded-full overflow-hidden border border-primary/20 shrink-0">
-                            <img className="w-full h-full object-cover" alt={doc.name} src={doc.image} />
+                            <img className="w-full h-full object-cover" alt={displayName} src={displayImage} />
                           </div>
                           <div>
-                            <p className="font-label-md text-on-surface dark:text-slate-100 group-hover:text-primary dark:group-hover:text-inverse-primary transition-colors">{doc.name}</p>
-                            <p className="text-[12px] text-on-surface-variant dark:text-slate-400">{doc.experience} Years Exp | {doc.location}</p>
+                            <p className="font-label-md text-on-surface dark:text-slate-100 group-hover:text-primary dark:group-hover:text-inverse-primary transition-colors">{displayName}</p>
+                            <p className="text-[12px] text-on-surface-variant dark:text-slate-400">{doc.experience || 0} Years Exp | {doc.location || 'Local'}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="p-md font-label-md text-primary dark:text-inverse-primary">{doc.specialty}</td>
-                      <td className="p-md text-label-sm text-on-surface-variant dark:text-slate-400">{doc.qualifications}</td>
+                      <td className="p-md font-label-md text-primary dark:text-inverse-primary">{displaySpecialty}</td>
+                      <td className="p-md text-label-sm text-on-surface-variant dark:text-slate-400">{doc.qualifications || 'N/A'}</td>
                       <td className="p-md text-center">
                         <div className="inline-flex items-center gap-xs bg-yellow-50 dark:bg-yellow-950/20 px-3 py-1 rounded-full border border-yellow-200 dark:border-yellow-900/40">
                           <span className="material-symbols-outlined text-[14px] text-yellow-500" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                          <span className="text-label-sm text-on-surface dark:text-slate-200 font-bold">{doc.rating.toFixed(1)}</span>
+                          <span className="text-label-sm text-on-surface dark:text-slate-200 font-bold">{(doc.averageRating || 0).toFixed(1)}</span>
                         </div>
                       </td>
-                      <td className="p-md text-center font-label-md text-on-surface dark:text-slate-100">${doc.fee}</td>
+                      <td className="p-md text-center font-label-md text-on-surface dark:text-slate-100">${doc.consultationFee || 0}</td>
                       <td className="p-md">
-                        <span className="text-label-sm font-medium text-secondary dark:text-inverse-primary">{doc.nextSlot}</span>
+                        <span className="text-label-sm font-medium text-secondary dark:text-inverse-primary">{doc.nextSlot || 'Tomorrow, 10:00 AM'}</span>
                       </td>
                       <td className="p-md text-right">
-                        <button className="bg-primary dark:bg-inverse-primary text-on-primary dark:text-on-primary-fixed-variant px-4 py-1.5 rounded-lg text-label-sm hover:bg-primary-container dark:hover:bg-primary-fixed transition-all active:scale-95 shadow">Book</button>
+                        <button onClick={() => handleBookAppointment(doc._id, doc.nextSlot || 'Tomorrow, 10:00 AM')} className="bg-primary dark:bg-inverse-primary text-on-primary dark:text-on-primary-fixed-variant px-4 py-1.5 rounded-lg text-label-sm hover:bg-primary-container dark:hover:bg-primary-fixed transition-all active:scale-95 shadow">Book</button>
                       </td>
                     </tr>
-                  ))}
+                  )})}
                 </tbody>
               </table>
             </div>
@@ -470,7 +407,7 @@ export default function FindDoctorsPage() {
         )}
 
         {/* Apple-Style Pagination */}
-        {totalPages > 1 && (
+        {!loading && totalPages > 1 && (
           <div className="mt-xl flex justify-center items-center gap-xs">
             <button 
               onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
