@@ -23,7 +23,7 @@ interface Doctor {
 
 const mockDoctors: Doctor[] = [
   {
-    id: "1",
+    id: "64a1b2c3d4e5f6a7b8c9d0e1",
     name: "Dr. Sarah Jenkins",
     specialty: "Neurology",
     qualifications: "MBBS, MD, DM",
@@ -39,7 +39,7 @@ const mockDoctors: Doctor[] = [
     hospital: "Central Medical Institute"
   },
   {
-    id: "2",
+    id: "64a1b2c3d4e5f6a7b8c9d0e2",
     name: "Dr. Michael Chen",
     specialty: "Cardiology",
     qualifications: "MBBS, MD, FACC",
@@ -55,7 +55,7 @@ const mockDoctors: Doctor[] = [
     hospital: "Heart & Vascular Center"
   },
   {
-    id: "3",
+    id: "64a1b2c3d4e5f6a7b8c9d0e3",
     name: "Dr. Elena Rodriguez",
     specialty: "Pediatrics",
     qualifications: "MBBS, DCH",
@@ -71,7 +71,7 @@ const mockDoctors: Doctor[] = [
     hospital: "Valley Children's Hospital"
   },
   {
-    id: "4",
+    id: "64a1b2c3d4e5f6a7b8c9d0e4",
     name: "Dr. James Wilson",
     specialty: "Dermatology",
     qualifications: "MBBS, MD",
@@ -87,7 +87,7 @@ const mockDoctors: Doctor[] = [
     hospital: "Skin & Laser Clinic"
   },
   {
-    id: "5",
+    id: "64a1b2c3d4e5f6a7b8c9d0e5",
     name: "Dr. Sarah Chen",
     specialty: "Cardiology",
     qualifications: "MBBS, MD, FRCP",
@@ -103,7 +103,7 @@ const mockDoctors: Doctor[] = [
     hospital: "Central Medical Institute"
   },
   {
-    id: "6",
+    id: "64a1b2c3d4e5f6a7b8c9d0e6",
     name: "Dr. James Wilson (Neurology)",
     specialty: "Neurology",
     qualifications: "MBBS, PhD, DM",
@@ -119,7 +119,7 @@ const mockDoctors: Doctor[] = [
     hospital: "Central Medical Institute"
   },
   {
-    id: "7",
+    id: "64a1b2c3d4e5f6a7b8c9d0e7",
     name: "Dr. Marcus Thorne",
     specialty: "Orthopedics",
     qualifications: "MS, MCh (Orth)",
